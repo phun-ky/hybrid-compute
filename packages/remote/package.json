@@ -1,8 +1,19 @@
 {
   "name": "@hybrid-compute/remote",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Remote compute backend using fetch or WebSocket transport for distributed task execution.",
+  "keywords": [
+    "remote",
+    "compute",
+    "websocket",
+    "fetch",
+    "transport",
+    "distributed",
+    "json-rpc",
+    "http",
+    "cloud",
+    "task"
+  ],
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"

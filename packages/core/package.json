@@ -1,8 +1,18 @@
 {
   "name": "@hybrid-compute/core",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Core orchestrator for dispatching compute tasks to local, threaded, or remote backends.",
+  "keywords": [
+    "compute",
+    "task-dispatch",
+    "core",
+    "strategy",
+    "hybrid",
+    "orchestrator",
+    "execution",
+    "modular",
+    "framework"
+  ],
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"

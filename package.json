@@ -1,8 +1,21 @@
 {
   "name": "hybrid-compute",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Composable compute orchestration across local, threaded, and remote environments.",
+  "keywords": [
+    "compute",
+    "task-runner",
+    "web-worker",
+    "remote",
+    "fetch",
+    "websocket",
+    "modular",
+    "framework",
+    "hybrid",
+    "offloading",
+    "multithreaded",
+    "orchestrator"
+  ],
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"
@@ -24,6 +37,7 @@
     "clean": "lerna exec -- rm -rf dist tsconfig.tsbuildinfo",
     "commit": "npx git-cz",
     "test": "npm run test --workspaces --if-present",
+    "release": "release-it",
     "test:ci": "npm run test:ci --workspaces --if-present",
     "docs": "typedoc"
   },

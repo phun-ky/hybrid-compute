@@ -1,5 +1,8 @@
 # @hybrid-compute
 
+**Run compute tasks wherever they run best - local, threaded, or remote - with a
+pluggable backend architecture.**
+
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](http://makeapullrequest.com)
 [![SemVer 2.0](https://img.shields.io/badge/SemVer-2.0-green.svg)](http://semver.org/spec/v2.0.0.html)
@@ -10,23 +13,74 @@
 
 ## About
 
+`@hybrid-compute` is a flexible, modular compute orchestration framework that
+dispatches computational tasks to the most appropriate backend — whether that's:
+
+- The local JS thread (for fast, simple tasks)
+- A dedicated Web Worker (for multi-threaded offloading)
+- Or a remote compute service over HTTP or WebSocket
+
+All you do is define tasks and call `runTask()`. HybridCompute takes care of the
+rest.
+
 ## Table of Contents<!-- omit from toc -->
 
 - [@hybrid-compute](#hybrid-compute)
   - [About](#about)
+  - [API](#api)
   - [Usage](#usage)
+  - [Example](#example)
+  - [Visual overviews](#visual-overviews)
     - [High-Level Package Architecture](#high-level-package-architecture)
     - [Task Dispatch Flow (HybridCompute Core)](#task-dispatch-flow-hybridcompute-core)
     - [Threaded Worker Lifecycle](#threaded-worker-lifecycle)
     - [Remote Compute Flow (WebSocket or Fetch)](#remote-compute-flow-websocket-or-fetch)
-  - [API](#api)
   - [Development](#development)
   - [Contributing](#contributing)
   - [License](#license)
   - [Changelog](#changelog)
   - [Sponsor me](#sponsor-me)
 
+## API
+
+Check out the full documentation
+[here](https://github.com/phun-ky/hybrid-compute/blob/main/api/README.md).
+
+Includes:
+
+- All public classes and methods
+- Task registration and execution patterns
+- Transport and backend setup guides
+
 ## Usage
+
+```shell-session
+npm install @hybrid-compute/core
+```
+
+## Example
+
+```ts
+import {
+  HybridCompute,
+  createLocalCompute,
+  createThreadedCompute,
+  createRemoteCompute
+} from '@hybrid-compute/core';
+
+const compute = new HybridCompute({
+  local: createLocalCompute(),
+  worker: createThreadedCompute(new URL('./worker.js', import.meta.url), [
+    'double'
+  ]),
+  remote: createRemoteCompute({ transport: 'fetch', endpoint: '/api/compute' })
+});
+
+const result = await compute.runTask<number, number>('double', 21, 'auto');
+console.log(result); // 42
+```
+
+## Visual overviews
 
 ### High-Level Package Architecture
 
@@ -93,17 +147,11 @@ flowchart TD
 
 ```
 
-## API
-
----
-
 ## Development
 
 ```shell-session
 // Build
 $ npm run build
-// Run dev
-$ npm run dev
 // Test
 $ npm test
 ```

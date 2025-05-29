@@ -1,8 +1,18 @@
 {
   "name": "@hybrid-compute/worker",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Threaded compute backend for executing tasks in Web Workers.",
+  "keywords": [
+    "web-worker",
+    "worker",
+    "thread",
+    "multithreaded",
+    "compute",
+    "offload",
+    "async",
+    "frontend",
+    "task"
+  ],
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"
