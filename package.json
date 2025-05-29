@@ -15,10 +15,14 @@
   "license": "MIT",
   "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "clean": "lerna exec -- rm -rf dist tsconfig.tsbuildinfo",
     "prebuild": "npm run clean",
     "build": "tsc -b",
+    "clean": "lerna exec -- rm -rf dist tsconfig.tsbuildinfo",
+    "commit": "npx git-cz",
     "docs": "typedoc"
   },
   "config": {
@@ -41,8 +45,5 @@
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.8.2"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

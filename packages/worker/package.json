@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "exports": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"
@@ -17,6 +15,8 @@
   "license": "MIT",
   "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
   "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {},
   "devDependencies": {
     "eslint": "^9.27.0",
