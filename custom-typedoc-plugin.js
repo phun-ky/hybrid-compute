@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 // @ts-check
 
 import { MarkdownTheme, MarkdownThemeContext } from 'typedoc-plugin-markdown';
@@ -18,7 +17,7 @@ export function load(app) {
 
 **Contributing**
 
-Want to contribute? Please read the [CONTRIBUTING.md](https://github.com/phun-ky/<name-of-repo>/blob/main/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](https://github.com/phun-ky/<name-of-repo>/blob/main/CODE_OF_CONDUCT.md)
+Want to contribute? Please read the [CONTRIBUTING.md](https://github.com/phun-ky/hybrid-compute/blob/main/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](https://github.com/phun-ky/hybrid-compute/blob/main/CODE_OF_CONDUCT.md)
 
 **Sponsor me**
 
@@ -51,7 +50,7 @@ class MyMarkdownThemeContext extends MarkdownThemeContext {
   partials = {
     ...this.partials,
     header: () => {
-      return '';
+      return '<div><img alt="hybrid-compute logo" src="https://raw.githubusercontent.com/phun-ky/hybrid-compute/main/public/logo-hybrid-compute-horizontal-colored-package.svg?raw=true" style="max-height:32px;"/></div>';
     }
   };
 }

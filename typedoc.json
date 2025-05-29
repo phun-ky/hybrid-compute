@@ -7,9 +7,15 @@
     "typedoc-plugin-rename-defaults",
     "./custom-typedoc-plugin.js"
   ],
-  "out": "./api",
-  "tsconfig": "tsconfig.json",
-  "outputFileStrategy": "modules",
+  "out": "docs/api",
+  "tsconfig": "./tsconfig.base.json",
+  "entryPoints": [
+    "packages/core/src",
+    "packages/local/src",
+    "packages/worker/src",
+    "packages/remote/src"
+  ],
+  "entryPointStrategy": "expand",
   "interfacePropertiesFormat": "table",
   "classPropertiesFormat": "table",
   "enumMembersFormat": "table",
@@ -17,9 +23,6 @@
   "propertyMembersFormat": "table",
   "theme": "custom-markdown-theme",
   "parametersFormat": "table",
-  "entryPoints": ["src"],
-  "entryPointStrategy": "expand",
-  "readme": "./public/docs/README.md",
   "gitRevision": "main",
   "githubPages": false,
   "mergeReadme": true,
@@ -27,7 +30,10 @@
   "expandObjects": true,
   "remarkPlugins": [
     "unified-prettier",
-    ["remark-github", { "repository": "https://github.com/phun-ky/<name-of-repo>" }],
+    [
+      "remark-github",
+      { "repository": "https://github.com/phun-ky/hybrid-compute" }
+    ],
     ["remark-toc", { "heading": "Table of Contents", "maxDepth": 3 }]
   ]
 }

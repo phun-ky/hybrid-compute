@@ -1,0 +1,34 @@
+{
+  "name": "@hybrid-compute/remote",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://phun-ky.net/projects/hybrid-compute",
+  "bugs": {
+    "url": "https://github.com/phun-ky/hybrid-compute/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phun-ky/hybrid-compute.git"
+  },
+  "funding": "https://github.com/phun-ky/hybrid-compute?sponsor=1",
+  "license": "MIT",
+  "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "eslint": "^9.27.0",
+    "eslint-config-phun-ky": "^1.0.3",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.8.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
