@@ -48,12 +48,21 @@ export class RemoteCompute implements ComputeBackendInterface {
    * @param options - Configuration including transport type, endpoint URL, and optional task whitelist.
    */
   constructor(options: RemoteComputeOptionsInterface) {
+    console.log(
+      '[DEBUG] Constructing RemoteCompute with transport:',
+      options.transport
+    );
+
     this.transport = options.transport;
     this.endpoint = options.endpoint;
     this.canRunSet = new Set(options.canRunTasks ?? []);
 
     if (this.transport === 'websocket') {
       this.socket = new WebSocket(this.endpoint);
+
+      if (this.transport === 'websocket') {
+        console.log('[DEBUG] Socket state:', this.socket?.readyState);
+      }
 
       this.socket.onmessage = (event: MessageEvent) => {
         const { id, result, error } = JSON.parse(event.data);
@@ -113,6 +122,7 @@ export class RemoteCompute implements ComputeBackendInterface {
 
     return new Promise<Output>((resolve, reject) => {
       if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+        console.log('[DEBUG] WebSocket not connected', this.socket?.readyState);
         reject(new Error('WebSocket not connected'));
 
         return;

@@ -23,6 +23,8 @@
     "build": "tsc -b",
     "clean": "lerna exec -- rm -rf dist tsconfig.tsbuildinfo",
     "commit": "npx git-cz",
+    "test": "npm run test --workspaces --if-present",
+    "test:ci": "npm run test:ci --workspaces --if-present",
     "docs": "typedoc"
   },
   "config": {
@@ -31,10 +33,13 @@
     }
   },
   "devDependencies": {
+    "cobertura": "^1.0.3",
     "git-cz": "^4.9.0",
+    "glob": "^11.0.2",
     "lerna": "^8.2.2",
     "remark-github": "^12.0.0",
     "remark-toc": "^9.0.0",
+    "tsx": "^4.19.4",
     "typedoc": "^0.28.5",
     "typedoc-plugin-markdown": "^4.6.3",
     "typedoc-plugin-mdn-links": "^5.0.2",

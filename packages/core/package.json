@@ -17,8 +17,13 @@
   "type": "module",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {},
+  "scripts": {
+    "test": "tsx --test **/__tests__/**/*.spec.ts",
+    "pretest:ci": "rm -rf coverage && mkdir -p coverage",
+    "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
+  },
   "devDependencies": {
+    "@types/node": "^22.15.24",
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.5.3",

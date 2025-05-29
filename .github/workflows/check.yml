@@ -57,7 +57,10 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: phun-ky/hybrid-core
+          slug: phun-ky/hybrid-compute
+          flags: monorepo
+          files: ./packages/**/coverage/cobertura-coverage.xml
+
   notify:
     name: Notify failed check
     needs: check
