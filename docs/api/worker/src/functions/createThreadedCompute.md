@@ -5,14 +5,14 @@ createThreadedCompute
 
 # Function: createThreadedCompute()
 
-> Last updated 2025-05-29T12:50:11.817Z
+> Last updated 2025-05-29T13:00:13.381Z
 
 ```ts
 function createThreadedCompute(workerPath, tasks): ThreadedCompute;
 ```
 
 Defined in:
-[worker/src/index.ts:116](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/index.ts#L116)
+[worker/src/index.ts:116](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L116)
 
 Factory function to create a new `ThreadedCompute` backend.
 

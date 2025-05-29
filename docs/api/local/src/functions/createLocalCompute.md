@@ -5,14 +5,14 @@ createLocalCompute
 
 # Function: createLocalCompute()
 
-> Last updated 2025-05-29T12:50:11.725Z
+> Last updated 2025-05-29T13:00:13.298Z
 
 ```ts
 function createLocalCompute(): LocalCompute;
 ```
 
 Defined in:
-[local/src/index.ts:95](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/local/src/index.ts#L95)
+[local/src/index.ts:95](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L95)
 
 Factory function to create a new LocalCompute backend instance.
 

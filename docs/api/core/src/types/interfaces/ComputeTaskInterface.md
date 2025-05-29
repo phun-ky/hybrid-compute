@@ -5,10 +5,10 @@ ComputeTaskInterface
 
 # Interface: ComputeTaskInterface\<Input, Output>
 
-> Last updated 2025-05-29T12:50:11.649Z
+> Last updated 2025-05-29T13:00:13.225Z
 
 Defined in:
-[core/src/types.ts:33](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/core/src/types.ts#L33)
+[core/src/types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L33)
 
 Describes a unit of work that can be executed by a compute backend.
 
@@ -30,9 +30,9 @@ const task: ComputeTaskInterface<number, number> = {
 
 ## Properties
 
-| Property                 | Type     | Description                              | Defined in                                                                                                      |
-| ------------------------ | -------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| <a id="name"></a> `name` | `string` | A unique name used to identify the task. | [core/src/types.ts:34](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/core/src/types.ts#L34) |
+| Property                 | Type     | Description                              | Defined in                                                                                                 |
+| ------------------------ | -------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <a id="name"></a> `name` | `string` | A unique name used to identify the task. | [core/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L34) |
 
 ## Methods
 
@@ -43,7 +43,7 @@ run(input): Promise<Output>;
 ```
 
 Defined in:
-[core/src/types.ts:35](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/core/src/types.ts#L35)
+[core/src/types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L35)
 
 A function that takes input and returns a Promise of the output.
 

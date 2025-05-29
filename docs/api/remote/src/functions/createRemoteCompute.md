@@ -5,14 +5,14 @@ createRemoteCompute
 
 # Function: createRemoteCompute()
 
-> Last updated 2025-05-29T12:50:11.761Z
+> Last updated 2025-05-29T13:00:13.330Z
 
 ```ts
 function createRemoteCompute(options): RemoteCompute;
 ```
 
 Defined in:
-[remote/src/index.ts:142](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/index.ts#L142)
+[remote/src/index.ts:142](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L142)
 
 Factory function for creating a RemoteCompute instance.
 

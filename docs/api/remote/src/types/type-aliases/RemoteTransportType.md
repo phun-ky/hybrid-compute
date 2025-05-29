@@ -5,14 +5,14 @@ RemoteTransportType
 
 # Type Alias: RemoteTransportType
 
-> Last updated 2025-05-29T12:50:11.785Z
+> Last updated 2025-05-29T13:00:13.351Z
 
 ```ts
 type RemoteTransportType = 'fetch' | 'websocket';
 ```
 
 Defined in:
-[remote/src/types.ts:13](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/types.ts#L13)
+[remote/src/types.ts:13](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L13)
 
 Represents the communication method used by the `RemoteCompute` backend to
 interact with a remote server.

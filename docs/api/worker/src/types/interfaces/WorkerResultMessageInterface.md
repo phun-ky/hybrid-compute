@@ -5,10 +5,10 @@ WorkerResultMessageInterface
 
 # Interface: WorkerResultMessageInterface
 
-> Last updated 2025-05-29T12:50:11.833Z
+> Last updated 2025-05-29T13:00:13.394Z
 
 Defined in:
-[worker/src/types.ts:48](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L48)
+[worker/src/types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L48)
 
 The message format sent from a Web Worker back to the main thread upon task
 completion.
@@ -32,11 +32,11 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web\_Workers\_API/Using\_web\_w
 
 ## Properties
 
-| Property                     | Type     | Description                                                        | Defined in                                                                                                          |
-| ---------------------------- | -------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| <a id="error"></a> `error?`  | `string` | An optional error message if the task failed.                      | [worker/src/types.ts:52](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L52) |
-| <a id="id"></a> `id`         | `number` | The unique identifier that matches a previously sent task message. | [worker/src/types.ts:49](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L49) |
-| <a id="result"></a> `result` | `any`    | The result of the task execution (if successful).                  | [worker/src/types.ts:51](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L51) |
+| Property                     | Type     | Description                                                        | Defined in                                                                                                     |
+| ---------------------------- | -------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| <a id="error"></a> `error?`  | `string` | An optional error message if the task failed.                      | [worker/src/types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L52) |
+| <a id="id"></a> `id`         | `number` | The unique identifier that matches a previously sent task message. | [worker/src/types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L49) |
+| <a id="result"></a> `result` | `any`    | The result of the task execution (if successful).                  | [worker/src/types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L51) |
 
 ---
 

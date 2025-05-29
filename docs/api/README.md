@@ -150,7 +150,7 @@ e.g. to [Red Cross](https://www.icrc.org/en/donate/ukraine),
 or
 [donate Ambulances for Ukraine](https://www.gofundme.com/f/help-to-save-the-lives-of-civilians-in-a-war-zone).
 
-> Last updated 2025-05-29T12:50:11.420Z
+> Last updated 2025-05-29T13:00:12.990Z
 
 ## Modules
 

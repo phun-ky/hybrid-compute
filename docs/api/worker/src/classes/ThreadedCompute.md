@@ -5,10 +5,10 @@ ThreadedCompute
 
 # Class: ThreadedCompute
 
-> Last updated 2025-05-29T12:50:11.800Z
+> Last updated 2025-05-29T13:00:13.363Z
 
 Defined in:
-[worker/src/index.ts:27](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/index.ts#L27)
+[worker/src/index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L27)
 
 `ThreadedCompute` is a compute backend that runs tasks in a dedicated Web
 Worker.
@@ -45,7 +45,7 @@ new ThreadedCompute(workerPath, taskNames): ThreadedCompute;
 ```
 
 Defined in:
-[worker/src/index.ts:47](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/index.ts#L47)
+[worker/src/index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L47)
 
 Constructs a new `ThreadedCompute` backend with a specified worker and list of
 available task names.
@@ -70,7 +70,7 @@ canRun(taskName): boolean;
 ```
 
 Defined in:
-[worker/src/index.ts:68](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/index.ts#L68)
+[worker/src/index.ts:68](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L68)
 
 Checks whether the current worker is registered to handle a given task.
 
@@ -99,7 +99,7 @@ runTask<Input, Output>(taskName, input): Promise<Output>;
 ```
 
 Defined in:
-[worker/src/index.ts:90](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/index.ts#L90)
+[worker/src/index.ts:90](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L90)
 
 Runs a task inside the Web Worker.
 

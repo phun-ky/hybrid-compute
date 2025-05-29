@@ -5,10 +5,10 @@ RemoteComputeOptionsInterface
 
 # Interface: RemoteComputeOptionsInterface
 
-> Last updated 2025-05-29T12:50:11.773Z
+> Last updated 2025-05-29T13:00:13.342Z
 
 Defined in:
-[remote/src/types.ts:34](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/types.ts#L34)
+[remote/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L34)
 
 Configuration options for initializing a `RemoteCompute` backend.
 
@@ -29,11 +29,11 @@ const options: RemoteComputeOptionsInterface = {
 
 ## Properties
 
-| Property                                | Type                                                            | Description                                                                                                          | Defined in                                                                                                          |
-| --------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| <a id="canruntasks"></a> `canRunTasks?` | `string`\[]                                                     | An optional list of task names this backend can handle. If omitted, it is assumed the backend can attempt all tasks. | [remote/src/types.ts:37](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/types.ts#L37) |
-| <a id="endpoint"></a> `endpoint`        | `string`                                                        | The server URL for handling task requests.                                                                           | [remote/src/types.ts:36](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/types.ts#L36) |
-| <a id="transport"></a> `transport`      | [`RemoteTransportType`](../type-aliases/RemoteTransportType.md) | The transport mechanism to use (`fetch` or `websocket`).                                                             | [remote/src/types.ts:35](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/types.ts#L35) |
+| Property                                | Type                                                            | Description                                                                                                          | Defined in                                                                                                     |
+| --------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| <a id="canruntasks"></a> `canRunTasks?` | `string`\[]                                                     | An optional list of task names this backend can handle. If omitted, it is assumed the backend can attempt all tasks. | [remote/src/types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L37) |
+| <a id="endpoint"></a> `endpoint`        | `string`                                                        | The server URL for handling task requests.                                                                           | [remote/src/types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L36) |
+| <a id="transport"></a> `transport`      | [`RemoteTransportType`](../type-aliases/RemoteTransportType.md) | The transport mechanism to use (`fetch` or `websocket`).                                                             | [remote/src/types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L35) |
 
 ---
 

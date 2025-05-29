@@ -5,10 +5,10 @@ RemoteCompute
 
 # Class: RemoteCompute
 
-> Last updated 2025-05-29T12:50:11.742Z
+> Last updated 2025-05-29T13:00:13.313Z
 
 Defined in:
-[remote/src/index.ts:29](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/index.ts#L29)
+[remote/src/index.ts:29](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L29)
 
 RemoteCompute is a backend that delegates task execution to a remote service
 over HTTP (`fetch`) or a persistent WebSocket connection.
@@ -47,7 +47,7 @@ new RemoteCompute(options): RemoteCompute;
 ```
 
 Defined in:
-[remote/src/index.ts:50](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/index.ts#L50)
+[remote/src/index.ts:50](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L50)
 
 Constructs a RemoteCompute backend with either fetch or WebSocket transport.
 
@@ -70,7 +70,7 @@ canRun(taskName): boolean;
 ```
 
 Defined in:
-[remote/src/index.ts:75](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/index.ts#L75)
+[remote/src/index.ts:75](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L75)
 
 Checks whether this backend can execute a specific task.
 
@@ -99,7 +99,7 @@ runTask<Input, Output>(taskName, input): Promise<Output>;
 ```
 
 Defined in:
-[remote/src/index.ts:95](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/remote/src/index.ts#L95)
+[remote/src/index.ts:95](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L95)
 
 Runs a task using the remote backend, via HTTP or WebSocket transport.
 

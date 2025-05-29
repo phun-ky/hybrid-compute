@@ -5,14 +5,14 @@ createHybridCompute
 
 # Function: createHybridCompute()
 
-> Last updated 2025-05-29T12:50:11.608Z
+> Last updated 2025-05-29T13:00:13.181Z
 
 ```ts
 function createHybridCompute(backends): HybridCompute;
 ```
 
 Defined in:
-[core/src/index.ts:101](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/core/src/index.ts#L101)
+[core/src/index.ts:101](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L101)
 
 Factory function for creating a HybridCompute instance.
 

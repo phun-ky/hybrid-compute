@@ -5,14 +5,14 @@ ExecutionStrategyType
 
 # Type Alias: ExecutionStrategyType
 
-> Last updated 2025-05-29T12:50:11.676Z
+> Last updated 2025-05-29T13:00:13.255Z
 
 ```ts
 type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
 ```
 
 Defined in:
-[core/src/types.ts:14](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/core/src/types.ts#L14)
+[core/src/types.ts:14](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L14)
 
 The strategy used to determine which compute backend to use.
 

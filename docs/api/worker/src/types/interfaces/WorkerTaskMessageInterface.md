@@ -5,10 +5,10 @@ WorkerTaskMessageInterface
 
 # Interface: WorkerTaskMessageInterface
 
-> Last updated 2025-05-29T12:50:11.841Z
+> Last updated 2025-05-29T13:00:13.401Z
 
 Defined in:
-[worker/src/types.ts:21](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L21)
+[worker/src/types.ts:21](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L21)
 
 The message format sent from the main thread to a Web Worker when executing a
 task.
@@ -29,11 +29,11 @@ worker.postMessage(message);
 
 ## Properties
 
-| Property                   | Type     | Description                                                           | Defined in                                                                                                          |
-| -------------------------- | -------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| <a id="id"></a> `id`       | `number` | A unique identifier for correlating the response message.             | [worker/src/types.ts:25](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L25) |
-| <a id="input"></a> `input` | `any`    | The input data for the task. This can be any JSON-serializable value. | [worker/src/types.ts:24](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L24) |
-| <a id="task"></a> `task`   | `string` | The name of the task to be executed in the worker.                    | [worker/src/types.ts:22](https://github.com/phun-ky/hybrid-compute-core/blob/main/packages/worker/src/types.ts#L22) |
+| Property                   | Type     | Description                                                           | Defined in                                                                                                     |
+| -------------------------- | -------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| <a id="id"></a> `id`       | `number` | A unique identifier for correlating the response message.             | [worker/src/types.ts:25](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L25) |
+| <a id="input"></a> `input` | `any`    | The input data for the task. This can be any JSON-serializable value. | [worker/src/types.ts:24](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L24) |
+| <a id="task"></a> `task`   | `string` | The name of the task to be executed in the worker.                    | [worker/src/types.ts:22](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L22) |
 
 ---
 
