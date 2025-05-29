@@ -34,7 +34,7 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc -b",
-    "clean": "lerna exec -- rm -rf dist tsconfig.tsbuildinfo",
+    "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
     "test": "npm run test --workspaces --if-present",
     "release": "release-it",
@@ -50,7 +50,6 @@
     "cobertura": "^1.0.3",
     "git-cz": "^4.9.0",
     "glob": "^11.0.2",
-    "lerna": "^8.2.2",
     "remark-github": "^12.0.0",
     "remark-toc": "^9.0.0",
     "tsx": "^4.19.4",
