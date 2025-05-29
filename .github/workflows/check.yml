@@ -12,7 +12,6 @@ on:
       - 'src/**'
       - 'package.json'
       - 'package-lock.json'
-      - 'rollup.config.js'
       - 'tsconfig.json'
       - '.npmrc'
   pull_request:
@@ -23,7 +22,6 @@ on:
       - 'src/**'
       - 'package.json'
       - 'package-lock.json'
-      - 'rollup.config.js'
       - 'tsconfig.json'
       - '.npmrc'
 
@@ -59,7 +57,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: phun-ky/ts-template
+          slug: phun-ky/hybrid-core
   notify:
     name: Notify failed check
     needs: check
