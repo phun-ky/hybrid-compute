@@ -36,10 +36,10 @@
     "build": "tsc -b",
     "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
-    "test": "npm run test --workspaces --if-present",
+    "docs": "typedoc",
     "release": "release-it",
-    "test:ci": "npm run test:ci --workspaces --if-present",
-    "docs": "typedoc"
+    "test": "npm run test --workspaces --if-present",
+    "test:ci": "npm run test:ci --workspaces --if-present"
   },
   "config": {
     "commitizen": {

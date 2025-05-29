@@ -34,6 +34,9 @@
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
     "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
+  "dependencies": {
+    "@hybrid-compute/core": "^0.0.0"
+  },
   "devDependencies": {
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
