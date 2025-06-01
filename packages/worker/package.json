@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/worker",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Threaded compute backend for executing tasks in Web Workers.",
   "keywords": [
     "web-worker",
