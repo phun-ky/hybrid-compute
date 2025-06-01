@@ -47,5 +47,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@phun-ky/typeof": "^1.2.15"
   }
 }

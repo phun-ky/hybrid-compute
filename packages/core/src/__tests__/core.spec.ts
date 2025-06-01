@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import {
   ComputeBackendInterface,
   createHybridCompute,
+  ExecutionStrategyType,
   HybridCompute
 } from '..';
 
@@ -45,6 +46,17 @@ describe('HybridCompute', () => {
     const compute = new HybridCompute({ worker: createMockBackend() });
 
     const result = await compute.runTask(mockTaskName, mockInput, 'worker');
+    assert.strictEqual(result, mockOutput);
+  });
+
+  test('runs task with missing strategy, should default to auto', async () => {
+    const compute = new HybridCompute({ worker: createMockBackend() });
+
+    const result = await compute.runTask(
+      mockTaskName,
+      mockInput,
+      2 as unknown as ExecutionStrategyType
+    );
     assert.strictEqual(result, mockOutput);
   });
 
