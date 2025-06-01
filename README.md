@@ -179,7 +179,7 @@ for details on the latest updates.
 
 I'm an Open Source evangelist, creating stuff that does not exist yet to help
 get rid of secondary activities and to enhance systems already in place, be it
-documentation or web sites.
+documentation, tools or web sites.
 
 The sponsorship is an unique opportunity to alleviate more hours for me to
 maintain my projects, create new ones and contribute to the large community

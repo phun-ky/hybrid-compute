@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComputeBackendInterface } from '@hybrid-compute/core';
 
 import { RemoteComputeOptionsInterface, RemoteTransportType } from './types.js';
@@ -5,22 +6,39 @@ import { RemoteComputeOptionsInterface, RemoteTransportType } from './types.js';
 export * from './types.js';
 
 /**
- * RemoteCompute is a backend that delegates task execution to a remote service
- * over HTTP (`fetch`) or a persistent WebSocket connection.
+ * RemoteCompute is a backend that delegates compute tasks to a remote API
+ * using either HTTP requests (fetch) or a persistent WebSocket connection.
  *
- * It supports task registration via `canRunTasks` and routes input/output using
- * a JSON-based messaging protocol. Each task request is assigned a unique ID
- * to match responses (especially important for WebSocket communication).
+ * It supports bidirectional communication, which is useful for low-latency
+ * or streaming scenarios using WebSocket, or traditional stateless interaction
+ * using fetch.
  *
- * @example
+ * @remarks
+ * WebSocket-based transport allows concurrent request handling via an internal
+ * request/response map using `id`. This is useful when running multiple tasks in parallel.
+ *
+ * Fetch transport is simpler and more interoperable with typical REST APIs.
+ *
+ * @example Fetch transport
  * ```ts
  * const remote = new RemoteCompute({
  *   transport: 'fetch',
  *   endpoint: 'https://api.example.com/compute',
- *   canRunTasks: ['generateReport']
+ *   canRunTasks: ['translateText']
  * });
  *
- * const result = await remote.runTask('generateReport', { userId: 'abc123' });
+ * const result = await remote.runTask('translateText', { text: 'hello' });
+ * ```
+ *
+ * @example WebSocket transport
+ * ```ts
+ * const remote = new RemoteCompute({
+ *   transport: 'websocket',
+ *   endpoint: 'wss://api.example.com/ws',
+ *   canRunTasks: ['analyzeSentiment']
+ * });
+ *
+ * const result = await remote.runTask('analyzeSentiment', { text: 'It works!' });
  * ```
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/fetch
@@ -34,18 +52,16 @@ export class RemoteCompute implements ComputeBackendInterface {
   private pending = new Map<
     number,
     {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resolve: (value: any | PromiseLike<any>) => void;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       reject: (value: any | PromiseLike<any>) => void;
     }
   >();
   private nextId = 1;
 
   /**
-   * Constructs a RemoteCompute backend with either fetch or WebSocket transport.
+   * Initializes the remote compute backend.
    *
-   * @param options - Configuration including transport type, endpoint URL, and optional task whitelist.
+   * @param options - Transport type and endpoint configuration.
    */
   constructor(options: RemoteComputeOptionsInterface) {
     this.transport = options.transport;
@@ -67,30 +83,24 @@ export class RemoteCompute implements ComputeBackendInterface {
   }
 
   /**
-   * Checks whether this backend can execute a specific task.
+   * Determines if this backend is allowed to handle the given task.
    *
-   * @param taskName - The name of the task to check.
-   * @returns `true` if the task is allowed or unrestricted, `false` otherwise.
+   * @param taskName - Name of the task.
+   * @returns `true` if task is permitted, or if no restrictions are set.
    */
   canRun(taskName: string): boolean {
     return this.canRunSet.size === 0 || this.canRunSet.has(taskName);
   }
 
   /**
-   * Runs a task using the remote backend, via HTTP or WebSocket transport.
+   * Executes the specified task using remote communication.
    *
-   * @typeParam Input - Input data structure expected by the task.
-   * @typeParam Output - Expected output structure returned by the backend.
+   * @typeParam Input - The input data structure expected by the task.
+   * @typeParam Output - The output structure returned by the task.
    *
-   * @param taskName - The task to run.
-   * @param input - Input data for the task.
-   * @returns A Promise resolving to the output.
-   * @throws If transport fails or task is rejected remotely.
-   *
-   * @example
-   * ```ts
-   * const output = await remote.runTask('translateText', { text: 'hello' });
-   * ```
+   * @param taskName - Name of the remote task.
+   * @param input - Input data to send.
+   * @returns A promise resolving to the result from the server.
    */
   async runTask<Input, Output>(
     taskName: string,
@@ -125,19 +135,10 @@ export class RemoteCompute implements ComputeBackendInterface {
 }
 
 /**
- * Factory function for creating a RemoteCompute instance.
+ * Factory to create a RemoteCompute instance with given options.
  *
- * @param options - The backend transport type and endpoint configuration.
- * @returns A new `RemoteCompute` instance.
- *
- * @example
- * ```ts
- * const remote = createRemoteCompute({
- *   transport: 'websocket',
- *   endpoint: 'wss://example.org/ws',
- *   canRunTasks: ['analyzeSentiment']
- * });
- * ```
+ * @param options - Remote connection configuration.
+ * @returns Instance of RemoteCompute.
  */
 export function createRemoteCompute(options: RemoteComputeOptionsInterface) {
   return new RemoteCompute(options);

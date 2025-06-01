@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import { defineConfig } from 'eslint/config';
 import customConfig from 'eslint-config-phun-ky';
 
