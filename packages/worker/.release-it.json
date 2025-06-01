@@ -6,6 +6,7 @@
   },
   "github": {
     "release": true,
+    "releaseName": "@hybrid-compute/worker@${version}",
     "tokenRef": "GH_TOKEN"
   },
   "npm": {
