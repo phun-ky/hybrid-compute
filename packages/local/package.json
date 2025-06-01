@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/local",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Local compute backend for in-memory synchronous task execution.",
   "keywords": [
     "compute",
@@ -33,7 +33,7 @@
     "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@hybrid-compute/core": "0.0.7"
+    "@hybrid-compute/core": "0.0.8"
   },
   "devDependencies": {
     "eslint": "^9.27.0",
