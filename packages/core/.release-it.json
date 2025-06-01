@@ -1,9 +1,6 @@
 {
   "git": false,
-  "github": {
-    "release": true,
-    "tokenRef": "GH_TOKEN"
-  },
+  "github": false,
   "npm": {
     "publish": true,
     "skipChecks": true

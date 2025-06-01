@@ -7,10 +7,7 @@
     "release": true,
     "tokenRef": "GH_TOKEN"
   },
-  "npm": {
-    "publish": false,
-    "skipChecks": true
-  },
+  "npm": false,
   "hooks": {
     "after:bump": "npm run build && npm run docs",
     "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
