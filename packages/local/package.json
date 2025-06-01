@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/local",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Local compute backend for in-memory synchronous task execution.",
   "keywords": [
     "compute",
