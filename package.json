@@ -29,10 +29,7 @@
   "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
   "type": "module",
   "workspaces": [
-    "packages/core",
-    "packages/local",
-    "packages/remote",
-    "packages/worker"
+    "packages/*"
   ],
   "scripts": {
     "prebuild": "npm run clean",
@@ -43,11 +40,6 @@
     "release": "npm run release --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:ci": "npm run test:ci --workspaces --if-present"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/git-cz"
-    }
   },
   "devDependencies": {
     "@release-it/bumper": "^7.0.5",
@@ -69,5 +61,10 @@
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.8.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/git-cz"
+    }
   }
 }

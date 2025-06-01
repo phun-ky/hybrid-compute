@@ -90,6 +90,7 @@ export class LocalCompute implements ComputeBackendInterface {
  * @example
  * ```ts
  * const compute = createLocalCompute();
+ * compute.runTask(…);
  * ```
  */
 export function createLocalCompute() {

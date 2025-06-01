@@ -28,8 +28,8 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "release": "release-it",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "release": "release-it",
     "test": "tsx --test **/__tests__/**/*.spec.ts",
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
     "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
