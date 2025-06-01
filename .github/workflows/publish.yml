@@ -10,11 +10,9 @@ on:
     paths:
       - '.github/**'
       - 'src/**'
-      - 'api/**'
-      - 'public/**'
+      - 'docs/**'
       - 'package.json'
       - 'package-lock.json'
-      - 'rollup.config.js'
       - 'tsconfig.json'
       - '.npmrc'
       - '.release-it.json'
@@ -22,7 +20,6 @@ on:
       - 'CONTRIBUTING.md'
       - 'CODE_OF_CONDUCT.md'
       - 'SECURITY.md'
-      - '.postcssrc.cjs'
       - '.browserlistrc'
   workflow_dispatch:
 jobs:

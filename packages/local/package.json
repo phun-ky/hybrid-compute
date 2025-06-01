@@ -1,0 +1,51 @@
+{
+  "name": "@hybrid-compute/local",
+  "version": "0.0.2",
+  "description": "Local compute backend for in-memory synchronous task execution.",
+  "keywords": [
+    "compute",
+    "task",
+    "local",
+    "sync",
+    "backend",
+    "lightweight",
+    "in-memory"
+  ],
+  "homepage": "https://phun-ky.net/projects/hybrid-compute",
+  "bugs": {
+    "url": "https://github.com/phun-ky/hybrid-compute/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phun-ky/hybrid-compute.git"
+  },
+  "funding": "https://github.com/phun-ky/hybrid-compute?sponsor=1",
+  "license": "MIT",
+  "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "release": "release-it",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "test": "tsx --test **/__tests__/**/*.spec.ts",
+    "pretest:ci": "rm -rf coverage && mkdir -p coverage",
+    "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
+  },
+  "dependencies": {
+    "@hybrid-compute/core": "0.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.27.0",
+    "eslint-config-phun-ky": "^1.0.3",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.8.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

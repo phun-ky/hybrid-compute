@@ -15,12 +15,15 @@
               - '.editorconfig'
               - '.eslintignore'
               - '.eslintrc.json'
+              - '.eslint.config.mjs'
+              - '.eslint.config.cjs'
+              - '.eslint.config.js'
+              - '.eslint.config.ts'
+              - '.eslintrc'
               - '.eslintrc.js'
               - '.gitignore'
               - '.release-it.json'
-              - '.renovate.json'
               - '.npmrc'
-              - '.prettierrc'
 'context: github':
   - any:
       - changed-files:

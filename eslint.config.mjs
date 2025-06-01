@@ -1,10 +1,12 @@
-/* eslint-disable import/no-unused-modules */
-import customConfig from 'eslint-config-phun-ky';
 import { defineConfig } from 'eslint/config';
+import customConfig from 'eslint-config-phun-ky';
 
 export default defineConfig([
   {
-    extends: [customConfig]
+    extends: [customConfig],
+    rules: {
+      'import/no-unused-modules': 'off'
+    }
   },
   {
     files: ['**/*.md'],
