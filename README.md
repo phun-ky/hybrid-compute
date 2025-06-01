@@ -171,9 +171,7 @@ details.
 
 ## Changelog
 
-See the
-[CHANGELOG.md](https://github.com/phun-ky/hybrid-compute/blob/main/CHANGELOG.md)
-for details on the latest updates.
+See the respective package changelogs.
 
 ## Sponsor me
 
