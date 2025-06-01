@@ -4,10 +4,10 @@
 
 # Class: HybridCompute
 
-> Last updated 2025-05-29T13:00:13.117Z
+> Last updated 2025-06-01T19:11:58.149Z
 
 Defined in:
-[core/src/index.ts:30](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L30)
+[core/src/index.ts:32](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L32)
 
 The HybridCompute class acts as an orchestrator to delegate compute tasks across
 different backends (local, worker, or remote) using a flexible strategy.
@@ -42,7 +42,7 @@ new HybridCompute(backends): HybridCompute;
 ```
 
 Defined in:
-[core/src/index.ts:38](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L38)
+[core/src/index.ts:40](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L40)
 
 Creates a new HybridCompute orchestrator.
 
@@ -68,7 +68,7 @@ strategy): Promise<Output>;
 ```
 
 Defined in:
-[core/src/index.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L63)
+[core/src/index.ts:65](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L65)
 
 Runs a task using the specified execution strategy.
 
@@ -119,13 +119,15 @@ and
 
 I'm an Open Source evangelist, creating stuff that does not exist yet to help
 get rid of secondary activities and to enhance systems already in place, be it
-documentation or web sites.
+documentation, tools or web sites.
 
 The sponsorship is an unique opportunity to alleviate more hours for me to
 maintain my projects, create new ones and contribute to the large community
 we're all part of :)
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
+
+![@hybrid-compute banner with logo and text](https://github.com/phun-ky/speccer/blob/main/public/logo-banner.png?raw=true)
 
 ---
 

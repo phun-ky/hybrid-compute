@@ -5,28 +5,46 @@ RemoteCompute
 
 # Class: RemoteCompute
 
-> Last updated 2025-05-29T13:00:13.313Z
+> Last updated 2025-06-01T19:11:58.496Z
 
 Defined in:
-[remote/src/index.ts:29](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L29)
+[remote/src/index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L47)
 
-RemoteCompute is a backend that delegates task execution to a remote service
-over HTTP (`fetch`) or a persistent WebSocket connection.
+RemoteCompute is a backend that delegates compute tasks to a remote API using
+either HTTP requests (fetch) or a persistent WebSocket connection.
 
-It supports task registration via `canRunTasks` and routes input/output using a
-JSON-based messaging protocol. Each task request is assigned a unique ID to
-match responses (especially important for WebSocket communication).
+It supports bidirectional communication, which is useful for low-latency or
+streaming scenarios using WebSocket, or traditional stateless interaction using
+fetch.
 
-## Example
+## Remarks
+
+WebSocket-based transport allows concurrent request handling via an internal
+request/response map using `id`. This is useful when running multiple tasks in
+parallel.
+
+Fetch transport is simpler and more interoperable with typical REST APIs.
+
+## Examples
 
 ```ts
 const remote = new RemoteCompute({
   transport: 'fetch',
   endpoint: 'https://api.example.com/compute',
-  canRunTasks: ['generateReport']
+  canRunTasks: ['translateText']
 });
 
-const result = await remote.runTask('generateReport', { userId: 'abc123' });
+const result = await remote.runTask('translateText', { text: 'hello' });
+```
+
+```ts
+const remote = new RemoteCompute({
+  transport: 'websocket',
+  endpoint: 'wss://api.example.com/ws',
+  canRunTasks: ['analyzeSentiment']
+});
+
+const result = await remote.runTask('analyzeSentiment', { text: 'It works!' });
 ```
 
 ## See
@@ -47,15 +65,15 @@ new RemoteCompute(options): RemoteCompute;
 ```
 
 Defined in:
-[remote/src/index.ts:50](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L50)
+[remote/src/index.ts:66](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L66)
 
-Constructs a RemoteCompute backend with either fetch or WebSocket transport.
+Initializes the remote compute backend.
 
 #### Parameters
 
-| Parameter | Type                                                                                    | Description                                                                        |
-| --------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `options` | [`RemoteComputeOptionsInterface`](../types/interfaces/RemoteComputeOptionsInterface.md) | Configuration including transport type, endpoint URL, and optional task whitelist. |
+| Parameter | Type                                                                                    | Description                                |
+| --------- | --------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `options` | [`RemoteComputeOptionsInterface`](../types/interfaces/RemoteComputeOptionsInterface.md) | Transport type and endpoint configuration. |
 
 #### Returns
 
@@ -70,21 +88,21 @@ canRun(taskName): boolean;
 ```
 
 Defined in:
-[remote/src/index.ts:75](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L75)
+[remote/src/index.ts:91](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L91)
 
-Checks whether this backend can execute a specific task.
+Determines if this backend is allowed to handle the given task.
 
 #### Parameters
 
-| Parameter  | Type     | Description                    |
-| ---------- | -------- | ------------------------------ |
-| `taskName` | `string` | The name of the task to check. |
+| Parameter  | Type     | Description       |
+| ---------- | -------- | ----------------- |
+| `taskName` | `string` | Name of the task. |
 
 #### Returns
 
 `boolean`
 
-`true` if the task is allowed or unrestricted, `false` otherwise.
+`true` if task is permitted, or if no restrictions are set.
 
 #### Implementation of
 
@@ -99,39 +117,29 @@ runTask<Input, Output>(taskName, input): Promise<Output>;
 ```
 
 Defined in:
-[remote/src/index.ts:95](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L95)
+[remote/src/index.ts:105](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L105)
 
-Runs a task using the remote backend, via HTTP or WebSocket transport.
+Executes the specified task using remote communication.
 
 #### Type Parameters
 
-| Type Parameter | Description                                        |
-| -------------- | -------------------------------------------------- |
-| `Input`        | Input data structure expected by the task.         |
-| `Output`       | Expected output structure returned by the backend. |
+| Type Parameter | Description                                    |
+| -------------- | ---------------------------------------------- |
+| `Input`        | The input data structure expected by the task. |
+| `Output`       | The output structure returned by the task.     |
 
 #### Parameters
 
 | Parameter  | Type     | Description              |
 | ---------- | -------- | ------------------------ |
-| `taskName` | `string` | The task to run.         |
-| `input`    | `Input`  | Input data for the task. |
+| `taskName` | `string` | Name of the remote task. |
+| `input`    | `Input`  | Input data to send.      |
 
 #### Returns
 
 [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<`Output`>
 
-A Promise resolving to the output.
-
-#### Throws
-
-If transport fails or task is rejected remotely.
-
-#### Example
-
-```ts
-const output = await remote.runTask('translateText', { text: 'hello' });
-```
+A promise resolving to the result from the server.
 
 #### Implementation of
 
@@ -150,13 +158,15 @@ and
 
 I'm an Open Source evangelist, creating stuff that does not exist yet to help
 get rid of secondary activities and to enhance systems already in place, be it
-documentation or web sites.
+documentation, tools or web sites.
 
 The sponsorship is an unique opportunity to alleviate more hours for me to
 maintain my projects, create new ones and contribute to the large community
 we're all part of :)
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
+
+![@hybrid-compute banner with logo and text](https://github.com/phun-ky/speccer/blob/main/public/logo-banner.png?raw=true)
 
 ---
 

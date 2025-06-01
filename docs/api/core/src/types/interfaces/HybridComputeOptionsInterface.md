@@ -5,7 +5,7 @@ HybridComputeOptionsInterface
 
 # Interface: HybridComputeOptionsInterface
 
-> Last updated 2025-05-29T13:00:13.239Z
+> Last updated 2025-06-01T19:11:58.348Z
 
 Defined in:
 [core/src/types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L84)
@@ -50,13 +50,15 @@ and
 
 I'm an Open Source evangelist, creating stuff that does not exist yet to help
 get rid of secondary activities and to enhance systems already in place, be it
-documentation or web sites.
+documentation, tools or web sites.
 
 The sponsorship is an unique opportunity to alleviate more hours for me to
 maintain my projects, create new ones and contribute to the large community
 we're all part of :)
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
+
+![@hybrid-compute banner with logo and text](https://github.com/phun-ky/speccer/blob/main/public/logo-banner.png?raw=true)
 
 ---
 

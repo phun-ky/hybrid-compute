@@ -1,33 +1,10 @@
 <div><img alt="hybrid-compute logo" src="https://raw.githubusercontent.com/phun-ky/hybrid-compute/main/public/logo-hybrid-compute-horizontal-colored-package.svg?raw=true" style="max-height:32px;"/></div>
 
-[hybrid-compute](../../../README.md) / [local/src](../README.md) /
-createLocalCompute
+[hybrid-compute](../../../../README.md) / local/src/\_\_tests\_\_/local.spec
 
-# Function: createLocalCompute()
+# local/src/\_\_tests\_\_/local.spec
 
-> Last updated 2025-06-01T19:11:58.462Z
-
-```ts
-function createLocalCompute(): LocalCompute;
-```
-
-Defined in:
-[local/src/index.ts:96](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L96)
-
-Factory function to create a new LocalCompute backend instance.
-
-## Returns
-
-[`LocalCompute`](../classes/LocalCompute.md)
-
-A new `LocalCompute` instance with empty task registry.
-
-## Example
-
-```ts
-const compute = createLocalCompute();
-compute.runTask(…);
-```
+> Last updated 2025-06-01T19:11:58.475Z
 
 ---
 

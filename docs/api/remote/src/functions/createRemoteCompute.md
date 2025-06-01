@@ -5,38 +5,28 @@ createRemoteCompute
 
 # Function: createRemoteCompute()
 
-> Last updated 2025-05-29T13:00:13.330Z
+> Last updated 2025-06-01T19:11:58.535Z
 
 ```ts
 function createRemoteCompute(options): RemoteCompute;
 ```
 
 Defined in:
-[remote/src/index.ts:142](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L142)
+[remote/src/index.ts:143](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L143)
 
-Factory function for creating a RemoteCompute instance.
+Factory to create a RemoteCompute instance with given options.
 
 ## Parameters
 
-| Parameter | Type                                                                                    | Description                                            |
-| --------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| `options` | [`RemoteComputeOptionsInterface`](../types/interfaces/RemoteComputeOptionsInterface.md) | The backend transport type and endpoint configuration. |
+| Parameter | Type                                                                                    | Description                      |
+| --------- | --------------------------------------------------------------------------------------- | -------------------------------- |
+| `options` | [`RemoteComputeOptionsInterface`](../types/interfaces/RemoteComputeOptionsInterface.md) | Remote connection configuration. |
 
 ## Returns
 
 [`RemoteCompute`](../classes/RemoteCompute.md)
 
-A new `RemoteCompute` instance.
-
-## Example
-
-```ts
-const remote = createRemoteCompute({
-  transport: 'websocket',
-  endpoint: 'wss://example.org/ws',
-  canRunTasks: ['analyzeSentiment']
-});
-```
+Instance of RemoteCompute.
 
 ---
 
@@ -51,13 +41,15 @@ and
 
 I'm an Open Source evangelist, creating stuff that does not exist yet to help
 get rid of secondary activities and to enhance systems already in place, be it
-documentation or web sites.
+documentation, tools or web sites.
 
 The sponsorship is an unique opportunity to alleviate more hours for me to
 maintain my projects, create new ones and contribute to the large community
 we're all part of :)
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
+
+![@hybrid-compute banner with logo and text](https://github.com/phun-ky/speccer/blob/main/public/logo-banner.png?raw=true)
 
 ---
 
