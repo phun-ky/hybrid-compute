@@ -12,12 +12,6 @@
     "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
   },
   "plugins": {
-    "@release-it/bumper": {
-      "out": {
-        "file": "package.json",
-        "path": ["dependencies.@hybrid-compute/core"]
-      }
-    },
     "@release-it/conventional-changelog": {
       "header": "# Changelog",
       "preset": {
