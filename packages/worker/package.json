@@ -28,6 +28,7 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "release": "release-it",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "test": "tsx --test **/__tests__/**/*.spec.ts",
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",

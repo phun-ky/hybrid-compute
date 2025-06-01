@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@release-it/bumper": "^7.0.5",
+    "@release-it/conventional-changelog": "^10.0.1",
     "cobertura": "^1.0.3",
     "git-cz": "^4.9.0",
     "glob": "^11.0.2",
