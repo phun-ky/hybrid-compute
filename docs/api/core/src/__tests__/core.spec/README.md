@@ -4,7 +4,7 @@
 
 # core/src/\_\_tests\_\_/core.spec
 
-> Last updated 2025-06-01T19:11:58.242Z
+> Last updated 2025-06-01T19:18:21.249Z
 
 ---
 
