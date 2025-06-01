@@ -1,5 +1,7 @@
 export * from './types.js';
 
+import { isNotString } from '@phun-ky/typeof';
+
 import {
   ExecutionStrategyType,
   HybridComputeOptionsInterface
@@ -65,6 +67,11 @@ export class HybridCompute {
     input: Input,
     strategy: ExecutionStrategyType = 'auto'
   ): Promise<Output> {
+    if (isNotString(strategy)) {
+      console.info("Wrong type passed for `strategy`, defaulting to 'auto'");
+      strategy = 'auto';
+    }
+
     if (strategy === 'local' && this.backends.local) {
       return this.backends.local.runTask(taskName, input);
     } else if (strategy === 'worker' && this.backends.worker) {
