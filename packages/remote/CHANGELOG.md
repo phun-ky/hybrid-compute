@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.6](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/remote@0.0.5...@hybrid-compute/remote@0.0.6) (2025-06-01)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.7 ([2d9b75c](https://github.com/phun-ky/hybrid-compute/commit/2d9b75c3f72784f196e58b2f6ba7b66082229347))
+* 🤖 @hybrid-compute/local@0.0.6 ([76950bb](https://github.com/phun-ky/hybrid-compute/commit/76950bb18413a55782f49c06def100d5ba569c7c))
+* 🤖 @hybrid-compute/worker@0.0.5 ([25aea11](https://github.com/phun-ky/hybrid-compute/commit/25aea11d7a953db1c3b255efd7a6dbcc03bc43f6))
+* 🤖 Add logo ([5dc5851](https://github.com/phun-ky/hybrid-compute/commit/5dc5851355bf9342045b54df03f1ed919cd5b4bd))
+* 🤖 Sort the `package.json`-files ([d83d2d2](https://github.com/phun-ky/hybrid-compute/commit/d83d2d2fbfbb48681b7366dc86254635fb91c691))
+* 🤖 Testing something ([0042a67](https://github.com/phun-ky/hybrid-compute/commit/0042a671fb12b987d07537e95db54bd9a77594f2))
+
+### Bug
+
+* 🐛 Fake a lerna enviroment to detect packages changed ([7616639](https://github.com/phun-ky/hybrid-compute/commit/7616639ab7c6b2dea7b145ea1b8651802662d46a)), closes [#2](https://github.com/phun-ky/hybrid-compute/issues/2)
+
+### Refactoring
+
+* 💡 Adjust release strategy ([6ceb0af](https://github.com/phun-ky/hybrid-compute/commit/6ceb0afd954348fb74643b7b4fa27874e621180e))
+
 ## 0.0.5 (2025-06-01)
 
 ### Tasks
