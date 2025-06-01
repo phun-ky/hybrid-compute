@@ -37,7 +37,7 @@
     "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
     "docs": "typedoc",
-    "prerelease": "npm run build && npm run docs",
+    "prerelease": "npm run build && npm run docs && git add .",
     "release": "npm run release --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:ci": "npm run test:ci --workspaces --if-present"
