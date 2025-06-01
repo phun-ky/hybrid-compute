@@ -13,6 +13,7 @@ on:
       - 'docs/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'tsconfig.base.json'
       - 'tsconfig.json'
       - '.npmrc'
       - '.release-it.json'

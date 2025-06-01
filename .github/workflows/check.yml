@@ -10,20 +10,36 @@ on:
     paths:
       - '.github/**'
       - 'src/**'
+      - 'docs/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'tsconfig.base.json'
       - 'tsconfig.json'
       - '.npmrc'
+      - '.release-it.json'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'SECURITY.md'
+      - '.browserlistrc'
   pull_request:
     branches: ['main']
     types: [opened, synchronize] # Workflow triggering events
     paths:
       - '.github/**'
       - 'src/**'
+      - 'docs/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'tsconfig.base.json'
       - 'tsconfig.json'
       - '.npmrc'
+      - '.release-it.json'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'SECURITY.md'
+      - '.browserlistrc'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
