@@ -16,6 +16,7 @@
     "paths": {
       "@hybrid-compute/core": ["packages/core/src"],
       "@hybrid-compute/local": ["packages/local/src"],
+      "@hybrid-compute/remote": ["packages/remote/src"],
       "@hybrid-compute/worker": ["packages/worker/src"]
     }
   },

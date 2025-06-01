@@ -12,8 +12,8 @@
   "entryPoints": [
     "packages/core/src",
     "packages/local/src",
-    "packages/worker/src",
-    "packages/remote/src"
+    "packages/remote/src",
+    "packages/worker/src"
   ],
   "entryPointStrategy": "expand",
   "interfacePropertiesFormat": "table",

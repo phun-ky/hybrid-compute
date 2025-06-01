@@ -3,6 +3,7 @@
   "references": [
     { "path": "packages/core" },
     { "path": "packages/local" },
+    { "path": "packages/remote" },
     { "path": "packages/worker" }
   ],
   "extends": "./tsconfig.base.json"
