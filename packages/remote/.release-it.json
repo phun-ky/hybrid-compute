@@ -1,6 +1,13 @@
 {
-  "git": false,
-  "github": false,
+  "git": {
+    "requireCleanWorkingDir": false,
+    "tagName": "@hybrid-compute/remote@${version}",
+    "commitMessage": "chore: 🤖 ${name}@${version}"
+  },
+  "github": {
+    "release": true,
+    "tokenRef": "GH_TOKEN"
+  },
   "npm": {
     "publish": true,
     "skipChecks": true

@@ -40,7 +40,7 @@
     "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
     "docs": "typedoc",
-    "release": "npm run release --workspaces && release-it",
+    "release": "npm run release --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:ci": "npm run test:ci --workspaces --if-present"
   },
