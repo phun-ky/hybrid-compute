@@ -26,6 +26,8 @@ The sponsorship is an unique opportunity to alleviate more hours for me to maint
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
 
+![@hybrid-compute banner with logo and text](https://github.com/phun-ky/speccer/blob/main/public/logo-banner.png?raw=true)
+
 ***
 
 This project created by [Alexander Vassbotn Røyne-Helgesen](http://phun-ky.net) is licensed under a [MIT License](https://choosealicense.com/licenses/mit/).
