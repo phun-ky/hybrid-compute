@@ -5,7 +5,7 @@ createThreadedCompute
 
 # Function: createThreadedCompute()
 
-> Last updated 2025-06-16T14:53:14.838Z
+> Last updated 2025-06-16T18:17:28.364Z
 
 ```ts
 function createThreadedCompute(workerPath, tasks): ThreadedCompute;
