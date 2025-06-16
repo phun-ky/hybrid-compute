@@ -198,7 +198,7 @@ e.g. to [Red Cross](https://www.icrc.org/en/donate/ukraine),
 or
 [donate Ambulances for Ukraine](https://www.gofundme.com/f/help-to-save-the-lives-of-civilians-in-a-war-zone).
 
-> Last updated 2025-06-09T10:17:01.956Z
+> Last updated 2025-06-16T14:53:13.975Z
 
 ## Modules
 
