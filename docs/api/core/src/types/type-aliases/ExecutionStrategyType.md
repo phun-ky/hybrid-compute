@@ -5,7 +5,7 @@ ExecutionStrategyType
 
 # Type Alias: ExecutionStrategyType
 
-> Last updated 2025-06-23T06:09:48.236Z
+> Last updated 2025-06-23T07:58:19.464Z
 
 ```ts
 type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
