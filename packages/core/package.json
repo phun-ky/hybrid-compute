@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/core",
-  "version": "0.0.9",
+  "version": "0.0.14",
   "description": "Core orchestrator for dispatching compute tasks to local, threaded, or remote backends.",
   "keywords": [
     "compute",
@@ -38,7 +38,7 @@
     "@phun-ky/typeof": "^1.2.15"
   },
   "devDependencies": {
-    "@types/node": "^22.15.24",
+    "@types/node": "^24.0.3",
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.5.3",

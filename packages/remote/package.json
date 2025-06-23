@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/remote",
-  "version": "0.0.8",
+  "version": "0.0.13",
   "description": "Remote compute backend using fetch or WebSocket transport for distributed task execution.",
   "keywords": [
     "remote",
@@ -36,7 +36,7 @@
     "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@hybrid-compute/core": "0.0.8"
+    "@hybrid-compute/core": "0.0.13"
   },
   "devDependencies": {
     "eslint": "^9.27.0",
