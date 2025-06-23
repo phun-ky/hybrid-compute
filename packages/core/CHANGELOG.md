@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.0.14...@hybrid-compute/core@0.1.0) (2025-06-23)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.0.13 ([b6bf061](https://github.com/phun-ky/hybrid-compute/commit/b6bf0617bb3b5a8dfc22fddf634e07698f3df13e))
+* 🤖 @hybrid-compute/remote@0.0.13 ([c349cb9](https://github.com/phun-ky/hybrid-compute/commit/c349cb9b1ecf1ec2a1cf6565f84601f28f6143d6))
+* 🤖 @hybrid-compute/worker@0.0.13 ([290e15a](https://github.com/phun-ky/hybrid-compute/commit/290e15a7472062ec44a7b55d185dc94d38bb317d))
+
+### Documentation
+
+* ✏️ Add more examples ([d874e1d](https://github.com/phun-ky/hybrid-compute/commit/d874e1d044eadf94c6641e2e01b134fd04ec0799))
+
+### Feature
+
+* 🎸 Add svg logo ([ea5f9d2](https://github.com/phun-ky/hybrid-compute/commit/ea5f9d23fedda902ca3344e0b207bb7b2c647020))
+
 ## [0.0.14](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.0.13...@hybrid-compute/core@0.0.14) (2025-06-23)
 
 ### Tasks
