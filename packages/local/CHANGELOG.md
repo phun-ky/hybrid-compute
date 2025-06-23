@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.0.13](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.12...@hybrid-compute/local@0.0.13) (2025-06-23)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.14 ([8d9be77](https://github.com/phun-ky/hybrid-compute/commit/8d9be777ff3267039dca971e9efc5bf3793f5fc5))
+* 🤖 @hybrid-compute/remote@0.0.12 ([48bbfdd](https://github.com/phun-ky/hybrid-compute/commit/48bbfddc55db3f384499f62b3ace889717d37859))
+* 🤖 @hybrid-compute/worker@0.0.12 ([08968b7](https://github.com/phun-ky/hybrid-compute/commit/08968b78224ed8184dba3bfd0aefa420f9df01d1))
+* 🤖 bump the minor-and-patch group with 4 updates ([f38077a](https://github.com/phun-ky/hybrid-compute/commit/f38077a03966e6019ac79d80cab786d181e325b2))
+
+## [0.0.12](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.11...@hybrid-compute/local@0.0.12) (2025-06-16)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.13 ([ea30edb](https://github.com/phun-ky/hybrid-compute/commit/ea30edb62ae1bdc00ece6f1a836e49b341b53210))
+* 🤖 @hybrid-compute/remote@0.0.11 ([4c6f5b4](https://github.com/phun-ky/hybrid-compute/commit/4c6f5b4ce8ed23bac2fff4c8c09cf31ca75492d4))
+* 🤖 @hybrid-compute/worker@0.0.11 ([389b007](https://github.com/phun-ky/hybrid-compute/commit/389b007ed1043d694dd735e2a613dc49a57d484e))
+* 🤖 bump @types/node in the major-updates group ([42a0416](https://github.com/phun-ky/hybrid-compute/commit/42a041651e5d89d259fd97fafd1826a5d6a8b1ba))
+
+## [0.0.11](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.10...@hybrid-compute/local@0.0.11) (2025-06-16)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.12 ([71642c2](https://github.com/phun-ky/hybrid-compute/commit/71642c2f5ab95a383557cda784d034f025039dd6))
+* 🤖 @hybrid-compute/remote@0.0.10 ([7480939](https://github.com/phun-ky/hybrid-compute/commit/7480939063d47a139068883f252f058c89b30982))
+* 🤖 @hybrid-compute/worker@0.0.10 ([2c3dfdb](https://github.com/phun-ky/hybrid-compute/commit/2c3dfdbaad714db9412cc571bfcd4d8053b9b32a))
+* 🤖 bump the minor-and-patch group with 5 updates ([73a94c1](https://github.com/phun-ky/hybrid-compute/commit/73a94c10cdbc8c8a86111876d2db5dde917600b7))
+
+## [0.0.10](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.9...@hybrid-compute/local@0.0.10) (2025-06-09)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.11 ([03a9254](https://github.com/phun-ky/hybrid-compute/commit/03a9254068291347d967c9c37add31ad69eccd32))
+* 🤖 @hybrid-compute/remote@0.0.9 ([9de61e6](https://github.com/phun-ky/hybrid-compute/commit/9de61e6b69c1ba177b2d89cad69b6a0cf1c1dcf4))
+* 🤖 @hybrid-compute/worker@0.0.9 ([4874d54](https://github.com/phun-ky/hybrid-compute/commit/4874d54de5009262f8f343372d82a04f497b1e22))
+* 🤖 bump the minor-and-patch group with 3 updates ([a463832](https://github.com/phun-ky/hybrid-compute/commit/a4638324655189348b8728f76786ade13e207599))
+
+## [0.0.9](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.8...@hybrid-compute/local@0.0.9) (2025-06-01)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.0.10 ([a6ee116](https://github.com/phun-ky/hybrid-compute/commit/a6ee116d2bd4a00d90f8d42a4ac751954d07fb92))
+* 🤖 @hybrid-compute/remote@0.0.8 ([b5d4b19](https://github.com/phun-ky/hybrid-compute/commit/b5d4b1927b3eefe9e586e1de50241e8827540fe6))
+* 🤖 @hybrid-compute/worker@0.0.8 ([df45110](https://github.com/phun-ky/hybrid-compute/commit/df45110680ec79c3641daee11e92b0eaaff37429))
+
+### Bug
+
+* 🐛 Use correct link to image ([4ecc4a4](https://github.com/phun-ky/hybrid-compute/commit/4ecc4a42459f62100b5036b36f26e64c8969de67))
+
 ## [0.0.8](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.0.7...@hybrid-compute/local@0.0.8) (2025-06-01)
 
 ### Tasks
