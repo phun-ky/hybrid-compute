@@ -5,7 +5,7 @@ createHybridCompute
 
 # Function: createHybridCompute()
 
-> Last updated 2025-06-23T07:58:19.352Z
+> Last updated 2025-07-07T13:14:13.657Z
 
 ```ts
 function createHybridCompute(backends): HybridCompute;
