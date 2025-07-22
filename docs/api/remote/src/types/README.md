@@ -4,7 +4,7 @@
 
 # remote/src/types
 
-> Last updated 2025-07-20T09:07:20.458Z
+> Last updated 2025-07-22T17:47:20.211Z
 
 ## Interfaces
 
