@@ -4,7 +4,7 @@
 
 # Class: HybridCompute
 
-> Last updated 2025-07-22T17:47:19.868Z
+> Last updated 2025-07-28T04:45:47.197Z
 
 Defined in:
 [core/src/index.ts:32](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L32)
