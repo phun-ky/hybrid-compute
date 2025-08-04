@@ -5,7 +5,7 @@ RemoteComputeOptionsInterface
 
 # Interface: RemoteComputeOptionsInterface
 
-> Last updated 2025-07-28T04:45:47.615Z
+> Last updated 2025-08-04T06:19:02.956Z
 
 Defined in:
 [remote/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L34)

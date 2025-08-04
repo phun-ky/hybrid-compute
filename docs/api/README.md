@@ -485,7 +485,7 @@ e.g. to [Red Cross](https://www.icrc.org/en/donate/ukraine),
 or
 [donate Ambulances for Ukraine](https://www.gofundme.com/f/help-to-save-the-lives-of-civilians-in-a-war-zone).
 
-> Last updated 2025-07-28T04:45:46.746Z
+> Last updated 2025-08-04T06:19:02.202Z
 
 ## Modules
 

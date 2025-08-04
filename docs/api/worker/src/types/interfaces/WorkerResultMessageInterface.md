@@ -5,7 +5,7 @@ WorkerResultMessageInterface
 
 # Interface: WorkerResultMessageInterface
 
-> Last updated 2025-07-28T04:45:47.727Z
+> Last updated 2025-08-04T06:19:03.060Z
 
 Defined in:
 [worker/src/types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L48)
