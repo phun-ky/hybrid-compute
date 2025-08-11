@@ -5,7 +5,7 @@ createLocalCompute
 
 # Function: createLocalCompute()
 
-> Last updated 2025-08-04T06:19:02.852Z
+> Last updated 2025-08-11T05:49:01.286Z
 
 ```ts
 function createLocalCompute(): LocalCompute;

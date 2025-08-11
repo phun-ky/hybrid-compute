@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/core",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Core orchestrator for dispatching compute tasks to local, threaded, or remote backends.",
   "keywords": [
     "compute",
