@@ -4,7 +4,7 @@
 
 # core/src/types
 
-> Last updated 2025-08-26T10:08:00.330Z
+> Last updated 2025-09-01T12:36:28.931Z
 
 ## Interfaces
 

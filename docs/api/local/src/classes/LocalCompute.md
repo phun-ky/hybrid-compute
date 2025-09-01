@@ -4,7 +4,7 @@
 
 # Class: LocalCompute
 
-> Last updated 2025-08-26T10:08:00.444Z
+> Last updated 2025-09-01T12:36:29.037Z
 
 Defined in:
 [local/src/index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L27)
