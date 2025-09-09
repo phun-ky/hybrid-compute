@@ -5,7 +5,7 @@ ComputeTaskInterface
 
 # Interface: ComputeTaskInterface\<Input, Output>
 
-> Last updated 2025-09-08T05:21:15.835Z
+> Last updated 2025-09-09T07:55:14.856Z
 
 Defined in:
 [core/src/types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L33)

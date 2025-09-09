@@ -5,7 +5,7 @@ ComputeBackendInterface
 
 # Interface: ComputeBackendInterface
 
-> Last updated 2025-09-08T05:21:15.802Z
+> Last updated 2025-09-09T07:55:14.825Z
 
 Defined in:
 [core/src/types.ts:59](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L59)

@@ -4,7 +4,7 @@
 
 # worker/src/types
 
-> Last updated 2025-09-08T05:21:16.122Z
+> Last updated 2025-09-09T07:55:15.152Z
 
 ## Interfaces
 

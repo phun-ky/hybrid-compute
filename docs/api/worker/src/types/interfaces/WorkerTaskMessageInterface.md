@@ -5,7 +5,7 @@ WorkerTaskMessageInterface
 
 # Interface: WorkerTaskMessageInterface
 
-> Last updated 2025-09-08T05:21:16.146Z
+> Last updated 2025-09-09T07:55:15.174Z
 
 Defined in:
 [worker/src/types.ts:21](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L21)
