@@ -5,7 +5,7 @@ HybridComputeOptionsInterface
 
 # Interface: HybridComputeOptionsInterface
 
-> Last updated 2025-09-23T05:22:17.882Z
+> Last updated 2025-09-29T08:40:34.136Z
 
 Defined in:
 [core/src/types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L84)
