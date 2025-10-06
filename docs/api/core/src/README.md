@@ -4,7 +4,7 @@
 
 # core/src
 
-> Last updated 2025-09-29T08:40:33.961Z
+> Last updated 2025-10-06T12:00:48.477Z
 
 ## Classes
 
