@@ -40,7 +40,12 @@
     "frontend-compute",
     "browser-compute",
     "isomorphic",
-    "cross-environment"
+    "cross-environment",
+    "wasm",
+    "llm",
+    "stream",
+    "web-rtc",
+    "web-assembly"
   ],
   "homepage": "https://phun-ky.net/projects/hybrid-compute",
   "bugs": {

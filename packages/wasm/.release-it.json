@@ -1,0 +1,75 @@
+{
+  "git": {
+    "requireCleanWorkingDir": false,
+    "tagName": "@hybrid-compute/wasm@${version}",
+    "commitMessage": "chore: 🤖 ${name}@${version}"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "@hybrid-compute/wasm@${version}",
+    "tokenRef": "GH_TOKEN"
+  },
+  "npm": {
+    "publish": true,
+    "skipChecks": true
+  },
+  "hooks": {
+    "after:release": "echo Successfully released ${name} v${version}."
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "out": {
+        "file": "package.json",
+        "path": ["dependencies.@hybrid-compute/core"]
+      }
+    },
+    "@release-it/conventional-changelog": {
+      "header": "# Changelog",
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "chore",
+            "section": "Tasks"
+          },
+          {
+            "type": "docs",
+            "section": "Documentation"
+          },
+          {
+            "type": "feat",
+            "section": "Feature"
+          },
+          {
+            "type": "fix",
+            "section": "Bug"
+          },
+          {
+            "type": "perf",
+            "section": "Performance change"
+          },
+          {
+            "type": "refactor",
+            "section": "Refactoring"
+          },
+          {
+            "type": "release",
+            "section": "Create a release commit",
+            "hidden": true
+          },
+          {
+            "type": "style",
+            "section": "Markup, white-space, formatting, missing semi-colons...",
+            "hidden": true
+          },
+          {
+            "type": "test",
+            "section": "Adding missing tests",
+            "hidden": true
+          }
+        ]
+      },
+      "infile": "CHANGELOG.md"
+    }
+  }
+}

@@ -13,6 +13,7 @@
     "packages/core/src",
     "packages/local/src",
     "packages/remote/src",
+    "packages/wasm/src",
     "packages/worker/src"
   ],
   "entryPointStrategy": "expand",
