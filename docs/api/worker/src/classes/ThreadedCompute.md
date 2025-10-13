@@ -5,7 +5,7 @@ ThreadedCompute
 
 # Class: ThreadedCompute
 
-> Last updated 2025-09-01T12:36:29.215Z
+> Last updated 2025-10-13T06:51:07.470Z
 
 Defined in:
 [worker/src/index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L27)
