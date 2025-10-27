@@ -5,7 +5,7 @@ createRemoteCompute
 
 # Function: createRemoteCompute()
 
-> Last updated 2025-10-20T07:10:16.318Z
+> Last updated 2025-10-27T10:56:59.292Z
 
 ```ts
 function createRemoteCompute(options): RemoteCompute;
