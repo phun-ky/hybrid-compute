@@ -4,7 +4,7 @@
 
 # worker/src
 
-> Last updated 2025-10-27T10:56:59.349Z
+> Last updated 2025-11-03T12:14:12.777Z
 
 ## Classes
 
