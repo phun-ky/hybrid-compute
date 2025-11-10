@@ -5,7 +5,7 @@ RemoteCompute
 
 # Class: RemoteCompute
 
-> Last updated 2025-11-03T12:14:12.687Z
+> Last updated 2025-11-10T09:41:49.506Z
 
 Defined in:
 [remote/src/index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L47)
