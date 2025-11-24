@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.21.0](///compare/@hybrid-compute/local@0.20.0...@hybrid-compute/local@0.21.0) (2025-11-24)
+
 ## [0.20.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/local@0.19.0...@hybrid-compute/local@0.20.0) (2025-11-10)
 
 ### Tasks
