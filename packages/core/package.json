@@ -38,7 +38,7 @@
     "@phun-ky/typeof": "^2.0.1"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3",
+    "@types/node": "^25.0.2",
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.5.3",
