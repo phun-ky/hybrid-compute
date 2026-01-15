@@ -4,6 +4,7 @@
     { "path": "packages/core" },
     { "path": "packages/local" },
     { "path": "packages/remote" },
+    { "path": "packages/wasm" },
     { "path": "packages/worker" }
   ],
   "extends": "./tsconfig.base.json"
