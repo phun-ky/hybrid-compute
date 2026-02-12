@@ -33,7 +33,10 @@ export default withMermaid(
     },
     lang: 'en-GB',
     head: [
-      ['meta', { property: 'og:url', content: 'https://hybrid-compute.dev' }],
+      [
+        'meta',
+        { property: 'og:url', content: 'https://phun-ky.net/hybrid-compute/' }
+      ],
       ['meta', { property: 'og:type', content: 'website' }],
       [
         'meta',
@@ -63,7 +66,7 @@ export default withMermaid(
         {
           property: 'og:image',
           content:
-            'https://opengraph.githubassets.com/67b2a057c3b6fe59450314613d107981641cea26e781e5b1bf14338855180880/phun-ky/hybrid-compute/pull/32'
+            'https://repository-images.githubusercontent.com/992105751/b7ca30bb-f4b8-4dcf-9331-f9f9c8d45e3e'
         }
       ],
       ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -72,7 +75,7 @@ export default withMermaid(
         'meta',
         {
           property: 'twitter:url',
-          content: 'https://hybrid-compute.dev'
+          content: 'https://phun-ky.net/hybrid-compute/'
         }
       ],
       [
@@ -95,7 +98,7 @@ export default withMermaid(
         {
           name: 'twitter:image',
           content:
-            'https://opengraph.githubassets.com/67b2a057c3b6fe59450314613d107981641cea26e781e5b1bf14338855180880/phun-ky/hybrid-compute/pull/32'
+            'https://repository-images.githubusercontent.com/992105751/b7ca30bb-f4b8-4dcf-9331-f9f9c8d45e3e'
         }
       ]
     ],
@@ -156,11 +159,7 @@ export default withMermaid(
         }
       ],
       socialLinks: [
-        { icon: 'github', link: 'https://github.com/phun-ky/hybrid-compute' },
-        {
-          icon: 'npm',
-          link: 'https://www.npmjs.com/package/@phun-ky/hybrid-compute'
-        }
+        { icon: 'github', link: 'https://github.com/phun-ky/hybrid-compute' }
       ],
       footer: {
         message:
