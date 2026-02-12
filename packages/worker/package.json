@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/worker",
-  "version": "0.16.0",
+  "version": "0.22.0",
   "description": "Threaded compute backend for executing tasks in Web Workers.",
   "keywords": [
     "web-worker",
@@ -32,10 +32,10 @@
     "release": "release-it",
     "test": "tsx --test **/__tests__/**/*.spec.ts",
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
-    "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
+    "test:ci": "glob-bin -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@hybrid-compute/core": "0.16.0"
+    "@hybrid-compute/core": "0.22.0"
   },
   "devDependencies": {
     "eslint": "^9.27.0",

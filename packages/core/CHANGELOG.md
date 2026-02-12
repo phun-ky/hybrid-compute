@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.22.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.21.0...@hybrid-compute/core@0.22.0) (2026-02-12)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.21.0 ([02dd3f8](https://github.com/phun-ky/hybrid-compute/commit/02dd3f848a220922a0ab388275dd21fe8a43b9fd))
+* 🤖 @hybrid-compute/remote@0.21.0 ([cd59e28](https://github.com/phun-ky/hybrid-compute/commit/cd59e28dba9eb61bc393f580c9884983bde094dd))
+* 🤖 @hybrid-compute/worker@0.21.0 ([f1c1a3d](https://github.com/phun-ky/hybrid-compute/commit/f1c1a3d7f12b465a2c2a824a862eb4effbea210a))
+* 🤖 bump the major-updates group across 1 directory with 2 updates ([1f73fdb](https://github.com/phun-ky/hybrid-compute/commit/1f73fdb36f258af191f8c3b901dc9ff94d34b7bc))
+* 🤖 bump the major-updates group across 1 directory with 3 updates ([e2defae](https://github.com/phun-ky/hybrid-compute/commit/e2defae02a5c1ffe49a3314eb26b453edb45d965))
+* 🤖 Ensure that we can use trusted publishing ([8c1c34b](https://github.com/phun-ky/hybrid-compute/commit/8c1c34bf2db8fe172c10bf4066d0f4cd75c234e6))
+
+### Refactoring
+
+* 💡 Replace glob with glob-bin ([98cc893](https://github.com/phun-ky/hybrid-compute/commit/98cc8932bee41bfdb7eb2b668b039def35867402))
+
+## [0.21.0](///compare/@hybrid-compute/core@0.20.0...@hybrid-compute/core@0.21.0) (2025-11-24)
+
+## [0.20.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.19.0...@hybrid-compute/core@0.20.0) (2025-11-10)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.19.0 ([cd21c27](https://github.com/phun-ky/hybrid-compute/commit/cd21c27a1bef55ec839241b55ad37758cab293ef))
+* 🤖 @hybrid-compute/remote@0.19.0 ([33c86f7](https://github.com/phun-ky/hybrid-compute/commit/33c86f7758c1ff163ff110bd8421a456144bd29b))
+* 🤖 @hybrid-compute/worker@0.19.0 ([9d81006](https://github.com/phun-ky/hybrid-compute/commit/9d81006ad35f87ccaa3a43f72d92a71c39b3b601))
+* 🤖 bump the minor-and-patch group with 4 updates ([3308e0e](https://github.com/phun-ky/hybrid-compute/commit/3308e0e94a20e238eff31c59eeee42175f94023d))
+
+## [0.19.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.18.0...@hybrid-compute/core@0.19.0) (2025-11-03)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.18.0 ([b1911b7](https://github.com/phun-ky/hybrid-compute/commit/b1911b76ef7f2b98d46a453e495d3a2a4ee0eb2e))
+* 🤖 @hybrid-compute/remote@0.18.0 ([2a48581](https://github.com/phun-ky/hybrid-compute/commit/2a485817328251021029692781881f0d10c4ebca))
+* 🤖 @hybrid-compute/worker@0.18.0 ([c93812a](https://github.com/phun-ky/hybrid-compute/commit/c93812a16e6a68bb8610ad067ac147eabb2a9f37))
+* 🤖 bump the minor-and-patch group with 4 updates ([85a11e2](https://github.com/phun-ky/hybrid-compute/commit/85a11e2a4ef9ddacc86dcbbcbb774c9b94ed43e9))
+
+## [0.18.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.17.0...@hybrid-compute/core@0.18.0) (2025-10-27)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.17.0 ([e40d278](https://github.com/phun-ky/hybrid-compute/commit/e40d278265173ef074e31addd504814da6ac2b0e))
+* 🤖 @hybrid-compute/remote@0.17.0 ([f388192](https://github.com/phun-ky/hybrid-compute/commit/f388192c7f48929acafdc619de04dc1a0eb31095))
+* 🤖 @hybrid-compute/worker@0.17.0 ([3ddffe6](https://github.com/phun-ky/hybrid-compute/commit/3ddffe6cb90869bc2360214da893ed3fc0b7d83b))
+* 🤖 bump the minor-and-patch group with 3 updates ([8e68891](https://github.com/phun-ky/hybrid-compute/commit/8e68891d76ce21f65e89a79d06b6421545ef62b7))
+
+## [0.17.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.16.0...@hybrid-compute/core@0.17.0) (2025-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.16.0 ([c67ad06](https://github.com/phun-ky/hybrid-compute/commit/c67ad060357d5c871ac9c04906ed69899841a703))
+* 🤖 @hybrid-compute/remote@0.16.0 ([2e1f2b7](https://github.com/phun-ky/hybrid-compute/commit/2e1f2b77c42bb97995a493e33dd23f0ccd76dd09))
+* 🤖 @hybrid-compute/worker@0.16.0 ([d18b162](https://github.com/phun-ky/hybrid-compute/commit/d18b1627450f81cebf05c918aed3d623166849b5))
+* 🤖 bump the minor-and-patch group with 3 updates ([892ab37](https://github.com/phun-ky/hybrid-compute/commit/892ab37fe53b39f11b7c73276ff202f0c6962fb2))
+
 ## [0.16.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.15.0...@hybrid-compute/core@0.16.0) (2025-10-13)
 
 ### Tasks

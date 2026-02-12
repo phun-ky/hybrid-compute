@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/core",
-  "version": "0.16.0",
+  "version": "0.22.0",
   "description": "Core orchestrator for dispatching compute tasks to local, threaded, or remote backends.",
   "keywords": [
     "compute",
@@ -32,13 +32,13 @@
     "release": "release-it",
     "test": "tsx --test **/__tests__/**/*.spec.ts",
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
-    "test:ci": "glob -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
+    "test:ci": "glob-bin -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
     "@phun-ky/typeof": "^2.0.1"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3",
+    "@types/node": "^25.2.3",
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.5.3",
