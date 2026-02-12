@@ -18,9 +18,9 @@ npm install @hybrid-compute/core @hybrid-compute/local
 yarn add @hybrid-compute/core @hybrid-compute/local
 ```
 
-## Example
-
 :::
+
+## Example
 
 ```ts
 import { createHybridCompute } from '@hybrid-compute/core';
@@ -33,9 +33,8 @@ const echoTask = {
     return `Echo: ${input}`;
   }
 };
-
-// Set up the local backend and register the task
 const local = createLocalCompute();
+
 local.registerTask(echoTask);
 
 // Set up the HybridCompute instance with only the local backend
@@ -47,6 +46,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Hello from HybridCompute!');
+
     console.log(result); // Output: Echo: Hello from HybridCompute!
   } catch (error) {
     console.error('Task failed:', error);
