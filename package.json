@@ -62,7 +62,7 @@
     "build": "tsc -b",
     "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
-    "docs:gen": "node ./node_modules/.bin/typedoc",
+    "docs:gen": "typedoc",
     "predocs:dev": "npm run docs:gen",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
