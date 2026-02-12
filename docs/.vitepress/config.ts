@@ -1,0 +1,219 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { defineConfig } from 'vitepress';
+import {
+  groupIconMdPlugin,
+  groupIconVitePlugin
+} from 'vitepress-plugin-group-icons';
+import { withMermaid } from 'vitepress-plugin-mermaid';
+
+// import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import pkg from '../../package.json' with { type: 'json' };
+import typedocSidebar from '../api/typedoc-sidebar.json';
+
+import darkTheme from './shiki/accessible-aa-dark-shiki.json' with { type: 'json' };
+import lightTheme from './shiki/accessible-aa-light-shiki.json' with { type: 'json' };
+
+// const here = fileURLToPath(new URL('.', import.meta.url));
+// const root = path.resolve(here, '../../..');
+
+export default withMermaid(
+  defineConfig({
+    mermaidPlugin: {
+      class: 'mermaid'
+    },
+    mermaid: {
+      themeVariables: {
+        fontFamily:
+          "'Menlo for Powerline', 'Menlo Regular for Powerline', 'DejaVu Sans Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+        fontSize: '16px'
+      }
+    },
+    lang: 'en-GB',
+    head: [
+      ['meta', { property: 'og:url', content: 'https://hybrid-compute.dev' }],
+      ['meta', { property: 'og:type', content: 'website' }],
+      [
+        'meta',
+        {
+          property: 'og:title',
+          content: 'Hybrid Compute'
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:description',
+          content:
+            'Run compute tasks wherever they run best - local, threaded, or remote - with a pluggable backend architecture'
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:site_name',
+          content: 'Hybrid Compute'
+        }
+      ],
+      ['meta', { property: 'og:locale:locale', content: 'en_GB' }],
+      [
+        'meta',
+        {
+          property: 'og:image',
+          content:
+            'https://opengraph.githubassets.com/67b2a057c3b6fe59450314613d107981641cea26e781e5b1bf14338855180880/phun-ky/hybrid-compute/pull/32'
+        }
+      ],
+      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['meta', { property: 'twitter:domain', content: 'phun-ky.net' }],
+      [
+        'meta',
+        {
+          property: 'twitter:url',
+          content: 'https://hybrid-compute.dev'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:title',
+          content: 'Hybrid Compute'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:description',
+          content:
+            'Run compute tasks wherever they run best - local, threaded, or remote - with a pluggable backend architecture'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:image',
+          content:
+            'https://opengraph.githubassets.com/67b2a057c3b6fe59450314613d107981641cea26e781e5b1bf14338855180880/phun-ky/hybrid-compute/pull/32'
+        }
+      ]
+    ],
+
+    lastUpdated: true,
+    cleanUrls: true,
+    metaChunk: true,
+    description:
+      'Run compute tasks wherever they run best - local, threaded, or remote - with a pluggable backend architecture',
+    title: 'Hybrid Compute',
+    themeConfig: {
+      search: {
+        provider: 'local'
+      },
+      editLink: {
+        pattern:
+          'https://github.com/phun-ky/hybrid-compute/edit/main/docs/:path'
+      },
+      siteTitle: 'Hybrid Compute',
+      logo: {
+        src: '/logo/logo.svg',
+        alt: 'Hybrid Compute logo'
+      },
+      nav: [
+        { text: 'Guide', link: '/guide/introduction/' },
+        { text: 'Reference', link: '/api/' },
+        { text: 'Sponsor', link: '/sponsor' },
+        {
+          text: pkg.version,
+          items: [
+            {
+              text: 'Changelog',
+              link: 'https://github.com/phun-ky/hybrid-compute/blob/main/CHANGELOG.md'
+            },
+            {
+              text: 'Contributing',
+              link: 'https://github.com/phun-ky/hybrid-compute/blob/main/CONTRIBUTING.md'
+            }
+          ]
+        }
+      ],
+      socialLinks: [
+        { icon: 'github', link: 'https://github.com/phun-ky/hybrid-compute' },
+        {
+          icon: 'npm',
+          link: 'https://www.npmjs.com/package/@phun-ky/hybrid-compute'
+        }
+      ],
+      footer: {
+        message:
+          'Released under the <a href="https://choosealicense.com/licenses/mit/" target="_blank" rel="nofollow noreferrer">MIT License</a>.',
+        copyright:
+          'Copyright © 2025-present <a href="https://phun-ky.net/">Alexander Vassbotn Røyne-Helgesen</a>'
+      },
+      sidebar: {
+        '/guide/': [
+          {
+            text: 'Introduction',
+            collapsed: false,
+            items: [
+              {
+                text: 'About Hybrid Compute',
+                link: '/guide/introduction/about'
+              },
+              { text: 'Getting started', link: '/guide/introduction/' }
+            ]
+          },
+          {
+            text: 'Usage',
+            collapsed: false,
+            items: [
+              { text: 'Local', link: '/guide/usage/local' },
+              { text: 'Remote', link: '/guide/usage/remote' },
+              { text: 'Worker', link: '/guide/usage/worker' }
+            ]
+          },
+          {
+            text: 'Development',
+            link: '/guide/development'
+          }
+        ],
+        '/api/': [
+          {
+            text: 'API',
+            items: typedocSidebar.map((s) => ({
+              ...s,
+              collapsed: false
+            }))
+          }
+        ]
+      }
+    },
+    vite: {
+      plugins: [groupIconVitePlugin()],
+      resolve: {
+        alias: [
+          {
+            find: /^.*\/VPSwitchAppearance\.vue$/,
+            replacement: fileURLToPath(
+              new URL('./theme/components/ToggleDarkMode.vue', import.meta.url)
+            )
+          }
+        ]
+      }
+    },
+    markdown: {
+      config(md) {
+        md.use(groupIconMdPlugin);
+      },
+
+      theme: {
+        dark: darkTheme as any,
+        light: lightTheme as any
+      },
+      // (Optional) Preload themes explicitly
+      shikiSetup: async (shiki) => {
+        await shiki.loadTheme(darkTheme as any);
+        await shiki.loadTheme(lightTheme as any);
+      }
+    }
+  })
+);
