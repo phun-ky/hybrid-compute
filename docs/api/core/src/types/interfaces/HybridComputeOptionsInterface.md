@@ -5,7 +5,7 @@ HybridComputeOptionsInterface
 
 # Interface: HybridComputeOptionsInterface
 
-> Last updated 2025-11-24T11:08:15.540Z
+> Last updated 2026-02-12T10:43:31.165Z
 
 Defined in:
 [core/src/types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L84)
@@ -31,11 +31,11 @@ const options: HybridComputeOptionsInterface = {
 
 ## Properties
 
-| Property                      | Type                                                    | Description                                           | Defined in                                                                                                 |
-| ----------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <a id="local"></a> `local?`   | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A local synchronous compute backend (main thread).    | [core/src/types.ts:85](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L85) |
-| <a id="remote"></a> `remote?` | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A server-side or cloud compute backend.               | [core/src/types.ts:87](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L87) |
-| <a id="worker"></a> `worker?` | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A background-thread compute backend (e.g. WebWorker). | [core/src/types.ts:86](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L86) |
+| Property                               | Type                                                    | Description                                           | Defined in                                                                                                 |
+| -------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <a id="property-local"></a> `local?`   | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A local synchronous compute backend (main thread).    | [core/src/types.ts:85](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L85) |
+| <a id="property-remote"></a> `remote?` | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A server-side or cloud compute backend.               | [core/src/types.ts:87](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L87) |
+| <a id="property-worker"></a> `worker?` | [`ComputeBackendInterface`](ComputeBackendInterface.md) | A background-thread compute backend (e.g. WebWorker). | [core/src/types.ts:86](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L86) |
 
 ---
 

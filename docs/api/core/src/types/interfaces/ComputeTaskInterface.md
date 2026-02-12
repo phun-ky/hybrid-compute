@@ -5,7 +5,7 @@ ComputeTaskInterface
 
 # Interface: ComputeTaskInterface\<Input, Output>
 
-> Last updated 2025-11-24T11:08:15.516Z
+> Last updated 2026-02-12T10:43:31.149Z
 
 Defined in:
 [core/src/types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L33)
@@ -30,9 +30,9 @@ const task: ComputeTaskInterface<number, number> = {
 
 ## Properties
 
-| Property                 | Type     | Description                              | Defined in                                                                                                 |
-| ------------------------ | -------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <a id="name"></a> `name` | `string` | A unique name used to identify the task. | [core/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L34) |
+| Property                          | Type     | Description                              | Defined in                                                                                                 |
+| --------------------------------- | -------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <a id="property-name"></a> `name` | `string` | A unique name used to identify the task. | [core/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L34) |
 
 ## Methods
 

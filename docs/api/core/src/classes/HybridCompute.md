@@ -4,7 +4,7 @@
 
 # Class: HybridCompute
 
-> Last updated 2025-11-24T11:08:15.392Z
+> Last updated 2026-02-12T10:43:31.048Z
 
 Defined in:
 [core/src/index.ts:32](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L32)
@@ -64,7 +64,7 @@ Creates a new HybridCompute orchestrator.
 runTask<Input, Output>(
    taskName,
    input,
-strategy): Promise<Output>;
+strategy?): Promise<Output>;
 ```
 
 Defined in:

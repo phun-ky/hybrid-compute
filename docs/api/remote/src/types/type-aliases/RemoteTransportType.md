@@ -5,7 +5,7 @@ RemoteTransportType
 
 # Type Alias: RemoteTransportType
 
-> Last updated 2025-11-24T11:08:15.814Z
+> Last updated 2026-02-12T10:43:31.358Z
 
 ```ts
 type RemoteTransportType = 'fetch' | 'websocket';
