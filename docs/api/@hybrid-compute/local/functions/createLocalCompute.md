@@ -8,7 +8,7 @@ function createLocalCompute(): LocalCompute;
 ```
 
 Defined in:
-[index.ts:96](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/local/src/index.ts#L96)
+[index.ts:96](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/local/src/index.ts#L96)
 
 Factory function to create a new LocalCompute backend instance.
 

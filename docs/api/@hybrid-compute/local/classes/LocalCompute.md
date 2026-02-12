@@ -4,7 +4,7 @@ LocalCompute
 # Class: LocalCompute
 
 Defined in:
-[index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/local/src/index.ts#L27)
+[index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/local/src/index.ts#L27)
 
 LocalCompute is a compute backend that executes tasks directly on the main
 thread (synchronously in the JavaScript event loop).
@@ -52,7 +52,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:51](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/local/src/index.ts#L51)
+[index.ts:51](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/local/src/index.ts#L51)
 
 Determines whether the backend has a task by this name.
 
@@ -83,7 +83,7 @@ registerTask<Input, Output>(task: ComputeTaskInterface<Input, Output>): void;
 ```
 
 Defined in:
-[index.ts:41](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/local/src/index.ts#L41)
+[index.ts:41](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/local/src/index.ts#L41)
 
 Registers a new task to be executed by this backend.
 
@@ -123,7 +123,7 @@ runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
 ```
 
 Defined in:
-[index.ts:70](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/local/src/index.ts#L70)
+[index.ts:70](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/local/src/index.ts#L70)
 
 Executes a registered task with the given input.
 

@@ -4,7 +4,7 @@ HybridCompute
 # Class: HybridCompute
 
 Defined in:
-[index.ts:32](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/core/src/index.ts#L32)
+[index.ts:32](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/core/src/index.ts#L32)
 
 The HybridCompute class acts as an orchestrator to delegate compute tasks across
 different backends (local, worker, or remote) using a flexible strategy.
@@ -39,7 +39,7 @@ new HybridCompute(backends: HybridComputeOptionsInterface): HybridCompute;
 ```
 
 Defined in:
-[index.ts:40](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/core/src/index.ts#L40)
+[index.ts:40](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/core/src/index.ts#L40)
 
 Creates a new HybridCompute orchestrator.
 
@@ -67,7 +67,7 @@ strategy?: ExecutionStrategyType): Promise<Output>;
 ```
 
 Defined in:
-[index.ts:65](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/core/src/index.ts#L65)
+[index.ts:65](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/core/src/index.ts#L65)
 
 Runs a task using the specified execution strategy.
 

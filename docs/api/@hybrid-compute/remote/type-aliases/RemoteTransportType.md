@@ -8,7 +8,7 @@ type RemoteTransportType = 'fetch' | 'websocket';
 ```
 
 Defined in:
-[types.ts:13](https://github.com/phun-ky/hybrid-compute/blob/0019aa38a6f2721e563fc43e328e9923e73bf79a/packages/remote/src/types.ts#L13)
+[types.ts:13](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/remote/src/types.ts#L13)
 
 Represents the communication method used by the `RemoteCompute` backend to
 interact with a remote server.
