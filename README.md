@@ -2,8 +2,7 @@
 
 ![@hybrid-compute banner with logo and text](./public/logo-banner.png)
 
-> **Run compute tasks wherever they run best - local, threaded, or remote - with
-> a pluggable backend architecture.**
+> **Run compute tasks wherever they run best - local, threaded, or remote - with a pluggable backend architecture.**
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](http://makeapullrequest.com)

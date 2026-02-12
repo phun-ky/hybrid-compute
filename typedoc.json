@@ -3,31 +3,44 @@
   "plugin": [
     "typedoc-plugin-markdown",
     "typedoc-plugin-remark",
+    "typedoc-vitepress-theme",
     "typedoc-plugin-mdn-links",
-    "typedoc-plugin-rename-defaults",
-    "./custom-typedoc-plugin.js"
+    "typedoc-plugin-rename-defaults"
   ],
+
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/*"],
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "readme": "none"
+  },
   "out": "docs/api",
+  "docsRoot": "./docs",
   "tsconfig": "./tsconfig.base.json",
-  "entryPoints": [
-    "packages/core/src",
-    "packages/local/src",
-    "packages/remote/src",
-    "packages/worker/src"
-  ],
-  "entryPointStrategy": "expand",
-  "interfacePropertiesFormat": "table",
-  "classPropertiesFormat": "table",
-  "enumMembersFormat": "table",
-  "typeDeclarationFormat": "htmlTable",
-  "propertyMembersFormat": "table",
-  "theme": "custom-markdown-theme",
-  "parametersFormat": "table",
-  "gitRevision": "main",
   "githubPages": false,
-  "mergeReadme": true,
-  "useCodeBlocks": true,
+  "hideGenerator": true,
+  "gitRevision": "main",
+  "navigationLinks": {
+    "GitHub": "https://github.com/phun-ky/hybrid-compute"
+  },
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": false,
+    "includeFolders": true,
+    "compactFolders": false,
+    "excludeReferences": true
+  },
+  "readme": "none",
+  "indexFormat": "list",
+  "interfacePropertiesFormat": "list",
+  "classPropertiesFormat": "list",
+  "expandParameters": true,
+  "strikeDeprecatedPageTitles": true,
+  "enumMembersFormat": "list",
+  "typeDeclarationFormat": "list",
+  "propertyMembersFormat": "list",
   "expandObjects": true,
+  "useCodeBlocks": true,
   "remarkPlugins": [
     "unified-prettier",
     [
