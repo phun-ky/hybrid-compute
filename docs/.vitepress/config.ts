@@ -9,7 +9,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 // import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import pkg from '../../package.json' with { type: 'json' };
+import corePackage from '../../packages/core/package.json' with { type: 'json' };
 import typedocSidebar from '../api/typedoc-sidebar.json';
 
 import darkTheme from './shiki/accessible-aa-dark-shiki.json' with { type: 'json' };
@@ -20,6 +20,7 @@ import lightTheme from './shiki/accessible-aa-light-shiki.json' with { type: 'js
 
 export default withMermaid(
   defineConfig({
+    base: '/hybrid-compute/',
     mermaidPlugin: {
       class: 'mermaid'
     },
@@ -111,7 +112,8 @@ export default withMermaid(
       },
       editLink: {
         pattern:
-          'https://github.com/phun-ky/hybrid-compute/edit/main/docs/:path'
+          'https://github.com/phun-ky/hybrid-compute/edit/main/docs/:path',
+        text: 'Suggest changes to this page'
       },
       siteTitle: 'Hybrid Compute',
       logo: {
@@ -120,14 +122,31 @@ export default withMermaid(
       },
       nav: [
         { text: 'Guide', link: '/guide/introduction/' },
-        { text: 'Reference', link: '/api/' },
+        { text: 'Reference', link: '/api/', activeMatch: '/api/' },
         { text: 'Sponsor', link: '/sponsor' },
         {
-          text: pkg.version,
+          text: corePackage.version,
           items: [
             {
-              text: 'Changelog',
-              link: 'https://github.com/phun-ky/hybrid-compute/blob/main/CHANGELOG.md'
+              text: 'Changelogs',
+              items: [
+                {
+                  text: 'Core',
+                  link: 'https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/README.md'
+                },
+                {
+                  text: 'Local',
+                  link: 'https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/README.md'
+                },
+                {
+                  text: 'Remote',
+                  link: 'https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/README.md'
+                },
+                {
+                  text: 'Worker',
+                  link: 'https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/README.md'
+                }
+              ]
             },
             {
               text: 'Contributing',

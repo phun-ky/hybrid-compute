@@ -72,3 +72,7 @@ dist
 tsconfig.tsbuildinfo
 packages/*/tsconfig.tsbuildinfo
 .vscode
+.vitepress/cache
+.vitepress/dist
+/docs/.vitepress/cache
+/docs/.vitepress/dist

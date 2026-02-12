@@ -9,7 +9,7 @@
 
 ::: info
 
-**Hybrid Compute** is an ESM package
+**Hybrid Compute** is a collection of ESM packages
 
 :::
 
@@ -52,9 +52,9 @@ const echoTask = {
     return `Echo: ${input}`;
   }
 };
-
 // Set up the local backend and register the task
 const local = createLocalCompute();
+
 local.registerTask(echoTask);
 
 // Set up the HybridCompute instance with only the local backend
@@ -66,6 +66,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Hello from HybridCompute!');
+
     console.log(result); // Output: Echo: Hello from HybridCompute!
   } catch (error) {
     console.error('Task failed:', error);
@@ -96,7 +97,7 @@ const compute = new HybridCompute({
   ]),
   remote: createRemoteCompute({ transport: 'fetch', endpoint: '/api/compute' })
 });
-
 const result = await compute.runTask<number, number>('double', 21, 'auto');
+
 console.log(result); // 42
 ```

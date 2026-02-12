@@ -21,8 +21,6 @@
   --vp-code-block-bg: var(--ph-color-well-background);
   --vp-c-bg-soft: var(--ph-color-well-background);
   --vp-button-brand-text: var(--ph-color-text-brand);
-  --vp-sidebar-width: 352px;
-  --vp-layout-max-width: 1920px;
 }
 
 :root.theme--light {

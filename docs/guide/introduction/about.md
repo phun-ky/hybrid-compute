@@ -265,7 +265,7 @@ flowchart TD
 
 ## Developer Experience
 
-**Hybrid Compute** is a ESM package, served through
+**Hybrid Compute** is a collection of ESM packages, served through
 [npm](https://www.npmjs.com/).
 
 It is Open Source, and easy to use.
