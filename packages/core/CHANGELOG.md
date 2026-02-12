@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.23.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.22.0...@hybrid-compute/core@0.23.0) (2026-02-12)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.22.0 ([44ddbae](https://github.com/phun-ky/hybrid-compute/commit/44ddbae654b152699d7376e6d559690e37a762e2))
+* 🤖 @hybrid-compute/remote@0.22.0 ([113298f](https://github.com/phun-ky/hybrid-compute/commit/113298f268d2cab8006c7ddc8c5b3b09ba991cf9))
+* 🤖 @hybrid-compute/worker@0.22.0 ([6692487](https://github.com/phun-ky/hybrid-compute/commit/66924876c688b44a6f4bc9ec48fda983403fe170))
+* 🤖 Preparing for docs site ([7743428](https://github.com/phun-ky/hybrid-compute/commit/774342810573b6e4351c15e144ce8c225de245e0))
+
+### Documentation
+
+* ✏️ Add docs site ([f9c0afe](https://github.com/phun-ky/hybrid-compute/commit/f9c0afef19ee985b24c0e7b908dd2d5a4d45071c))
+* ✏️ Regenerate docs ([df5293f](https://github.com/phun-ky/hybrid-compute/commit/df5293f6b90c891efc03206ef7967e049c874f07))
+* ✏️ Regenerate docs ([ab22036](https://github.com/phun-ky/hybrid-compute/commit/ab22036b72ae20e44c2ff6b14b663cfc921d34ef))
+
+### Bug
+
+* 🐛 Small fixes ([06125d8](https://github.com/phun-ky/hybrid-compute/commit/06125d8e4713eac0ec73aa47f10b979c19a091dd))
+
 ## [0.22.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.21.0...@hybrid-compute/core@0.22.0) (2026-02-12)
 
 ### Tasks

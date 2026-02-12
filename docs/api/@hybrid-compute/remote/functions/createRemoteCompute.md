@@ -10,7 +10,7 @@ function createRemoteCompute(
 ```
 
 Defined in:
-[index.ts:143](https://github.com/phun-ky/hybrid-compute/blob/566231abfd6619d76a9d89ee87729f299a716dad/packages/remote/src/index.ts#L143)
+[index.ts:143](https://github.com/phun-ky/hybrid-compute/blob/245d63304b8c73c1564e241a5ecc221f8c01058b/packages/remote/src/index.ts#L143)
 
 Factory to create a RemoteCompute instance with given options.
 
