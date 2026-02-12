@@ -1,6 +1,6 @@
 # About Hybrid Compute
 
-**Hybrid Comppute** is a flexible, modular compute orchestration framework that
+**Hybrid Compute** is a flexible, modular compute orchestration framework that
 dispatches computational tasks to the most appropriate backend - whether that's:
 
 - The local JS thread (for fast, simple tasks)

@@ -4,7 +4,7 @@ RemoteCompute
 # Class: RemoteCompute
 
 Defined in:
-[index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/remote/src/index.ts#L47)
+[index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/566231abfd6619d76a9d89ee87729f299a716dad/packages/remote/src/index.ts#L47)
 
 RemoteCompute is a backend that delegates compute tasks to a remote API using
 either HTTP requests (fetch) or a persistent WebSocket connection.
@@ -61,7 +61,7 @@ new RemoteCompute(options: RemoteComputeOptionsInterface): RemoteCompute;
 ```
 
 Defined in:
-[index.ts:66](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/remote/src/index.ts#L66)
+[index.ts:66](https://github.com/phun-ky/hybrid-compute/blob/566231abfd6619d76a9d89ee87729f299a716dad/packages/remote/src/index.ts#L66)
 
 Initializes the remote compute backend.
 
@@ -86,7 +86,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:91](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/remote/src/index.ts#L91)
+[index.ts:91](https://github.com/phun-ky/hybrid-compute/blob/566231abfd6619d76a9d89ee87729f299a716dad/packages/remote/src/index.ts#L91)
 
 Determines if this backend is allowed to handle the given task.
 
@@ -117,7 +117,7 @@ runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
 ```
 
 Defined in:
-[index.ts:105](https://github.com/phun-ky/hybrid-compute/blob/06125d8e4713eac0ec73aa47f10b979c19a091dd/packages/remote/src/index.ts#L105)
+[index.ts:105](https://github.com/phun-ky/hybrid-compute/blob/566231abfd6619d76a9d89ee87729f299a716dad/packages/remote/src/index.ts#L105)
 
 Executes the specified task using remote communication.
 
