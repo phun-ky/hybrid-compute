@@ -60,7 +60,7 @@ html.ph body {
     padding: 0;
     word-break: break-word;
     box-sizing: border-box;
-    -webkit-font-smoothing: antialised;
+    -webkit-font-smoothing: antialiased;
 
     & h1,
     & h2,
