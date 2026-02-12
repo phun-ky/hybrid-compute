@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.22.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/remote@0.21.0...@hybrid-compute/remote@0.22.0) (2026-02-12)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.22.0 ([c66124e](https://github.com/phun-ky/hybrid-compute/commit/c66124e504a419acd6b4eebbdb62b46ce1cc6644))
+* 🤖 @hybrid-compute/local@0.22.0 ([44ddbae](https://github.com/phun-ky/hybrid-compute/commit/44ddbae654b152699d7376e6d559690e37a762e2))
+* 🤖 @hybrid-compute/worker@0.21.0 ([f1c1a3d](https://github.com/phun-ky/hybrid-compute/commit/f1c1a3d7f12b465a2c2a824a862eb4effbea210a))
+* 🤖 bump the major-updates group across 1 directory with 2 updates ([1f73fdb](https://github.com/phun-ky/hybrid-compute/commit/1f73fdb36f258af191f8c3b901dc9ff94d34b7bc))
+* 🤖 bump the major-updates group across 1 directory with 3 updates ([e2defae](https://github.com/phun-ky/hybrid-compute/commit/e2defae02a5c1ffe49a3314eb26b453edb45d965))
+* 🤖 Ensure that we can use trusted publishing ([8c1c34b](https://github.com/phun-ky/hybrid-compute/commit/8c1c34bf2db8fe172c10bf4066d0f4cd75c234e6))
+
+### Refactoring
+
+* 💡 Replace glob with glob-bin ([98cc893](https://github.com/phun-ky/hybrid-compute/commit/98cc8932bee41bfdb7eb2b668b039def35867402))
+
 ## [0.21.0](///compare/@hybrid-compute/remote@0.20.0...@hybrid-compute/remote@0.21.0) (2025-11-24)
 
 ## [0.20.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/remote@0.19.0...@hybrid-compute/remote@0.20.0) (2025-11-10)
