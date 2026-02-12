@@ -57,7 +57,7 @@ export default withMermaid(
           content: 'Hybrid Compute'
         }
       ],
-      ['meta', { property: 'og:locale:locale', content: 'en_GB' }],
+      ['meta', { property: 'og:locale', content: 'en_GB' }],
       [
         'meta',
         {
