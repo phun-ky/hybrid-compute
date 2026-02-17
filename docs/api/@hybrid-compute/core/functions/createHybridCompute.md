@@ -10,7 +10,7 @@ function createHybridCompute(
 ```
 
 Defined in:
-[index.ts:108](https://github.com/phun-ky/hybrid-compute/blob/1b7a32a1585a10d9fa5185ab5f0ccd132b50895c/packages/core/src/index.ts#L108)
+[index.ts:108](https://github.com/phun-ky/hybrid-compute/blob/a7e9ef17c10efbef32c1426320810cabe5afdd53/packages/core/src/index.ts#L108)
 
 Factory function for creating a HybridCompute instance.
 

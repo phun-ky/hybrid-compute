@@ -4,7 +4,7 @@ WorkerResultMessageInterface
 # Interface: WorkerResultMessageInterface
 
 Defined in:
-[types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/1b7a32a1585a10d9fa5185ab5f0ccd132b50895c/packages/worker/src/types.ts#L48)
+[types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/a7e9ef17c10efbef32c1426320810cabe5afdd53/packages/worker/src/types.ts#L48)
 
 The message format sent from a Web Worker back to the main thread upon task
 completion.
@@ -35,7 +35,7 @@ optional error: string;
 ```
 
 Defined in:
-[types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/1b7a32a1585a10d9fa5185ab5f0ccd132b50895c/packages/worker/src/types.ts#L52)
+[types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/a7e9ef17c10efbef32c1426320810cabe5afdd53/packages/worker/src/types.ts#L52)
 
 An optional error message if the task failed.
 
@@ -48,7 +48,7 @@ id: number;
 ```
 
 Defined in:
-[types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/1b7a32a1585a10d9fa5185ab5f0ccd132b50895c/packages/worker/src/types.ts#L49)
+[types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/a7e9ef17c10efbef32c1426320810cabe5afdd53/packages/worker/src/types.ts#L49)
 
 The unique identifier that matches a previously sent task message.
 
@@ -61,6 +61,6 @@ result: any;
 ```
 
 Defined in:
-[types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/1b7a32a1585a10d9fa5185ab5f0ccd132b50895c/packages/worker/src/types.ts#L51)
+[types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/a7e9ef17c10efbef32c1426320810cabe5afdd53/packages/worker/src/types.ts#L51)
 
 The result of the task execution (if successful).
