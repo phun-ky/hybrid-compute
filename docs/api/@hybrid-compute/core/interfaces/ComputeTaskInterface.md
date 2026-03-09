@@ -4,7 +4,7 @@ ComputeTaskInterface
 # Interface: ComputeTaskInterface\<Input, Output>
 
 Defined in:
-[types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/3f1bd1ff635128cedae6993bf28ae702b52b4ff6/packages/core/src/types.ts#L33)
+[types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/core/src/types.ts#L33)
 
 Describes a unit of work that can be executed by a compute backend.
 
@@ -40,7 +40,7 @@ name: string;
 ```
 
 Defined in:
-[types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/3f1bd1ff635128cedae6993bf28ae702b52b4ff6/packages/core/src/types.ts#L34)
+[types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/core/src/types.ts#L34)
 
 A unique name used to identify the task.
 
@@ -53,7 +53,7 @@ run(input: Input): Promise<Output>;
 ```
 
 Defined in:
-[types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/3f1bd1ff635128cedae6993bf28ae702b52b4ff6/packages/core/src/types.ts#L35)
+[types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/core/src/types.ts#L35)
 
 A function that takes input and returns a Promise of the output.
 

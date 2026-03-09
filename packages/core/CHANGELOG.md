@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.28.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.27.0...@hybrid-compute/core@0.28.0) (2026-03-09)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.27.0 ([941eb4e](https://github.com/phun-ky/hybrid-compute/commit/941eb4e0f66d666e832793c8df3f2820beb0ed8d))
+* 🤖 @hybrid-compute/remote@0.27.0 ([07c7c9b](https://github.com/phun-ky/hybrid-compute/commit/07c7c9bd1ad4c590a51e233360058bf1b22f7e3d))
+* 🤖 @hybrid-compute/worker@0.27.0 ([7d1dd4d](https://github.com/phun-ky/hybrid-compute/commit/7d1dd4d486994ec2c90f91976b85fc024e7f313f))
+* 🤖 bump the minor-and-patch group with 3 updates ([bf08ccd](https://github.com/phun-ky/hybrid-compute/commit/bf08ccd9e51073b53932209f7c522d60f91621cb))
+
 ## [0.27.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.26.0...@hybrid-compute/core@0.27.0) (2026-03-02)
 
 ### Tasks
