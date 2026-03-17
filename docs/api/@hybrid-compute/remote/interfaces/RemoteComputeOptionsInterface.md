@@ -4,7 +4,7 @@ RemoteComputeOptionsInterface
 # Interface: RemoteComputeOptionsInterface
 
 Defined in:
-[types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/remote/src/types.ts#L34)
+[types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/6f831219cfd5e76ccee0895312d615eb58cbdc38/packages/remote/src/types.ts#L34)
 
 Configuration options for initializing a `RemoteCompute` backend.
 
@@ -32,7 +32,7 @@ optional canRunTasks: string[];
 ```
 
 Defined in:
-[types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/remote/src/types.ts#L37)
+[types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/6f831219cfd5e76ccee0895312d615eb58cbdc38/packages/remote/src/types.ts#L37)
 
 An optional list of task names this backend can handle. If omitted, it is
 assumed the backend can attempt all tasks.
@@ -46,7 +46,7 @@ endpoint: string;
 ```
 
 Defined in:
-[types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/remote/src/types.ts#L36)
+[types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/6f831219cfd5e76ccee0895312d615eb58cbdc38/packages/remote/src/types.ts#L36)
 
 The server URL for handling task requests.
 
@@ -59,6 +59,6 @@ transport: RemoteTransportType;
 ```
 
 Defined in:
-[types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/2d42a8ddb7f8129fdfc06f10b6a15fa9df85dda2/packages/remote/src/types.ts#L35)
+[types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/6f831219cfd5e76ccee0895312d615eb58cbdc38/packages/remote/src/types.ts#L35)
 
 The transport mechanism to use (`fetch` or `websocket`).
