@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.32.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.31.0...@hybrid-compute/core@0.32.0) (2026-03-30)
+
+### Tasks
+
+* 🤖 @hybrid-compute/local@0.31.0 ([9b58b09](https://github.com/phun-ky/hybrid-compute/commit/9b58b091481508ec48a89615c1a2de4ffa0b1b86))
+* 🤖 @hybrid-compute/remote@0.31.0 ([8fad199](https://github.com/phun-ky/hybrid-compute/commit/8fad199972b22b000525254710e5f64fd3c19606))
+* 🤖 @hybrid-compute/worker@0.31.0 ([6741575](https://github.com/phun-ky/hybrid-compute/commit/67415759fe8828c0546f49d0d259ef33c0767596))
+* 🤖 bump typescript from 5.9.3 to 6.0.2 in the major-updates group ([93027e1](https://github.com/phun-ky/hybrid-compute/commit/93027e1fd2340fcd6fbf08906ef70cdc73202ff5))
+
 ## [0.31.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.30.0...@hybrid-compute/core@0.31.0) (2026-03-30)
 
 ### Tasks
