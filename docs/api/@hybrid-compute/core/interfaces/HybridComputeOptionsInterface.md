@@ -4,7 +4,7 @@ HybridComputeOptionsInterface
 # Interface: HybridComputeOptionsInterface
 
 Defined in:
-[types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/1a9ef686b1ec198cb7e5e713226c831bd2dd09e4/packages/core/src/types.ts#L84)
+[types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/bb27d092566034ca0db7820e6d72140b6acace60/packages/core/src/types.ts#L84)
 
 Configuration options for initializing the HybridCompute orchestrator.
 
@@ -34,7 +34,7 @@ optional local?: ComputeBackendInterface;
 ```
 
 Defined in:
-[types.ts:85](https://github.com/phun-ky/hybrid-compute/blob/1a9ef686b1ec198cb7e5e713226c831bd2dd09e4/packages/core/src/types.ts#L85)
+[types.ts:85](https://github.com/phun-ky/hybrid-compute/blob/bb27d092566034ca0db7820e6d72140b6acace60/packages/core/src/types.ts#L85)
 
 A local synchronous compute backend (main thread).
 
@@ -47,7 +47,7 @@ optional remote?: ComputeBackendInterface;
 ```
 
 Defined in:
-[types.ts:87](https://github.com/phun-ky/hybrid-compute/blob/1a9ef686b1ec198cb7e5e713226c831bd2dd09e4/packages/core/src/types.ts#L87)
+[types.ts:87](https://github.com/phun-ky/hybrid-compute/blob/bb27d092566034ca0db7820e6d72140b6acace60/packages/core/src/types.ts#L87)
 
 A server-side or cloud compute backend.
 
@@ -60,6 +60,6 @@ optional worker?: ComputeBackendInterface;
 ```
 
 Defined in:
-[types.ts:86](https://github.com/phun-ky/hybrid-compute/blob/1a9ef686b1ec198cb7e5e713226c831bd2dd09e4/packages/core/src/types.ts#L86)
+[types.ts:86](https://github.com/phun-ky/hybrid-compute/blob/bb27d092566034ca0db7820e6d72140b6acace60/packages/core/src/types.ts#L86)
 
 A background-thread compute backend (e.g. WebWorker).
