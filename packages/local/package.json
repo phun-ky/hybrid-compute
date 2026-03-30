@@ -39,7 +39,7 @@
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.2"
   },
   "engines": {
     "node": ">=22.0.0",
