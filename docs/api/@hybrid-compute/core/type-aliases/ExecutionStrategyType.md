@@ -8,7 +8,7 @@ type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
 ```
 
 Defined in:
-[types.ts:14](https://github.com/phun-ky/hybrid-compute/blob/decce9958f0b607bb0719749fdf044dad21d69c3/packages/core/src/types.ts#L14)
+[types.ts:14](https://github.com/phun-ky/hybrid-compute/blob/6eb30891e08946df8a7febc3b1f326574eae0478/packages/core/src/types.ts#L14)
 
 The strategy used to determine which compute backend to use.
 
