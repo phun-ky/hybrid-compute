@@ -11,7 +11,7 @@ function createThreadedCompute(
 ```
 
 Defined in:
-[index.ts:116](https://github.com/phun-ky/hybrid-compute/blob/6eb30891e08946df8a7febc3b1f326574eae0478/packages/worker/src/index.ts#L116)
+[index.ts:116](https://github.com/phun-ky/hybrid-compute/blob/7880d7770a79a233ef54b835919874b1352f2610/packages/worker/src/index.ts#L116)
 
 Factory function to create a new `ThreadedCompute` backend.
 
