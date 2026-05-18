@@ -35,12 +35,12 @@
     "test:ci": "glob-bin -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@phun-ky/typeof": "^2.1.9"
+    "@phun-ky/typeof": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.8.0",
     "eslint": "^9.27.0",
-    "eslint-config-phun-ky": "^1.0.3",
+    "eslint-config-phun-ky": "^2.0.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3"
   },
