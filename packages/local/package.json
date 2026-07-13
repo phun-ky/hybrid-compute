@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "eslint": "^9.27.0",
-    "eslint-config-phun-ky": "^1.0.3",
+    "eslint-config-phun-ky": "^2.0.6",
     "prettier": "^3.8.3",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "engines": {
     "node": ">=22.0.0",
