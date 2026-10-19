@@ -4,15 +4,22 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
+
+# Read-only by default; jobs ask for what they need
+permissions:
+  contents: read
+
 jobs:
   run:
-    runs-on: ubuntu-latest
+    # Dependabot PRs get a read-only token, so assigning would fail
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
     permissions:
       issues: write
       pull-requests: write
     steps:
       - name: 'Auto-assign issue'
-        uses: pozil/auto-assign-issue@v1
+        uses: pozil/auto-assign-issue@af6beea6bdf1e8eb373f061c5bc168681fc6d011 # v4.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           assignees: phun-ky

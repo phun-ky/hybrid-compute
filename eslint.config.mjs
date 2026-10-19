@@ -25,6 +25,10 @@ export default defineConfig([
       globals: {
         ...globals.node
       }
+    },
+    rules: {
+      // Command-line scripts report to the terminal
+      'no-console': 'off'
     }
   },
   {

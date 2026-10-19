@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Checks
 
-# Controls when the workflow will run
 on:
   # On main, run when anything the job builds, tests or lints changes
   push:
@@ -19,10 +16,12 @@ on:
       - 'typedoc.json'
       - 'eslint.config.mjs'
       - '.prettierrc'
+      - '.prettierignore'
       - '.editorconfig'
       - '.npmrc'
       - '.browserslistrc'
       - '*.md'
+      - '*.yml'
   # No path filter on pull requests: `check` is a required status check,
   # so it has to report on every PR or the PR cannot merge
   pull_request:
@@ -32,33 +31,45 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "check"
-  check:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+# Read-only by default; jobs ask for what they need
+permissions:
+  contents: read
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+jobs:
+  check:
+    # Skip release commits pushed one by one by `npm run release`; packages
+    # are only consistent with each other after the last one
+    if:
+      "${{ !startsWith(github.event.head_commit.message, 'chore: 🤖
+      @hybrid-compute/') }}"
+    runs-on: ubuntu-24.04
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # Checkout all branches and tags
+          fetch-depth: 0 # TypeDoc reads git for source links
+          persist-credentials: false
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '>=22.0.0'
+          node-version: 24
+          cache: npm
       - name: Install dependencies
-        run: | # Install and link dependencies
-          npm i
-      - name: Build # Build all packages
+        run: npm ci
+      - name: Build
         run: npm run build
+      - name: Lint
+        run: npm run lint
+      - name: Check formatting
+        run: npm run format:check
+      - name: Type-check, tests included # After build: packages import each other's dist types
+        run: npm run typecheck
+      - name: Check API docs # TypeDoc errors and warnings (such as broken {@link}s) fail the build
+        run: npm run docs:check
       - name: Test
         run: npm run test:ci
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: phun-ky/hybrid-compute
@@ -68,10 +79,13 @@ jobs:
   notify:
     name: Notify failed check
     needs: check
-    if: failure()
-    runs-on: ubuntu-latest
+    # Only for main; a failing pull request already shows its failed check
+    if: failure() && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
     steps:
-      - uses: jayqi/failed-build-issue-action@v1.2
+      - uses: drivendataorg/failed-build-issue-action@940568ce50eeef3f31a920614cefcc6102d2f930 # v1.3.0
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          label-name: 'problems: build failed'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          label-name: 'problems: 💔 build failed'
