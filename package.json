@@ -1,6 +1,7 @@
 {
   "name": "hybrid-compute",
   "version": "0.0.0",
+  "private": true,
   "description": "Composable compute orchestration across local, threaded, and remote environments.",
   "keywords": [
     "compute",
@@ -58,6 +59,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "prebuild": "npm run clean",
     "build": "tsc -b",
     "clean": "npm run clean --workspaces --if-present",

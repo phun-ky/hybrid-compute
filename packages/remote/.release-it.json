@@ -2,11 +2,12 @@
   "git": {
     "requireCleanWorkingDir": false,
     "tagName": "@hybrid-compute/remote@${version}",
-    "commitMessage": "chore: 🤖 ${name}@${version}"
+    "commitMessage": "chore: 🤖 ${name}@${version}",
+    "commitArgs": ["-s"]
   },
   "github": {
     "release": true,
-    "releaseName": "@hybrid-compute/worker@${version}",
+    "releaseName": "@hybrid-compute/remote@${version}",
     "tokenRef": "GH_TOKEN"
   },
   "npm": {
