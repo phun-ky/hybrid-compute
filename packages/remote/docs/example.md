@@ -45,10 +45,10 @@ const remote = createRemoteCompute({
   endpoint: 'https://api.example.com/compute',
   canRunTasks: ['generatePDF']
 });
-
 const result = await remote.runTask('generatePDF', {
   content: 'Hello, world!'
 });
+
 console.log(result);
 ```
 
@@ -62,10 +62,10 @@ const remote = createRemoteCompute({
   endpoint: 'wss://api.example.com/ws',
   canRunTasks: ['summarizeText']
 });
-
 const result = await remote.runTask('summarizeText', {
   text: 'This is a long text...'
 });
+
 console.log(result);
 ```
 
@@ -77,7 +77,9 @@ console.log(result);
 
 ```ts
 import express from 'express';
+
 const app = express();
+
 app.use(express.json());
 
 const handlers = {
@@ -89,9 +91,12 @@ const handlers = {
 
 app.post('/compute', async (req, res) => {
   const { task, input } = req.body;
+
   try {
     if (!handlers[task]) throw new Error('Unknown task');
+
     const result = await handlers[task](input);
+
     res.json({ result });
   } catch (error) {
     res.json({ error: error.message });
@@ -107,7 +112,6 @@ app.listen(3000);
 import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
-
 const handlers = {
   summarizeText: async ({ text }) => {
     return `Summary: ${text.slice(0, 20)}...`;
@@ -117,9 +121,12 @@ const handlers = {
 wss.on('connection', (ws) => {
   ws.on('message', async (message) => {
     const { task, input, id } = JSON.parse(message.toString());
+
     try {
       if (!handlers[task]) throw new Error('Unknown task');
+
       const result = await handlers[task](input);
+
       ws.send(JSON.stringify({ id, result }));
     } catch (error) {
       ws.send(JSON.stringify({ id, error: error.message }));
