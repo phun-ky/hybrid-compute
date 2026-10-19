@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.37.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/worker@0.36.0...@hybrid-compute/worker@0.37.0) (2026-10-19)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.37.0 ([994ae4d](https://github.com/phun-ky/hybrid-compute/commit/994ae4d74aba2bd129a8bfe014e52d091a31e575))
+* 🤖 @hybrid-compute/local@0.37.0 ([8f2beee](https://github.com/phun-ky/hybrid-compute/commit/8f2beee9584e0b4c4b47527075a76a7b4a10412f))
+* 🤖 @hybrid-compute/remote@0.37.0 ([3096464](https://github.com/phun-ky/hybrid-compute/commit/309646464694314440c86cc2e382d22f0925e534))
+* 🤖 add lint, format, typecheck and docs:check scripts ([437485d](https://github.com/phun-ky/hybrid-compute/commit/437485dd1758b5b7dfb90c26a93bde9bdfeaa94d)), closes [#68](https://github.com/phun-ky/hybrid-compute/issues/68) [#79](https://github.com/phun-ky/hybrid-compute/issues/79)
+* 🤖 apply eslint --fix and prettier --write ([ee5175c](https://github.com/phun-ky/hybrid-compute/commit/ee5175cde14c477f93d6628c53cf81a6f4380d3e)), closes [#68](https://github.com/phun-ky/hybrid-compute/issues/68)
+* 🤖 apply only the category labels from the labeler ([7192834](https://github.com/phun-ky/hybrid-compute/commit/7192834112d17dc8eaa00cba0b44523c42a907d4)), closes [#74](https://github.com/phun-ky/hybrid-compute/issues/74)
+* 🤖 open majors separately and update GitHub Actions pins ([cdc69c8](https://github.com/phun-ky/hybrid-compute/commit/cdc69c888f0e5ee95c1f9d9589ed98728386f692)), closes [#71](https://github.com/phun-ky/hybrid-compute/issues/71)
+* 🤖 sign off every commit (DCO) ([04c05da](https://github.com/phun-ky/hybrid-compute/commit/04c05da1bba641b6bf3250597073b9f71c4296b7)), closes [#70](https://github.com/phun-ky/hybrid-compute/issues/70)
+* 🤖 sync package-lock.json with the 0.36.0 release ([4236ea3](https://github.com/phun-ky/hybrid-compute/commit/4236ea37c494a37a2f41b6eed4c48f5126b8a8f1)), closes [#76](https://github.com/phun-ky/hybrid-compute/issues/76)
+
+### Documentation
+
+* ✏️ rewrite SECURITY.md and add security-insights.yml ([64d45d3](https://github.com/phun-ky/hybrid-compute/commit/64d45d31a4e85cbed5605197e9a7c2a2b536a88e)), closes [#72](https://github.com/phun-ky/hybrid-compute/issues/72)
+
+### Bug
+
+* 🐛 ship a LICENSE in every package and fix the homepage URL ([3e48683](https://github.com/phun-ky/hybrid-compute/commit/3e4868375a9de36f28d312473fca275b8ce7a68a)), closes [#72](https://github.com/phun-ky/hybrid-compute/issues/72)
+
 ## [0.36.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/worker@0.35.0...@hybrid-compute/worker@0.36.0) (2026-05-18)
 
 ### Tasks
