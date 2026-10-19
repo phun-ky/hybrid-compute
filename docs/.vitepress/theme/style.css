@@ -1,0 +1,264 @@
+/*
+ * Thread Profiler: the docs styled like a performance timeline. A time
+ * ruler under the nav, headings and code marked as timeline slices, blue
+ * for work that ran and orange for work that blocked. Dark first, with a
+ * light variant. All colours come from the --d-* tokens below.
+ */
+
+/* Tokens: light */
+:root {
+  --d-font: 'Geist', system-ui, sans-serif;
+  --d-mono: 'Geist Mono', ui-monospace, monospace;
+  --d-bg: #fafafa;
+  --d-bg2: #ffffff;
+  --d-bg3: #f0f1f4;
+  --d-line: #dfe2e8;
+  --d-tick: #c9ced8;
+  --d-text: #15171c;
+  --d-muted: #4d5360;
+  --d-faint: #626876;
+  /* blue: work that ran */
+  --d-accent: #1f63d1;
+  --d-accent-soft: rgba(31, 99, 209, 0.09);
+  --d-on-accent: #ffffff;
+  /* orange: work that blocked */
+  --d-blocking: #b24f00;
+  --d-on-blocking: #ffffff;
+}
+
+/* Tokens: dark (the default) */
+.dark {
+  --d-bg: #0f1013;
+  --d-bg2: #16181d;
+  --d-bg3: #1d2027;
+  --d-line: #2a2e37;
+  --d-tick: #353a45;
+  --d-text: #e8eaee;
+  --d-muted: #a3a9b5;
+  --d-faint: #8a909c;
+  --d-accent: #6aa8ff;
+  --d-accent-soft: rgba(106, 168, 255, 0.12);
+  --d-on-accent: #0f1013;
+  --d-blocking: #ff9a3d;
+  --d-on-blocking: #1a0d00;
+}
+
+/* Map the tokens onto VitePress */
+:root,
+.dark {
+  --vp-font-family-base: var(--d-font);
+  --vp-font-family-mono: var(--d-mono);
+
+  --vp-c-bg: var(--d-bg);
+  --vp-c-bg-alt: var(--d-bg2);
+  --vp-c-bg-elv: var(--d-bg2);
+  --vp-c-bg-soft: var(--d-bg3);
+  --vp-c-text-1: var(--d-text);
+  --vp-c-text-2: var(--d-muted);
+  --vp-c-text-3: var(--d-faint);
+  --vp-c-divider: var(--d-line);
+  --vp-c-border: var(--d-line);
+  --vp-c-gutter: var(--d-line);
+  --vp-c-brand-1: var(--d-accent);
+  --vp-c-brand-2: var(--d-accent);
+  --vp-c-brand-3: var(--d-accent);
+  --vp-c-brand-soft: var(--d-accent-soft);
+  --vp-c-tip-1: var(--d-accent);
+  --vp-c-tip-soft: var(--d-accent-soft);
+  --vp-button-brand-bg: var(--d-accent);
+  --vp-button-brand-text: var(--d-on-accent);
+  --vp-button-brand-hover-bg: var(--d-accent);
+  --vp-button-brand-hover-text: var(--d-on-accent);
+  --vp-code-block-bg: var(--d-bg2);
+  --vp-code-bg: var(--d-accent-soft);
+  --vp-code-color: var(--d-accent);
+  --vp-nav-bg-color: var(--d-bg);
+  --vp-sidebar-bg-color: var(--d-bg);
+  --vp-local-nav-bg-color: var(--d-bg);
+  --vp-sidebar-width: 320px;
+  --vp-layout-max-width: 1440px;
+}
+
+body {
+  background-color: var(--d-bg);
+  color: var(--d-muted);
+}
+
+/* ---------- Nav bar: a time ruler along its bottom edge ---------- */
+
+.VPNavBar {
+  border-bottom: 1px solid var(--d-line);
+}
+
+.VPNavBar,
+.VPNavBar .content-body {
+  background: var(--d-bg) !important;
+}
+
+.VPNavBar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9px;
+  height: 8px;
+  background-image:
+    repeating-linear-gradient(90deg, var(--d-tick) 0 1px, transparent 1px 80px),
+    repeating-linear-gradient(90deg, var(--d-tick) 0 1px, transparent 1px 16px);
+  background-size:
+    100% 8px,
+    100% 4px;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.VPNavBarTitle .title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Sidebar and outline ---------- */
+
+.VPSidebarItem.level-0 > .item .text,
+.VPDocAsideOutline .outline-title {
+  font-family: var(--d-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--d-faint);
+}
+
+/* The current page reads as the selected slice */
+.VPSidebarItem.is-active > .item {
+  background: var(--d-accent-soft);
+  box-shadow: inset 3px 0 0 var(--d-accent);
+}
+
+.VPSidebarItem.is-active > .item .text {
+  padding-left: 10px;
+}
+
+/* ---------- Docs content ---------- */
+
+.vp-doc p,
+.vp-doc li {
+  color: var(--d-muted);
+  line-height: 1.75;
+}
+
+.vp-doc p {
+  max-width: 68ch;
+}
+
+.vp-doc strong,
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4 {
+  color: var(--d-text);
+}
+
+.vp-doc h1 {
+  font-size: 42px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.vp-doc h2 {
+  border-top: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* Each h2 gets a timeline slice above it: work that ran, then work that blocked */
+.vp-doc h2::before {
+  content: '';
+  display: block;
+  width: 96px;
+  height: 6px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--d-accent) 0 60%,
+    transparent 60% 64%,
+    var(--d-blocking) 64% 100%
+  );
+}
+
+.vp-doc a {
+  color: var(--d-accent);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.vp-doc a:hover {
+  text-decoration: underline;
+}
+
+.vp-doc div[class*='language-'] {
+  border: 1px solid var(--d-line);
+  border-left: 3px solid var(--d-accent);
+  border-radius: 6px;
+}
+
+.vp-doc div[class*='language-'] > span.lang {
+  font-family: var(--d-mono);
+  color: var(--d-faint);
+}
+
+.vp-doc table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vp-doc tr,
+.vp-doc th,
+.vp-doc td {
+  border-color: var(--d-line);
+}
+
+.vp-doc th {
+  font-family: var(--d-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--d-faint);
+  background: var(--d-bg3);
+}
+
+.vp-doc tr:nth-child(2n) {
+  background: var(--d-bg2);
+}
+
+.vp-doc .custom-block {
+  border: 1px solid var(--d-line);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: var(--d-bg2);
+}
+
+.vp-doc .custom-block.tip,
+.vp-doc .custom-block.info {
+  border-left-color: var(--d-accent);
+}
+
+.vp-doc .custom-block.warning,
+.vp-doc .custom-block.danger {
+  border-left-color: var(--d-blocking);
+}
+
+.vp-doc .custom-block p {
+  color: var(--d-muted);
+}
+
+.VPButton {
+  border-radius: 6px !important;
+}
+
+/* ---------- Home ---------- */
+
+.VPHome {
+  padding-bottom: 0 !important;
+}

@@ -81,6 +81,8 @@
     "test:ci": "npm run test:ci --workspaces --if-present"
   },
   "devDependencies": {
+    "@fontsource/geist": "^5.3.0",
+    "@fontsource/geist-mono": "^5.3.0",
     "@release-it/bumper": "^7.0.5",
     "@release-it/conventional-changelog": "^11.0.0",
     "cobertura": "^1.0.3",

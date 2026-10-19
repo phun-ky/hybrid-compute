@@ -26,12 +26,13 @@ export default withMermaid(
     },
     mermaid: {
       themeVariables: {
-        fontFamily:
-          "'Menlo for Powerline', 'Menlo Regular for Powerline', 'DejaVu Sans Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+        fontFamily: 'Geist Mono, ui-monospace, monospace',
         fontSize: '16px'
       }
     },
     lang: 'en-GB',
+    // Dark first, like a profiler; the toggle switches to light
+    appearance: 'dark',
     head: [
       [
         'meta',

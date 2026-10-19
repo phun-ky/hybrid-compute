@@ -19,7 +19,7 @@ watchPostEffect(() => {
 
 <template>
   <button
-    class="ph darkmode-button"
+    class="darkmode-button"
     :title="switchTitle"
     role="switch"
     :aria-checked="isDark"
@@ -30,7 +30,7 @@ watchPostEffect(() => {
       aria-label="Sun Icon"
       fill="currentColor"
       stroke="none"
-      class="ph hide-dark"
+      class="hide-dark"
       viewBox="0 0 20 20"
     >
       <path
@@ -45,7 +45,7 @@ watchPostEffect(() => {
       aria-label="Moon Icon"
       fill="currentColor"
       stroke="none"
-      class="ph hide-light"
+      class="hide-light"
       viewBox="0 0 20 20"
     >
       <path
@@ -76,7 +76,7 @@ watchPostEffect(() => {
   background-color: transparent;
   border: none;
   border-radius: 50%;
-  color: var(--ph-color-text);
+  color: var(--d-muted);
   cursor: pointer;
   display: flex;
   height: 36px;
@@ -85,7 +85,7 @@ watchPostEffect(() => {
 
   &:active,
   &:hover {
-    background-color: var(--ph-color-well-background);
+    background-color: var(--d-bg3);
   }
 
   & > svg {

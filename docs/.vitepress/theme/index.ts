@@ -1,33 +1,22 @@
 import type { Theme } from 'vitepress';
-import { useData } from 'vitepress';
 import DefaultTheme from 'vitepress/theme-without-fonts';
-import { onMounted, watchEffect } from 'vue';
 
+// Self-hosted fonts: the docs site loads nothing from other origins
+import '@fontsource/geist/400.css';
+import '@fontsource/geist/500.css';
+import '@fontsource/geist/600.css';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource/geist-mono/500.css';
 import 'virtual:group-icons.css';
-import './custom.css';
+import './style.css';
 
-const GLOBAL_CLASS = 'ph';
-const THEME_DARK = 'theme--dark';
-const THEME_LIGHT = 'theme--light';
+import ProfilerHome from './components/home/ProfilerHome.vue';
 
 export default {
   ...DefaultTheme,
-  enhanceApp() {
-    if (typeof window !== 'undefined') {
-      document.documentElement.classList.add(GLOBAL_CLASS);
-    }
-  },
-
-  setup() {
-    const { isDark } = useData();
-
-    onMounted(() => {
-      const root = document.documentElement;
-
-      watchEffect(() => {
-        root.classList.toggle(THEME_DARK, isDark.value);
-        root.classList.toggle(THEME_LIGHT, !isDark.value);
-      });
-    });
+  enhanceApp(ctx) {
+    // Keep the default theme's global components (such as <Badge>)
+    DefaultTheme.enhanceApp?.(ctx);
+    ctx.app.component('ProfilerHome', ProfilerHome);
   }
 } satisfies Theme;
