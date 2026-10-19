@@ -1,6 +1,7 @@
 {
   "name": "hybrid-compute",
   "version": "0.0.0",
+  "private": true,
   "description": "Composable compute orchestration across local, threaded, and remote environments.",
   "keywords": [
     "compute",
@@ -42,7 +43,7 @@
     "isomorphic",
     "cross-environment"
   ],
-  "homepage": "https://phun-ky.net/projects/hybrid-compute",
+  "homepage": "https://phun-ky.net/hybrid-compute/",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"
   },
@@ -58,11 +59,18 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "prebuild": "npm run clean",
     "build": "tsc -b",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present",
     "commit": "npx git-cz",
     "docs:gen": "typedoc",
+    "docs:check": "typedoc --emit none --treatWarningsAsErrors",
     "predocs:dev": "npm run docs:gen",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

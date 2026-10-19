@@ -13,7 +13,7 @@
     "modular",
     "framework"
   ],
-  "homepage": "https://phun-ky.net/projects/hybrid-compute",
+  "homepage": "https://phun-ky.net/hybrid-compute/",
   "bugs": {
     "url": "https://github.com/phun-ky/hybrid-compute/issues"
   },
@@ -28,7 +28,8 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "typecheck": "tsc -p tsconfig.json",
     "release": "release-it",
     "test": "tsx --test **/__tests__/**/*.spec.ts",
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
@@ -38,7 +39,7 @@
     "@phun-ky/typeof": "^2.1.9"
   },
   "devDependencies": {
-    "@types/node": "^25.8.0",
+    "@types/node": "^24.19.2",
     "eslint": "^9.27.0",
     "eslint-config-phun-ky": "^1.0.3",
     "prettier": "^3.8.3",

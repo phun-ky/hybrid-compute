@@ -2,24 +2,40 @@ version: 2
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
+    # Major updates are not grouped, so each one gets its own PR to test and merge
     groups:
       minor-and-patch:
         applies-to: version-updates
         update-types:
           - 'minor'
           - 'patch'
-      major-updates:
-        applies-to: version-updates
+    ignore:
+      # Keep @types/node on the Node major used by CI (24)
+      - dependency-name: '@types/node'
         update-types:
-          - 'major'
+          - 'version-update:semver-major'
     schedule:
       interval: 'weekly'
     labels:
       - 'mindless: 📦 dependencies'
-      - 'problems: security'
     commit-message:
       prefix: 'chore: 🤖 '
-    open-pull-requests-limit: 2
+    open-pull-requests-limit: 5
     allow:
       - dependency-type: direct
       - dependency-type: production
+
+  # Actions are pinned to commit SHAs; this keeps the pins and their version
+  # comments up to date
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    groups:
+      actions:
+        patterns:
+          - '*'
+    schedule:
+      interval: 'weekly'
+    labels:
+      - 'mindless: 📦 dependencies'
+    commit-message:
+      prefix: 'ci: 🎡 '

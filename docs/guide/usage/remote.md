@@ -33,7 +33,6 @@ const remote = createRemoteCompute({
   endpoint: 'https://your-remote-service.com/compute',
   canRunTasks: ['echo']
 });
-
 const compute = createHybridCompute({
   remote
 });
@@ -41,6 +40,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Remote via fetch!');
+
     console.log(result); // Output from remote server
   } catch (error) {
     console.error('Task failed:', error);
@@ -70,6 +70,7 @@ const tasks = {
   // Example additional task
   reverse: async (input) => {
     if (typeof input !== 'string') throw new Error('Input must be a string');
+
     return input.split('').reverse().join('');
   }
 };
@@ -84,6 +85,7 @@ app.post('/compute', async (req, res) => {
     }
 
     const result = await tasks[task](input);
+
     res.json({ result });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -116,7 +118,6 @@ const remote = createRemoteCompute({
   endpoint: 'wss://your-remote-service.com/socket',
   canRunTasks: ['echo']
 });
-
 const compute = createHybridCompute({
   remote
 });
@@ -124,6 +125,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Remote via WebSocket!');
+
     console.log(result); // Output from remote service
   } catch (error) {
     console.error('Task failed:', error);
@@ -137,6 +139,7 @@ main();
 
 ```js
 import { WebSocketServer } from 'ws';
+
 import http from 'http';
 
 // Simple task definitions
@@ -147,10 +150,10 @@ const tasks = {
 
   reverse: async (input) => {
     if (typeof input !== 'string') throw new Error('Input must be a string');
+
     return input.split('').reverse().join('');
   }
 };
-
 // Create an HTTP server to attach WebSocket
 const server = http.createServer();
 const wss = new WebSocketServer({ server });
@@ -163,6 +166,7 @@ wss.on('connection', (ws) => {
       request = JSON.parse(message.toString());
     } catch (err) {
       ws.send(JSON.stringify({ id: null, error: 'Invalid JSON' }));
+
       return;
     }
 
@@ -170,6 +174,7 @@ wss.on('connection', (ws) => {
 
     if (!id || typeof task !== 'string') {
       ws.send(JSON.stringify({ id, error: 'Missing or invalid task name' }));
+
       return;
     }
 
@@ -177,6 +182,7 @@ wss.on('connection', (ws) => {
       if (!tasks[task]) throw new Error(`Unknown task '${task}'`);
 
       const result = await tasks[task](input);
+
       ws.send(JSON.stringify({ id, result }));
     } catch (error) {
       ws.send(JSON.stringify({ id, error: error.message }));

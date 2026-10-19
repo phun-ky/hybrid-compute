@@ -59,14 +59,13 @@ const worker = createThreadedCompute(
   new URL('./worker.ts', import.meta.url).href,
   ['echo']
 );
-
 const compute = createHybridCompute({
   worker
 });
-
 const main = async () => {
   try {
     const result = await compute.runTask('echo', 'Hello from Worker!');
+
     console.log(result); // Echo from Worker: Hello from Worker!
   } catch (error) {
     console.error('Task failed:', error);

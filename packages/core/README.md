@@ -49,8 +49,9 @@ npm install @hybrid-compute/local
 ```
 
 ```ts
-import { createHybridCompute } from '@hybrid-compute/core';
 import { createLocalCompute } from '@hybrid-compute/local';
+
+import { createHybridCompute } from '@hybrid-compute/core';
 
 // Define a simple echo task
 const echoTask = {
@@ -59,9 +60,9 @@ const echoTask = {
     return `Echo: ${input}`;
   }
 };
-
 // Set up the local backend and register the task
 const local = createLocalCompute();
+
 local.registerTask(echoTask);
 
 // Set up the HybridCompute instance with only the local backend
@@ -73,6 +74,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Hello from HybridCompute!');
+
     console.log(result); // Output: Echo: Hello from HybridCompute!
   } catch (error) {
     console.error('Task failed:', error);
@@ -92,15 +94,15 @@ npm install @hybrid-compute/remote
 #### Fetch
 
 ```ts
-import { createHybridCompute } from '@hybrid-compute/core';
 import { createRemoteCompute } from '@hybrid-compute/remote';
+
+import { createHybridCompute } from '@hybrid-compute/core';
 
 const remote = createRemoteCompute({
   transport: 'fetch',
   endpoint: 'https://your-remote-service.com/compute',
   canRunTasks: ['echo']
 });
-
 const compute = createHybridCompute({
   remote
 });
@@ -108,6 +110,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Remote via fetch!');
+
     console.log(result); // Output from remote server
   } catch (error) {
     console.error('Task failed:', error);
@@ -137,6 +140,7 @@ const tasks = {
   // Example additional task
   reverse: async (input) => {
     if (typeof input !== 'string') throw new Error('Input must be a string');
+
     return input.split('').reverse().join('');
   }
 };
@@ -151,6 +155,7 @@ app.post('/compute', async (req, res) => {
     }
 
     const result = await tasks[task](input);
+
     res.json({ result });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -175,15 +180,15 @@ curl -X POST http://localhost:3000/compute \
 #### WebSocket
 
 ```ts
-import { createHybridCompute } from '@hybrid-compute/core';
 import { createRemoteCompute } from '@hybrid-compute/remote';
+
+import { createHybridCompute } from '@hybrid-compute/core';
 
 const remote = createRemoteCompute({
   transport: 'websocket',
   endpoint: 'wss://your-remote-service.com/socket',
   canRunTasks: ['echo']
 });
-
 const compute = createHybridCompute({
   remote
 });
@@ -191,6 +196,7 @@ const compute = createHybridCompute({
 async function main() {
   try {
     const result = await compute.runTask('echo', 'Remote via WebSocket!');
+
     console.log(result); // Output from remote service
   } catch (error) {
     console.error('Task failed:', error);
@@ -204,6 +210,7 @@ main();
 
 ```js
 import { WebSocketServer } from 'ws';
+
 import http from 'http';
 
 // Simple task definitions
@@ -214,10 +221,10 @@ const tasks = {
 
   reverse: async (input) => {
     if (typeof input !== 'string') throw new Error('Input must be a string');
+
     return input.split('').reverse().join('');
   }
 };
-
 // Create an HTTP server to attach WebSocket
 const server = http.createServer();
 const wss = new WebSocketServer({ server });
@@ -230,6 +237,7 @@ wss.on('connection', (ws) => {
       request = JSON.parse(message.toString());
     } catch (err) {
       ws.send(JSON.stringify({ id: null, error: 'Invalid JSON' }));
+
       return;
     }
 
@@ -237,6 +245,7 @@ wss.on('connection', (ws) => {
 
     if (!id || typeof task !== 'string') {
       ws.send(JSON.stringify({ id, error: 'Missing or invalid task name' }));
+
       return;
     }
 
@@ -244,6 +253,7 @@ wss.on('connection', (ws) => {
       if (!tasks[task]) throw new Error(`Unknown task '${task}'`);
 
       const result = await tasks[task](input);
+
       ws.send(JSON.stringify({ id, result }));
     } catch (error) {
       ws.send(JSON.stringify({ id, error: error.message }));
@@ -294,22 +304,22 @@ self.onmessage = async (event) => {
 And your `main.ts`:
 
 ```ts
-import { createHybridCompute } from '@hybrid-compute/core';
 import { createThreadedCompute } from '@hybrid-compute/worker';
+
+import { createHybridCompute } from '@hybrid-compute/core';
 
 // Worker must be served as a module
 const worker = createThreadedCompute(
   new URL('./worker.ts', import.meta.url).href,
   ['echo']
 );
-
 const compute = createHybridCompute({
   worker
 });
-
 const main = async () => {
   try {
     const result = await compute.runTask('echo', 'Hello from Worker!');
+
     console.log(result); // Echo from Worker: Hello from Worker!
   } catch (error) {
     console.error('Task failed:', error);

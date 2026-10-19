@@ -2,7 +2,8 @@
   "git": {
     "requireCleanWorkingDir": false,
     "tagName": "@hybrid-compute/worker@${version}",
-    "commitMessage": "chore: 🤖 ${name}@${version}"
+    "commitMessage": "chore: 🤖 ${name}@${version}",
+    "commitArgs": ["-s"]
   },
   "github": {
     "release": true,
@@ -14,6 +15,7 @@
     "skipChecks": true
   },
   "hooks": {
+    "after:bump": "node ../../scripts/sync-lockfile.mjs",
     "after:release": "echo Successfully released ${name} v${version}."
   },
   "plugins": {

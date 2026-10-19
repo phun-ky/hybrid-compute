@@ -1,0 +1,134 @@
+header:
+  schema-version: 2.2.0
+  last-updated: '2026-10-19'
+  last-reviewed: '2026-10-19'
+  url: https://raw.githubusercontent.com/phun-ky/hybrid-compute/main/security-insights.yml
+  comment: |
+    Security information for hybrid-compute, in the OpenSSF Security
+    Insights format. Keep it in step with SECURITY.md.
+
+project:
+  name: hybrid-compute
+  homepage: https://phun-ky.net/hybrid-compute/
+  funding: https://github.com/sponsors/phun-ky
+  administrators:
+    - name: Alexander Vassbotn Røyne-Helgesen
+      social: https://github.com/phun-ky
+      primary: true
+  documentation:
+    quickstart-guide: https://phun-ky.net/hybrid-compute/guide/introduction/
+    detailed-guide: https://phun-ky.net/hybrid-compute/
+    code-of-conduct: https://github.com/phun-ky/hybrid-compute/blob/main/CODE_OF_CONDUCT.md
+    support-policy: https://github.com/phun-ky/hybrid-compute/blob/main/SECURITY.md#supported-versions
+    signature-verification: https://github.com/phun-ky/hybrid-compute/blob/main/SECURITY.md#verifying-releases
+  repositories:
+    - name: hybrid-compute
+      url: https://github.com/phun-ky/hybrid-compute
+      comment: |
+        The monorepo for all four packages: core, local, remote and worker.
+  vulnerability-reporting:
+    reports-accepted: true
+    bug-bounty-available: false
+    policy: https://github.com/phun-ky/hybrid-compute/blob/main/SECURITY.md
+    comment: |
+      Report privately with GitHub's private vulnerability reporting
+      (https://github.com/phun-ky/hybrid-compute/security/advisories/new)
+      or by email to the contact below.
+    contact:
+      name: hybrid-compute security contact
+      email: security@phun-ky.net
+      primary: true
+
+repository:
+  url: https://github.com/phun-ky/hybrid-compute
+  status: active
+  accepts-change-request: true
+  accepts-automated-change-request: true
+  no-third-party-packages: false
+  core-team:
+    - name: Alexander Vassbotn Røyne-Helgesen
+      social: https://github.com/phun-ky
+      primary: true
+  documentation:
+    contributing-guide: https://github.com/phun-ky/hybrid-compute/blob/main/CONTRIBUTING.md
+    security-policy: https://github.com/phun-ky/hybrid-compute/blob/main/SECURITY.md
+    dependency-management-policy: https://github.com/phun-ky/hybrid-compute/blob/main/SECURITY.md#dependencies
+  license:
+    url: https://github.com/phun-ky/hybrid-compute/blob/main/LICENSE
+    expression: MIT
+  release:
+    automated-pipeline: true
+    changelog: https://github.com/phun-ky/hybrid-compute/releases
+    distribution-points:
+      - uri: pkg:npm/%40hybrid-compute/core
+        comment: npm package
+      - uri: pkg:npm/%40hybrid-compute/local
+        comment: npm package
+      - uri: pkg:npm/%40hybrid-compute/remote
+        comment: npm package
+      - uri: pkg:npm/%40hybrid-compute/worker
+        comment: npm package
+    attestations:
+      - name: npm provenance
+        predicate-uri: https://slsa.dev/provenance/v1
+        location: https://registry.npmjs.org/-/npm/v1/attestations/@hybrid-compute%2f{package}@{version}
+        comment: |
+          Every package is published from GitHub Actions with npm trusted
+          publishing and a Sigstore-signed provenance attestation. Replace
+          {package} and {version}, or run npm audit signatures.
+      - name: SBOM
+        predicate-uri: https://cyclonedx.org/bom
+        location: https://github.com/phun-ky/hybrid-compute/releases/tag/@hybrid-compute/{package}@{version}
+        comment: |
+          A CycloneDX SBOM of the package's runtime dependencies,
+          {package}-{version}.cdx.json, is attached to each GitHub release.
+  security:
+    tools:
+      - name: CodeQL
+        type: SAST
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          GitHub default setup, scanning JavaScript/TypeScript and the GitHub
+          Actions workflows on every push to main and every pull request.
+      - name: Dependabot
+        type: SCA
+        rulesets:
+          - default
+        integration:
+          adhoc: true
+          ci: false
+          release: false
+        results: {}
+        comment: |
+          Weekly checks of the npm dependencies and GitHub Actions, with
+          update pull requests.
+      - name: Dependency Review
+        type: SCA
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Fails pull requests that add a dependency with a known high or
+          critical vulnerability. npm audit gates every release the same way.
+      - name: OpenSSF Scorecard
+        type: other
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Runs on every push to main; results at
+          https://scorecard.dev/viewer/?uri=github.com/phun-ky/hybrid-compute

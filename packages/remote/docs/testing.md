@@ -31,8 +31,8 @@ async function run() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ task: taskName, input })
   });
-
   const json = await res.json();
+
   console.log('Response:', json);
 }
 
@@ -77,6 +77,7 @@ socket.onopen = () => {
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
+
   console.log('WS response:', data);
   socket.close();
 };

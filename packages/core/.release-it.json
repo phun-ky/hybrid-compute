@@ -2,11 +2,12 @@
   "git": {
     "requireCleanWorkingDir": false,
     "tagName": "@hybrid-compute/core@${version}",
-    "commitMessage": "chore: 🤖 ${name}@${version}"
+    "commitMessage": "chore: 🤖 ${name}@${version}",
+    "commitArgs": ["-s"]
   },
   "github": {
     "release": true,
-    "releaseName": "@hybrid-compute/worker@${version}",
+    "releaseName": "@hybrid-compute/core@${version}",
     "tokenRef": "GH_TOKEN"
   },
   "npm": {
@@ -14,6 +15,7 @@
     "skipChecks": true
   },
   "hooks": {
+    "after:bump": "node ../../scripts/sync-lockfile.mjs",
     "after:release": "echo Successfully released ${name} v${version}."
   },
   "plugins": {

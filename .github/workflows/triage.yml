@@ -4,9 +4,14 @@ on:
     types:
       - reopened
       - opened
+
+# Read-only by default; jobs ask for what they need
+permissions:
+  contents: read
+
 jobs:
   label_issues:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       issues: write
     steps:
