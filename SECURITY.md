@@ -137,6 +137,15 @@ Advisory Database:
 | Moderate or low            | Any dependency         | Fixed with the next update, within 90 days                                                       |
 | Licence outside the policy | New dependency         | Not merged                                                                                       |
 
+**Accepted exceptions.** A vulnerability that can't be fixed yet and can't be
+exploited through this project is allowed in dependency review, and its alert is
+dismissed with the reason. Each one is listed here and removed as soon as a fix
+is reachable:
+
+| Advisory                                                                 | Package            | Why it is accepted                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [GHSA-c475-qrg2-pj4r](https://github.com/advisories/GHSA-c475-qrg2-pj4r) | `basic-ftp` (high) | Development only, through `release-it` > `proxy-agent` > `get-uri`. The vulnerable code parses FTP directory listings, which is only reached when a proxy auto-config file is fetched over `ftp://`; releases never do that. `get-uri` requires `basic-ftp` 5, and the fix is in 6.2.1. |
+
 ## Code Scanning
 
 CodeQL analyses every pull request and every push to `main`. The ruleset on
