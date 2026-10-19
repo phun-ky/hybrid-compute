@@ -207,6 +207,14 @@ export default withMermaid(
     },
     vite: {
       plugins: [groupIconVitePlugin()],
+      // mermaid 11.17 imports fastdom, which is CommonJS: pre-bundle it so the
+      // dev server can load it (production builds bundle it anyway)
+      optimizeDeps: {
+        include: [
+          'mermaid > fastdom',
+          'mermaid > fastdom/extensions/fastdom-promised.js'
+        ]
+      },
       resolve: {
         alias: [
           {
