@@ -69,8 +69,8 @@ dist
 /playwright/.cache/
 
 
-tsconfig.tsbuildinfo
-packages/*/tsconfig.tsbuildinfo
+*.tsbuildinfo
+packages/*/*.tsbuildinfo
 .vscode
 .vitepress/cache
 .vitepress/dist

@@ -8,5 +8,6 @@
     "declarationMap": true
   },
   "include": ["src"],
-  "references": [{ "path": "../core" }]
+  "exclude": ["src/**/__tests__/**"],
+  "references": [{ "path": "../core/tsconfig.build.json" }]
 }

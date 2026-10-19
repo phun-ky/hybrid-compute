@@ -7,19 +7,18 @@
     "typedoc-plugin-mdn-links",
     "typedoc-plugin-rename-defaults"
   ],
-
   "entryPointStrategy": "packages",
   "entryPoints": ["packages/*"],
   "packageOptions": {
     "entryPoints": ["src/index.ts"],
-    "readme": "none"
+    "readme": "none",
+    "gitRevision": "main"
   },
   "out": "docs/api",
   "docsRoot": "./docs",
   "tsconfig": "./tsconfig.base.json",
   "githubPages": false,
   "hideGenerator": true,
-  "gitRevision": "main",
   "navigationLinks": {
     "GitHub": "https://github.com/phun-ky/hybrid-compute"
   },
@@ -45,8 +44,16 @@
     "unified-prettier",
     [
       "remark-github",
-      { "repository": "https://github.com/phun-ky/hybrid-compute" }
+      {
+        "repository": "https://github.com/phun-ky/hybrid-compute"
+      }
     ],
-    ["remark-toc", { "heading": "Table of Contents", "maxDepth": 3 }]
+    [
+      "remark-toc",
+      {
+        "heading": "Table of Contents",
+        "maxDepth": 3
+      }
+    ]
   ]
 }
