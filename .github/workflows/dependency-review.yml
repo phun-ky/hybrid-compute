@@ -19,3 +19,8 @@ jobs:
         with:
           fail-on-severity: high
           fail-on-scopes: runtime, development
+          # Accepted exceptions, each explained in SECURITY.md under
+          # "Accepted exceptions". Remove an entry once a fix is reachable.
+          # GHSA-c475-qrg2-pj4r: basic-ftp, development only (release-it >
+          # proxy-agent > get-uri, which requires basic-ftp ^5; fixed in 6.2.1)
+          allow-ghsas: GHSA-c475-qrg2-pj4r
