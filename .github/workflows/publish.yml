@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Publish
 
-# Controls when the workflow will run
 on:
   # Release only when a merged PR changes what gets published. Docs,
   # workflow and root dev tooling changes do not release.
@@ -14,44 +11,72 @@ on:
       - 'scripts/**'
       - 'tsconfig.base.json'
   workflow_dispatch:
+
+# Read-only by default; only the publish job gets an OIDC token for npm
+permissions:
+  contents: read
+
+# One release at a time; never cancel a release halfway
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   publish:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    if:
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
+    runs-on: ubuntu-24.04
     permissions:
-      contents: write # For git operations
-      id-token: write # < REQUIRED FOR OIDC
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+      contents: read # Pushing release commits and tags uses GH_TOKEN, which may bypass the ruleset
+      id-token: write # npm trusted publishing (OIDC) and provenance
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # Checkout all branches and tags
+          fetch-depth: 0 # release-it reads tags and commits
           token: ${{ secrets.GH_TOKEN }}
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '>=22.0.0'
+          node-version: 24 # Ships npm 11, which supports trusted publishing (needs >= 11.5.1)
       - name: Install dependencies
-        run: | # Install and link dependencies
-          npm i
-      - name: 'Release' # Interesting step
+        run: npm ci
+      - name: Audit runtime dependencies # No release with a known high or critical vulnerability
+        run: npm audit --omit=dev --audit-level=high
+      - name: Remember existing tags
+        run:
+          git tag --list '@hybrid-compute/*' | sort > "$RUNNER_TEMP/tags-before"
+      - name: Release
         run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor}}@users.noreply.github.com"
+          git config user.name "$ACTOR"
+          git config user.email "$ACTOR@users.noreply.github.com"
           npm run release
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        env: # npm authenticates with trusted publishing (id-token: write), no token needed
+          ACTOR: ${{ github.actor }} # via env, never interpolated into the script
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Attach SBOMs to the new releases # CycloneDX, runtime dependencies only
+        run: |
+          git tag --list '@hybrid-compute/*' | sort > "$RUNNER_TEMP/tags-after"
+          comm -13 "$RUNNER_TEMP/tags-before" "$RUNNER_TEMP/tags-after" | while read -r tag; do
+            name="${tag#@hybrid-compute/}"
+            name="${name%@*}"
+            file="$RUNNER_TEMP/${name}-${tag##*@}.cdx.json"
+            node scripts/sbom.mjs "$name" > "$file"
+            gh release upload "$tag" "$file" --clobber
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
   notify:
     name: Notify failed build
     needs: publish
     if: failure()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
     steps:
-      - uses: jayqi/failed-build-issue-action@v1.2
+      - uses: drivendataorg/failed-build-issue-action@940568ce50eeef3f31a920614cefcc6102d2f930 # v1.3.0
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          label-name: 'problems: build failed'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          label-name: 'problems: 💔 build failed'
