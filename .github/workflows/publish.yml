@@ -4,24 +4,15 @@ name: Publish
 
 # Controls when the workflow will run
 on:
+  # Release only when a merged PR changes what gets published. Docs,
+  # workflow and root dev tooling changes do not release.
   pull_request:
     types: [closed]
     branches: ['main']
     paths:
-      - '.github/**'
-      - 'src/**'
-      - 'docs/**'
-      - 'package.json'
-      - 'package-lock.json'
+      - 'packages/**'
+      - 'scripts/**'
       - 'tsconfig.base.json'
-      - 'tsconfig.json'
-      - '.npmrc'
-      - '.release-it.json'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
-      - 'CODE_OF_CONDUCT.md'
-      - 'SECURITY.md'
-      - '.browserlistrc'
   workflow_dispatch:
 jobs:
   publish:

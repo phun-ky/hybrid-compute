@@ -4,42 +4,30 @@ name: Checks
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # On main, run when anything the job builds, tests or lints changes
   push:
     branches: ['main']
     paths:
       - '.github/**'
-      - 'src/**'
+      - 'packages/**'
+      - 'scripts/**'
       - 'docs/**'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.base.json'
       - 'tsconfig.json'
+      - 'typedoc.json'
+      - 'eslint.config.mjs'
+      - '.prettierrc'
+      - '.editorconfig'
       - '.npmrc'
-      - '.release-it.json'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
-      - 'CODE_OF_CONDUCT.md'
-      - 'SECURITY.md'
-      - '.browserlistrc'
+      - '.browserslistrc'
+      - '*.md'
+  # No path filter on pull requests: `check` is a required status check,
+  # so it has to report on every PR or the PR cannot merge
   pull_request:
     branches: ['main']
-    types: [opened, synchronize] # Workflow triggering events
-    paths:
-      - '.github/**'
-      - 'src/**'
-      - 'docs/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'tsconfig.base.json'
-      - 'tsconfig.json'
-      - '.npmrc'
-      - '.release-it.json'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
-      - 'CODE_OF_CONDUCT.md'
-      - 'SECURITY.md'
-      - '.browserlistrc'
+    types: [opened, synchronize, reopened]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
