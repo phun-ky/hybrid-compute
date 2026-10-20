@@ -76,9 +76,9 @@ What you can't rely on:
 
 - **Isolation between tasks.** Local tasks run with the full rights of your
   application. A Web Worker has its own thread, not its own security context.
-- **Trust in remote results.** `remote` checks that a reply has the right shape
-  (`{ result }` or `{ error }`), but the result itself, and a worker's result,
-  are returned as they are. Treat them as input.
+- **Trust in results.** `remote` and `worker` check that a reply has the right
+  shape (`{ result }` or `{ error }`), but the result itself is returned as it
+  is. Treat it as input.
 - **Keeping data on the device.** With the `auto` strategy, a task that no
   worker or local backend can run goes to `remote`, and a `remote` backend with
   `canRunTasks: '*'` accepts every task. The task name and input are then sent
@@ -89,7 +89,7 @@ What you can't rely on:
   can send a token with its `headers` option.
 - **Availability.** Remote tasks time out after 30 seconds unless configured
   otherwise, and any task can be cancelled with an `AbortSignal`. Worker tasks
-  have no timeout yet, and there are no rate limits.
+  have no timeout unless you set one, and there are no rate limits.
 
 ## Verifying Releases
 

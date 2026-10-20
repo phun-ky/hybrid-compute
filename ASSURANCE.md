@@ -61,9 +61,8 @@ There are no secrets, accounts or personal data in the software itself.
 - **Economy of mechanism.** Each package is a few hundred lines with no runtime
   dependencies outside the monorepo, which keeps them simple to review.
 - **Fail-safe defaults.** When no configured backend matches the strategy,
-  `runTask` rejects with an error, and an unknown local task throws. (A task
-  sent to a worker script that doesn't handle it can still wait forever; see the
-  known gaps.)
+  `runTask` rejects with an error, and an unknown local task throws. A worker
+  that crashes or never loads rejects every task waiting for it.
 - **Least privilege.** The packages request no permissions of their own. GitHub
   Actions workflows are read-only by default, and jobs are granted only what
   they need, such as `id-token: write` for publishing.
@@ -75,32 +74,25 @@ There are no secrets, accounts or personal data in the software itself.
 
 ## Common weaknesses countered
 
-| Weakness                                      | How it's countered                                                                                                                       |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Code injection (CWE-94)                       | No `eval` or `new Function`; task names select registered tasks, they are never executed                                                 |
-| Prototype pollution (CWE-1321)                | Tasks are stored in a `Map` and a `Set`, not plain objects                                                                               |
-| Use of a vulnerable component (CWE-1395)      | Dependabot, dependency review on every pull request, `npm audit` before every release                                                    |
-| Insecure CI configuration                     | Actions pinned to commit SHAs, read-only default permissions, no untrusted input interpolated into scripts                               |
-| Missing integrity check on download (CWE-494) | npm provenance attestations, verifiable with `npm audit signatures`                                                                      |
-| Uncontrolled resource consumption (CWE-400)   | Remote tasks time out (30 seconds by default) and can be cancelled; WebSocket connections open only when needed and close with `close()` |
+| Weakness                                      | How it's countered                                                                                                                                   |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code injection (CWE-94)                       | No `eval` or `new Function`; task names select registered tasks, they are never executed                                                             |
+| Prototype pollution (CWE-1321)                | Tasks are stored in a `Map` and a `Set`, not plain objects                                                                                           |
+| Use of a vulnerable component (CWE-1395)      | Dependabot, dependency review on every pull request, `npm audit` before every release                                                                |
+| Insecure CI configuration                     | Actions pinned to commit SHAs, read-only default permissions, no untrusted input interpolated into scripts                                           |
+| Missing integrity check on download (CWE-494) | npm provenance attestations, verifiable with `npm audit signatures`                                                                                  |
+| Uncontrolled resource consumption (CWE-400)   | Remote tasks time out (30 seconds by default) and can be cancelled; WebSocket connections and workers start only when needed and stop with `close()` |
 
 ## Known gaps
 
 These are tracked and are honest limits today, not hidden risks:
 
-- **Input validation is incomplete.** `core` validates its backends, task names
-  and strategies, and `local` validates the tasks registered with it, but
-  `remote` and `worker` don't validate their own options yet. The remaining API
-  reviews for 1.0 decide those checks:
-  [#84](https://github.com/phun-ky/hybrid-compute/issues/84) and
-  [#85](https://github.com/phun-ky/hybrid-compute/issues/85).
-- **Results are trusted.** `remote` checks a reply's shape and ignores WebSocket
-  messages it can't match, but doesn't validate the result itself, and worker
-  results aren't checked at all. Treat results as input; see the security
-  policy.
-- **No timeout for worker tasks yet,** so a task the worker script never answers
-  stays pending unless it's cancelled with an `AbortSignal`
-  ([#85](https://github.com/phun-ky/hybrid-compute/issues/85)). Remote tasks
-  time out after 30 seconds by default.
+- **Results are trusted.** `remote` and `worker` check a reply's shape and
+  ignore messages they can't match, but don't validate the result itself. Treat
+  results as input; see the security policy.
+- **Worker tasks have no timeout by default,** since workers are for long
+  running work. A task the worker script never answers stays pending unless a
+  `timeout` is set or it's cancelled with an `AbortSignal`. Remote tasks time
+  out after 30 seconds by default.
 - **One maintainer.** Changes are not reviewed by a second person; see
   [governance](GOVERNANCE.md#continuity).

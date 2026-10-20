@@ -190,8 +190,10 @@ task.
 
 When the Worker backend is selected, **Hybrid-Compute** packages your request
 and posts a message to the Web Worker with `{ id, task, input }`. The worker
-performs the computation and posts back `{ id, result }` (or `{ id, error }`).
-The Worker backend then resolves the original promise on the main thread. This
+performs the computation and posts back `{ id, result }` (or `{ id, error }`);
+`exposeTasks` does that part for you. The Worker backend then resolves the
+original promise on the main thread, or rejects it with a `WorkerTaskError`. The
+worker starts on the first task, and a new one starts if it crashes. This
 separation keeps heavy computations off the UI thread while preserving a simple,
 promise-based API.
 
