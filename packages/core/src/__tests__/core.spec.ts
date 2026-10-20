@@ -4,7 +4,8 @@ import {
   ComputeBackendInterface,
   createHybridCompute,
   ExecutionStrategyType,
-  HybridCompute
+  HybridCompute,
+  NoBackendError
 } from '..';
 
 // Mocks
@@ -139,6 +140,38 @@ describe('HybridCompute', () => {
     await assert.rejects(
       () => compute.runTask(mockTaskName, mockInput, 'auto'),
       /No backend available/
+    );
+  });
+});
+
+describe('NoBackendError', () => {
+  test('rejects with NoBackendError, naming the task and the strategy', async () => {
+    const compute = new HybridCompute({
+      worker: createNonRunnableMockBackend(),
+      local: createNonRunnableMockBackend()
+    });
+
+    await assert.rejects(
+      () => compute.runTask(mockTaskName, mockInput, 'auto'),
+      (error: unknown) => {
+        assert.ok(error instanceof NoBackendError);
+        assert.ok(error instanceof Error);
+        assert.strictEqual(error.name, 'NoBackendError');
+        assert.strictEqual(error.taskName, mockTaskName);
+        assert.strictEqual(error.strategy, 'auto');
+        assert.match(error.message, /double/);
+
+        return true;
+      }
+    );
+  });
+
+  test('has a default message naming the task and strategy', () => {
+    const error = new NoBackendError('resize', 'remote');
+
+    assert.strictEqual(
+      error.message,
+      "No backend available for task 'resize' using strategy 'remote'"
     );
   });
 });

@@ -1,7 +1,9 @@
+export * from './errors.js';
 export * from './types.js';
 
 import { isNotString } from '@phun-ky/typeof';
 
+import { NoBackendError } from './errors.js';
 import {
   ExecutionStrategyType,
   HybridComputeOptionsInterface
@@ -88,9 +90,7 @@ export class HybridCompute {
       }
     }
 
-    throw new Error(
-      `No backend available for task '${taskName}' using strategy '${strategy}'`
-    );
+    throw new NoBackendError(taskName, strategy);
   }
 }
 
