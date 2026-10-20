@@ -1,7 +1,8 @@
 // Check what npm would publish: pack every package, check each tarball holds
-// the files its package.json points at and no tests, lint it with publint and
-// @arethetypeswrong/cli, then install the tarballs in an empty project, check
-// every source map resolves, and import them. Run after `npm run build`.
+// the files its package.json points at, its LICENSE and README, and no tests,
+// lint it with publint and @arethetypeswrong/cli, then install the tarballs
+// in an empty project, check every source map resolves, and import them. Run
+// after `npm run build`.
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
@@ -75,7 +76,8 @@ try {
     const packed = Array.isArray(output) ? output[0] : Object.values(output)[0];
     const files = new Set(packed.files.map((file) => file.path));
 
-    for (const path of entryPoints(pkg)) {
+    // npm adds LICENSE and README.md on its own, if the package has them
+    for (const path of [...entryPoints(pkg), 'LICENSE', 'README.md']) {
       if (!files.has(path))
         problems.push(`${pkg.name}: ${path} is not in the tarball`);
     }
