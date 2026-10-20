@@ -18,7 +18,7 @@
 ## About
 
 `@hybrid-compute` is a flexible, modular compute orchestration framework that
-dispatches computational tasks to the most appropriate backend — whether that's:
+dispatches computational tasks to the most appropriate backend, whether that's:
 
 - The local JS thread (for fast, simple tasks)
 - A dedicated Web Worker (for multi-threaded offloading)
@@ -40,10 +40,10 @@ rest.
     - [Usage with worker](#usage-with-worker)
   - [Example](#example)
   - [Visual overviews](#visual-overviews)
-    - [High-Level Package Architecture](#high-level-package-architecture)
-    - [Task Dispatch Flow (HybridCompute Core)](#task-dispatch-flow-hybridcompute-core)
-    - [Threaded Worker Lifecycle](#threaded-worker-lifecycle)
-    - [Remote Compute Flow (WebSocket or Fetch)](#remote-compute-flow-websocket-or-fetch)
+    - [Packages and their dependencies](#packages-and-their-dependencies)
+    - [Task dispatch](#task-dispatch)
+    - [Worker backend](#worker-backend)
+    - [Remote backend](#remote-backend)
   - [Development](#development)
   - [Contributing](#contributing)
   - [License](#license)
@@ -379,70 +379,77 @@ console.log(result); // 42
 
 ## Visual overviews
 
-### High-Level Package Architecture
+The documentation site has these diagrams too, with more detail on the
+[architecture page](https://phun-ky.net/hybrid-compute/guide/architecture).
+
+### Packages and their dependencies
+
+Each backend depends on core and implements its `ComputeBackendInterface`; core
+imports no backend.
 
 ```mermaid
-graph TD
-  subgraph HybridCompute
-    HC[HybridCompute Core]
-    HC -->|uses| Local[Local Backend]
-    HC -->|uses| Worker[Threaded Backend]
-    HC -->|uses| Remote[Remote Backend]
-  end
-
-  Local -.->|executes task locally| TaskLocal[ComputeTask]
-  Worker -.->|delegates task to| WebWorker
-  Remote -.->|calls| HTTP[HTTP API] & WS[WebSocket API]
+flowchart BT
+  Local["@hybrid-compute/local<br/>LocalCompute"] -->|implements| Core
+  Worker["@hybrid-compute/worker<br/>ThreadedCompute"] -->|implements| Core
+  Remote["@hybrid-compute/remote<br/>RemoteCompute"] -->|implements| Core
+  Core["@hybrid-compute/core<br/>HybridCompute, interfaces"] -.->|depends on| Typeof["@phun-ky/typeof"]
 ```
 
-### Task Dispatch Flow (HybridCompute Core)
+### Task dispatch
+
+With `local`, `worker` or `remote`, core uses that backend if it is set, without
+asking `canRun`. With `auto`, it uses the first backend whose `canRun(name)` is
+true, in the order worker, local, remote. If nothing matches, `runTask` rejects
+with an `Error`.
 
 ```mermaid
-flowchart TD
-  A["runTask(taskName, input, strategy)"] --> B{Strategy}
-  B -->|local| C[local.runTask]
-  B -->|worker| D[worker.runTask]
-  B -->|remote| E[remote.runTask]
-  B -->|auto| F{canRun?}
-
-  F -->|worker| D
-  F -->|local| C
-  F -->|remote| E
-  D & C & E --> G[Promise<Output>]
+flowchart LR
+  App["runTask(name, input, strategy)"] --> S{strategy}
+  S -->|"local / worker / remote"| Direct["that backend, if set"]
+  S -->|auto| W{"worker.canRun?"}
+  W -->|yes| WR[worker.runTask]
+  W -->|no| L{"local.canRun?"}
+  L -->|yes| LR[local.runTask]
+  L -->|no| R{"remote.canRun?"}
+  R -->|yes| RR[remote.runTask]
+  R -->|no| E["Error: No backend available"]
+  Direct --> P["Promise of the output"]
+  WR --> P
+  LR --> P
+  RR --> P
 ```
 
-### Threaded Worker Lifecycle
+### Worker backend
 
 ```mermaid
 sequenceDiagram
-  participant MainThread
-  participant ThreadedCompute
-  participant WebWorker
+  participant App as Your code (main thread)
+  participant TC as ThreadedCompute
+  participant W as Worker script
 
-  MainThread->>ThreadedCompute: runTask("task", input)
-  ThreadedCompute->>WebWorker: postMessage({ id, task, input })
-  WebWorker-->>ThreadedCompute: postMessage({ id, result })
-  ThreadedCompute-->>MainThread: resolve(result)
-
+  App->>TC: runTask("resize", input)
+  TC->>W: postMessage({ task, input, id })
+  W-->>TC: { id, result } or { id, error }
+  TC-->>App: resolve(result) or reject(error)
 ```
 
-### Remote Compute Flow (WebSocket or Fetch)
+### Remote backend
 
 ```mermaid
-flowchart TD
-  subgraph RemoteCompute
-    RC["runTask()"]
-    style RC fill:#eef,stroke:#333,stroke-width:1px
-    RC --> T{Transport}
-    T -->|fetch| F[POST /compute]
-    T -->|websocket| WS["WebSocket.send()"]
+sequenceDiagram
+  participant RC as RemoteCompute
+  participant E as Your endpoint
+
+  alt transport: 'fetch'
+    RC->>E: POST to the configured URL, JSON { task, input }
+    E-->>RC: JSON { result, error? }
+  else transport: 'websocket'
+    RC->>E: send { task, input, id } on the socket opened at creation
+    E-->>RC: { id, result, error? }
   end
-
-  F --> JSON["JSON-RPC {task, input}"]
-  WS --> JSON
-  JSON -->|response| RC
-
 ```
+
+An error in the reply rejects the task's Promise.
 
 ## Development
 

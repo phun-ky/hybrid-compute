@@ -10,6 +10,10 @@ import '@fontsource/geist-mono/500.css';
 import 'virtual:group-icons.css';
 import './style.css';
 
+import DispatchDiagram from './components/diagrams/DispatchDiagram.vue';
+import PackagesDiagram from './components/diagrams/PackagesDiagram.vue';
+import RemoteDiagram from './components/diagrams/RemoteDiagram.vue';
+import WorkerDiagram from './components/diagrams/WorkerDiagram.vue';
 import ProfilerHome from './components/home/ProfilerHome.vue';
 
 export default {
@@ -18,5 +22,10 @@ export default {
     // Keep the default theme's global components (such as <Badge>)
     DefaultTheme.enhanceApp?.(ctx);
     ctx.app.component('ProfilerHome', ProfilerHome);
+    // Diagrams shared by the About and architecture pages
+    ctx.app.component('DispatchDiagram', DispatchDiagram);
+    ctx.app.component('PackagesDiagram', PackagesDiagram);
+    ctx.app.component('RemoteDiagram', RemoteDiagram);
+    ctx.app.component('WorkerDiagram', WorkerDiagram);
   }
 } satisfies Theme;
