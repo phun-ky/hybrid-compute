@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.37.0...%40hybrid-compute%2Fcore%400.38.0) (2026-10-20)
+
+### ⚠ BREAKING CHANGES
+
+* an explicit strategy now requires the backend's
+  canRun(taskName) to return true. Make sure the backend lists the task:
+  register it with local.registerTask, pass it to createThreadedCompute,
+  or include it in remote's canRunTasks (or leave canRunTasks out to
+  accept every task). The message for a missing explicit backend changed
+  from "No backend available ..." to "No <strategy> backend is configured
+  for task '<name>'"; match on NoBackendError instead of the message.
+* invalid input now fails instead of being accepted.
+  Pass createHybridCompute an object with at least one of local, worker
+  or remote, each with canRun and runTask; fix any misspelt keys. Pass
+  runTask a non-empty task name, and a strategy of 'auto', 'local',
+  'worker' or 'remote' (or leave it out for auto); a strategy of another
+  type no longer falls back to auto. An unknown strategy now rejects with
+  a RangeError instead of "No backend available".
+
+### Documentation
+
+* ✏️ correct core's doc comments ([cba8123](https://github.com/phun-ky/hybrid-compute/commit/cba8123765b9fe9a281a3f7c91fcda89295fa6a0)), references [#82](https://github.com/phun-ky/hybrid-compute/issues/82)
+* ✏️ use sh for shell code blocks ([8f0f027](https://github.com/phun-ky/hybrid-compute/commit/8f0f02710e46a6888541c90c8f936b0d3284ded3))
+
+### Feature
+
+* 🎸 reject with a typed NoBackendError when no backend can run a task ([d1b4af5](https://github.com/phun-ky/hybrid-compute/commit/d1b4af5ebc9a191b63fc9646bee21b60e7029838)), references [#82](https://github.com/phun-ky/hybrid-compute/issues/82)
+* 🎸 release only the packages that changed, in dependency order ([1a4c5c7](https://github.com/phun-ky/hybrid-compute/commit/1a4c5c78ac2e0a82d854f8750d785f441b997c6b)), closes [#75](https://github.com/phun-ky/hybrid-compute/issues/75)
+* 🎸 validate the backends and runTask's arguments ([bd7777d](https://github.com/phun-ky/hybrid-compute/commit/bd7777d33ae6e815775b0212c4bfdeaf4568c2e6)), references [#82](https://github.com/phun-ky/hybrid-compute/issues/82)
+
+### Bug
+
+* 🐛 check canRun for explicit strategies too ([b69b077](https://github.com/phun-ky/hybrid-compute/commit/b69b077b21c8b53130afb2ea7006e2ee76330565)), references [#82](https://github.com/phun-ky/hybrid-compute/issues/82)
+
+### Refactoring
+
+* 💡 drop the @phun-ky/typeof dependency from core ([83d97bf](https://github.com/phun-ky/hybrid-compute/commit/83d97bf5be385f550cc806d8272b9be86be4e7c5)), references [#82](https://github.com/phun-ky/hybrid-compute/issues/82)
+
 ## [0.37.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/core@0.36.0...@hybrid-compute/core@0.37.0) (2026-10-19)
 
 ### Tasks

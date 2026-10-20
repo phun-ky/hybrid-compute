@@ -4,13 +4,14 @@ ComputeBackendInterface
 # Interface: ComputeBackendInterface
 
 Defined in:
-[types.ts:59](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L59)
+[packages/core/src/types.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L63)
 
 Represents a backend capable of executing registered compute tasks.
 
 Each backend must be able to:
 
-- Determine if it can run a given task (`canRun`)
+- Determine if it can run a given task (`canRun`). Core asks this before every
+  task, for every strategy.
 - Execute a named task with input and return a Promise of output (`runTask`)
 
 ## Template
@@ -42,7 +43,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[types.ts:60](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L60)
+[packages/core/src/types.ts:64](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L64)
 
 #### Parameters
 
@@ -63,7 +64,7 @@ runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
 ```
 
 Defined in:
-[types.ts:61](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L61)
+[packages/core/src/types.ts:65](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L65)
 
 #### Type Parameters
 

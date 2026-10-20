@@ -6,6 +6,7 @@
 ## Classes
 
 - [HybridCompute](classes/HybridCompute.md)
+- [NoBackendError](classes/NoBackendError.md)
 
 ## Interfaces
 
