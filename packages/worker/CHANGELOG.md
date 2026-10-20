@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.37.3](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.2...%40hybrid-compute%2Fworker%400.37.3) (2026-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.39.0 ([410c7a0](https://github.com/phun-ky/hybrid-compute/commit/410c7a00cfa43524449e6ea5ab5661208af76126))
+
+### Documentation
+
+* ✏️ document local's task rules and fix the package README links ([f8de45d](https://github.com/phun-ky/hybrid-compute/commit/f8de45dc5d7e55763132278c9ec39f171b5f588a)), closes [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+
+### Adding missing tests
+
+* 💍 measure coverage on each package's own source ([4720e44](https://github.com/phun-ky/hybrid-compute/commit/4720e443b2a1d7c5a17536258c29da730f1a0b42)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.37.2](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.1...%40hybrid-compute%2Fworker%400.37.2) (2026-10-20)
 
 ### Tasks
