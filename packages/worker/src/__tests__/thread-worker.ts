@@ -7,6 +7,8 @@ export class ThreadWorker extends EventTarget {
   static started = 0;
   /** The last worker started, to send it events in tests. */
   static last?: ThreadWorker;
+  /** Workers not terminated yet, so a failed test can't leave one running. */
+  static readonly running = new Set<ThreadWorker>();
   private readonly thread: Thread;
 
   constructor(url: string | URL) {
@@ -18,6 +20,7 @@ export class ThreadWorker extends EventTarget {
 
     ThreadWorker.started++;
     ThreadWorker.last = this;
+    ThreadWorker.running.add(this);
     this.thread = new Thread(new URL(url));
     this.thread.on('message', (data) =>
       this.dispatchEvent(new MessageEvent('message', { data }))
@@ -39,6 +42,7 @@ export class ThreadWorker extends EventTarget {
   }
 
   terminate() {
+    ThreadWorker.running.delete(this);
     void this.thread.terminate();
   }
 }
@@ -57,6 +61,9 @@ const withGlobalWorker = async <T>(
     return await fn();
   } finally {
     global.Worker = original;
+
+    // A test that failed before close() would otherwise keep the process alive
+    for (const worker of ThreadWorker.running) worker.terminate();
   }
 };
 
