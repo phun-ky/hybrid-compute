@@ -1,80 +1,57 @@
-# Contributing to **@hybrid-compute**
+# Contributing to Hybrid Compute
 
 First off, thanks for taking the time to contribute! ❤️
 
 All types of contributions are encouraged and valued. See the
 [Table of Contents](#table-of-contents) for different ways to help and details
-about how this project handles them. Please make sure to read the relevant
-section before making your contribution. It will make it a lot easier for us
-maintainers and smooth out the experience for all involved. The community looks
-forward to your contributions. 🎉
+about how this project handles them. Please read the relevant section before
+making your contribution. It makes it a lot easier for the maintainer and
+smooths out the experience for everyone involved.
 
-> And if you like the project, but just don't have time to contribute, that's
-> fine. There are other easy ways to support the project and show your
-> appreciation, which we would also be very happy about:
+> And if you like the project, but don't have time to contribute, that's fine.
+> There are other easy ways to support the project and show your appreciation:
 >
 > - Star the project
-> - Tweet about it
-> - Refer this project in your project's readme
-> - Mention the project at local meetups and tell your friends/colleagues
+> - Mention it in your project's readme
+> - Tell your friends and colleagues about it
 
 ## Table of Contents
 
-- [Contributing to **@hybrid-compute**](#contributing-to-hybrid-compute)
-  - [Table of Contents](#table-of-contents)
-  - [Code of Conduct](#code-of-conduct)
-  - [I Have a Question](#i-have-a-question)
-  - [I Want To Contribute](#i-want-to-contribute)
-    - [Reporting Bugs](#reporting-bugs)
-      - [Before Submitting a Bug Report](#before-submitting-a-bug-report)
-      - [How Do I Submit a Good Bug Report?](#how-do-i-submit-a-good-bug-report)
-    - [Suggesting Enhancements](#suggesting-enhancements)
-      - [Before Submitting an Enhancement](#before-submitting-an-enhancement)
-      - [How Do I Submit a Good Enhancement Suggestion?](#how-do-i-submit-a-good-enhancement-suggestion)
-  - [Attribution](#attribution)
+- [Code of Conduct](#code-of-conduct)
+- [I Have a Question](#i-have-a-question)
+- [I Want To Contribute](#i-want-to-contribute)
+  - [Reporting Bugs](#reporting-bugs)
+  - [Suggesting Enhancements](#suggesting-enhancements)
+  - [Contributing Code](#contributing-code)
+    - [Coding Style](#coding-style)
+    - [Tests](#tests)
+    - [Developer Certificate of Origin](#developer-certificate-of-origin)
+    - [Commits and Pull Requests](#commits-and-pull-requests)
+- [Attribution](#attribution)
 
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[**@hybrid-compute** Code of Conduct](https://github.com/phun-ky/@hybrid-compute/blob/master/CODE_OF_CONDUCT.md).
+[Hybrid Compute Code of Conduct](https://github.com/phun-ky/hybrid-compute/blob/main/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report
 unacceptable behaviour to <code-of-conduct@phun-ky.net>.
 
 ## I Have a Question
 
 > If you want to ask a question, we assume that you have read the available
-> [Documentation](https://github.com/phun-ky/@hybrid-compute).
+> [documentation](https://phun-ky.net/hybrid-compute/).
 
-Before you ask a question, it is best to search for existing
-[Issues](https://github.com/phun-ky/@hybrid-compute/issues) that might help you.
-In case you have found a suitable issue and still need clarification, you can
-write your question in this issue. It is also advisable to search the internet
-for answers first.
+Before you ask a question, search the existing
+[issues](https://github.com/phun-ky/hybrid-compute/issues) that might help you.
+If you find a suitable issue and still need clarification, write your question
+in that issue.
 
-If you then still feel the need to ask a question and need clarification, we
-recommend the following:
+If you still need to ask a question:
 
-- Open an [Issue](https://github.com/phun-ky/@hybrid-compute/issues/new).
+- Open an [issue](https://github.com/phun-ky/hybrid-compute/issues/new).
 - Provide as much context as you can about what you're running into.
-- Provide project and platform versions (nodejs, npm, etc), depending on what
-  seems relevant.
-
-We will then take care of the issue as soon as possible.
-
-<!--
-You might want to create a separate issue tag for questions and include it in this description. People should then tag their issues accordingly.
-
-Depending on how large the project is, you may want to outsource the questioning, e.g. to Stack Overflow or Gitter. You may add additional contact and information possibilities:
-- IRC
-- Slack
-- Gitter
-- Stack Overflow tag
-- Blog
-- FAQ
-- Roadmap
-- E-Mail List
-- Forum
--->
+- Provide the versions of the packages, Node.js and npm, and the browser if the
+  question is about the worker backend.
 
 ## I Want To Contribute
 
@@ -82,121 +59,133 @@ Depending on how large the project is, you may want to outsource the questioning
 >
 > When contributing to this project, you must agree that you have authored 100%
 > of the content, that you have the necessary rights to the content and that the
-> content you contribute may be provided under the project license.
+> content you contribute may be provided under the project licence. You confirm
+> this on every commit by signing it off under the
+> [Developer Certificate of Origin](#developer-certificate-of-origin).
 
 ### Reporting Bugs
 
 #### Before Submitting a Bug Report
 
 A good bug report shouldn't leave others needing to chase you up for more
-information. Therefore, we ask you to investigate carefully, collect information
-and describe the issue in detail in your report. Please complete the following
-steps in advance to help us fix any potential bug as fast as possible.
+information. Please:
 
 - Make sure that you are using the latest version.
-- Determine if your bug is really a bug and not an error on your side e.g. using
-  incompatible environment components/versions (Make sure that you have read the
-  [documentation](https://github.com/phun-ky/@hybrid-compute). If you are
-  looking for support, you might want to check
-  [this section](#i-have-a-question)).
-- To see if other users have experienced (and potentially already solved) the
-  same issue you are having, check if there is not already a bug report existing
-  for your bug or error in the
-  [bug tracker](https://github.com/phun-ky/@hybrid-computeissues?q=label%3Abug).
-- Also make sure to search the internet (including Stack Overflow) to see if
-  users outside of the GitHub community have discussed the issue.
+- Check that it's really a bug and not an error on your side, for example an
+  unsupported environment. Read the
+  [documentation](https://phun-ky.net/hybrid-compute/) first.
+- Search the
+  [bug tracker](https://github.com/phun-ky/hybrid-compute/issues?q=label%3A%22problems%3A+%F0%9F%90%9B+bug%22)
+  to see if the bug has already been reported.
 - Collect information about the bug:
-  - Stack trace (Traceback)
-  - OS, Platform and Version (Windows, Linux, macOS, x86, ARM)
-  - Version of the interpreter, compiler, SDK, runtime environment, package
-    manager, depending on what seems relevant.
-  - Possibly your input and the output
-  - Can you reliably reproduce the issue? And can you also reproduce it with
-    older versions?
+  - the error message and stack trace
+  - the OS, Node.js, npm and browser versions, as relevant
+  - the strategy and backends you configured, your input and the output
+  - whether you can reproduce it reliably, and with older versions
 
 #### How Do I Submit a Good Bug Report?
 
-> You must never report security related issues, vulnerabilities or bugs
-> including sensitive information to the issue tracker, or elsewhere in public.
-> Instead sensitive bugs must be sent by email to
-> <@<hybrid-compute@phun-ky.net>>.
+> Never report security issues, vulnerabilities or bugs that include sensitive
+> information in the issue tracker or elsewhere in public. Report them privately
+> as described in the [security policy](SECURITY.md#reporting-a-vulnerability).
 
-<!-- You may add a PGP key to allow the messages to be sent encrypted as well. -->
+Bugs are tracked as GitHub issues. If you run into a problem:
 
-We use GitHub issues to track bugs and errors. If you run into an issue with the
-project:
+- Open an [issue](https://github.com/phun-ky/hybrid-compute/issues/new) with the
+  bug report template.
+- Explain the behaviour you expected and the actual behaviour.
+- Describe the steps to reproduce it, ideally as a small piece of code that
+  shows the problem on its own.
+- Add the information you collected above.
 
-- Open an [Issue](https://github.com/phun-ky/@hybrid-compute/issues/new). (Since
-  we can't be sure at this point whether it is a bug or not, we ask you not to
-  talk about a bug yet and not to label the issue.)
-- Explain the behaviour you would expect and the actual behaviour.
-- Please provide as much context as possible and describe the _reproduction
-  steps_ that someone else can follow to recreate the issue on their own. This
-  usually includes your code. For good bug reports you should isolate the
-  problem and create a reduced test case.
-- Provide the information you collected in the previous section.
-
-Once it's filed:
-
-- The project team will label the issue accordingly.
-- A team member will try to reproduce the issue with your provided steps. If
-  there are no reproduction steps or no obvious way to reproduce the issue, the
-  team will ask you for those steps and mark the issue as `pending: need repro`.
-  Bugs with the `pending: need repro` tag will not be addressed until they are
-  reproduced.
-- If the team is able to reproduce the issue, it will be marked `🐛 needs fix`,
-  as well as possibly other tags (such as `problems: critical`), and the issue
-  will be left to be implemented by someone.
-
-<!-- You might want to create an issue template for bugs and errors that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
+Once it's filed, the maintainer labels it and tries to reproduce it. Without a
+way to reproduce it, the issue is marked `pending: need repro` until there is
+one. A reproduced bug is marked `🐛 needs fix`.
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for
-**@hybrid-compute**, **including completely new features and minor improvements
-to existing functionality**. Following these guidelines will help maintainers
-and the community to understand your suggestion and find related suggestions.
+Enhancements, from new features to small improvements, are tracked as
+[GitHub issues](https://github.com/phun-ky/hybrid-compute/issues).
 
-#### Before Submitting an Enhancement
+Before suggesting one:
 
-- Make sure that you are using the latest version.
-- Read the [documentation](https://github.com/phun-ky/@hybrid-compute) carefully
-  and find out if the functionality is already covered, maybe by an individual
-  configuration.
-- Perform a [search](https://github.com/phun-ky/@hybrid-compute/issues) to see
-  if the enhancement has already been suggested. If it has, add a comment to the
-  existing issue instead of opening a new one.
-- Find out whether your idea fits with the scope and aims of the project. It's
-  up to you to make a strong case to convince the project's developers of the
-  merits of this feature. Keep in mind that we want features that will be useful
-  to the majority of our users and not just a small subset. If you're just
-  targeting a minority of users, consider writing an add-on/plugin library.
+- Make sure that you are using the latest version, and read the
+  [documentation](https://phun-ky.net/hybrid-compute/) to see if it's already
+  possible.
+- [Search](https://github.com/phun-ky/hybrid-compute/issues) for an existing
+  suggestion, and add to it instead of opening a new one.
+- Check that it fits the [roadmap](ROADMAP.md), including what is not planned.
 
-#### How Do I Submit a Good Enhancement Suggestion?
+A good suggestion has a clear title, describes the current behaviour and the
+behaviour you'd like instead, and explains why it would be useful to most users.
 
-Enhancement suggestions are tracked as
-[GitHub issues](https://github.com/phun-ky/@hybrid-compute/issues).
+### Contributing Code
 
-- Use a **clear and descriptive title** for the issue to identify the
-  suggestion.
-- Provide a **step-by-step description of the suggested enhancement** in as many
-  details as possible.
-- **Describe the current behaviour** and **explain which behaviour you expected
-  to see instead** and why. At this point you can also tell which alternatives
-  do not work for you.
-- You may want to **include screenshots and animated GIFs** which help you
-  demonstrate the steps or point out the part which the suggestion is related
-  to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on
-  macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast)
-  or [this tool](https://github.com/GNOME/byzanz) on Linux.
-  <!-- this should only be included if the project has a GUI -->
-- **Explain why this enhancement would be useful** to most **@hybrid-compute**
-  users. You may also want to point out the other projects that solved it better
-  and which could serve as inspiration.
+Set up the project as described in the
+[development guide](https://phun-ky.net/hybrid-compute/guide/development):
+`npm install`, `npm run build`, then `npm test`. Larger changes are best
+discussed in an issue first, so the work fits the [roadmap](ROADMAP.md).
 
-<!-- You might want to create an issue template for enhancement suggestions that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
+#### Coding Style
+
+Code follows the project's [ESLint](https://eslint.org/) configuration
+(`eslint-config-phun-ky`), [Prettier](https://prettier.io/) formatting and
+TypeScript in strict mode. A contribution must pass `npm run lint`,
+`npm run format:check` and `npm run typecheck` with no errors. All of them run
+in CI on every pull request, and a pull request that fails them can't be merged.
+
+#### Tests
+
+- **New functionality must come with tests** in the package's `__tests__`
+  folder, run by `npm test`.
+- **Bug fixes must come with a regression test** that fails without the fix.
+- **Changes to the release scripts** come with tests in `scripts/__tests__`, run
+  by `npm run test:scripts`.
+- Coverage should not drop. CI uploads a coverage report for every pull request.
+
+#### Developer Certificate of Origin
+
+Every commit must be signed off under the
+[Developer Certificate of Origin](https://developercertificate.org/) (DCO): a
+statement that you wrote the change, or otherwise have the right to submit it
+under the project's licence. You agree to it by adding a `Signed-off-by` line
+with your name and email to the commit message:
+
+```text
+Signed-off-by: Your Name <you@example.com>
+```
+
+- **Per commit:** `git commit -s` adds the line for you.
+- **Always:** `npm install` sets `core.hooksPath` to `.githooks`, and the hook
+  in `.githooks/prepare-commit-msg` adds the line to every commit, including
+  those made by `npm run commit` or your editor.
+- **Forgot?** Sign off every commit on your branch and push again:
+  `git rebase --signoff main` then `git push --force-with-lease`.
+
+The DCO check on every pull request fails if a commit isn't signed off. Commits
+by Dependabot are exempt.
+
+#### Commits and Pull Requests
+
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
+  (`feat:`, `fix:`, `docs:`, ...). `npm run commit` helps write them. Releases
+  and changelogs are generated from them, as described in the
+  [development guide](https://phun-ky.net/hybrid-compute/guide/development#releases),
+  so pick the type that matches the change. A breaking change needs a
+  `BREAKING CHANGE:` footer that says what to change.
+- From 1.0 on, a breaking change also updates the migration guide in the same
+  pull request, with before-and-after code, and adds to the release notes for
+  the next major.
+- From 1.0 on, deprecating an API isn't a breaking change, so it can land in any
+  release. Mark it `@deprecated` with its replacement and the major it will be
+  removed in. It keeps working through one full major: deprecated during 1.x or
+  at 2.0, it can be removed in 3.0 at the earliest.
+- Don't commit regenerated API docs (`docs/api`); each release regenerates them.
+  Run `npm run docs:check` instead.
+- Open a pull request against `main`. The Checks workflow builds, lints,
+  type-checks, checks the API docs and runs the tests; all of it must pass.
 
 ## Attribution
 
-This guide is based on the **contributing-gen**.
-[Make your own](https://github.com/bttger/contributing-gen)!
+This guide is based on
+[contributing-gen](https://github.com/bttger/contributing-gen).

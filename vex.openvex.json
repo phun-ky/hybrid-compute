@@ -1,0 +1,26 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/phun-ky/hybrid-compute/blob/main/vex.openvex.json",
+  "author": "Alexander Vassbotn Røyne-Helgesen",
+  "role": "Maintainer",
+  "timestamp": "2026-10-20T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "@id": "https://github.com/advisories/GHSA-c475-qrg2-pj4r",
+        "name": "GHSA-c475-qrg2-pj4r"
+      },
+      "timestamp": "2026-10-20T00:00:00Z",
+      "products": [
+        { "@id": "pkg:npm/%40hybrid-compute/core" },
+        { "@id": "pkg:npm/%40hybrid-compute/local" },
+        { "@id": "pkg:npm/%40hybrid-compute/remote" },
+        { "@id": "pkg:npm/%40hybrid-compute/worker" }
+      ],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "basic-ftp is a development dependency only (release-it > proxy-agent > pac-proxy-agent > get-uri > basic-ftp) and is not a dependency of any published package. In development, its FTP directory-listing parser is only reached when a proxy auto-config file is fetched over ftp://, which the release workflow never does."
+    }
+  ]
+}
