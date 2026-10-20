@@ -35,9 +35,6 @@
     "pretest:ci": "rm -rf coverage && mkdir -p coverage",
     "test:ci": "glob-bin -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
-  "dependencies": {
-    "@phun-ky/typeof": "^2.1.9"
-  },
   "devDependencies": {
     "@types/node": "^24.19.2",
     "eslint": "^9.27.0",
