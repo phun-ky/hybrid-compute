@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.38.0...%40hybrid-compute%2Flocal%400.39.0) (2026-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.39.0 ([410c7a0](https://github.com/phun-ky/hybrid-compute/commit/410c7a00cfa43524449e6ea5ab5661208af76126))
+
+### Feature
+
+* 🎸 cancel local tasks with an AbortSignal ([f4b9bec](https://github.com/phun-ky/hybrid-compute/commit/f4b9bec4de90031387e61f8ee5f9f2cec05e6fbd)), references [#84](https://github.com/phun-ky/hybrid-compute/issues/84)
+
 ## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.37.2...%40hybrid-compute%2Flocal%400.38.0) (2026-10-20)
 
 ### ⚠ BREAKING CHANGES
