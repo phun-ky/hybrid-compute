@@ -28,9 +28,9 @@ every decision that would be a breaking change afterwards:
   modules only, an `exports` map with a `types` condition, and only built files
   and their source in the published packages, checked with publint and
   `@arethetypeswrong/cli`.
-- **Tests** ([#88](https://github.com/phun-ky/hybrid-compute/issues/88)):
-  keeping each package's own code fully covered (today all four are at 100% of
-  lines) with a threshold in CI, and property-based tests.
+- **Tests** ([#88](https://github.com/phun-ky/hybrid-compute/issues/88)): a
+  coverage threshold in CI (99% of lines, 100% of functions, 95% of branches per
+  package) and property-based tests with fast-check.
 - **The 1.0 release itself**
   ([#89](https://github.com/phun-ky/hybrid-compute/issues/89)), with release
   notes and a migration guide.

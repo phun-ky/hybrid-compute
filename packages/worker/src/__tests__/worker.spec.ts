@@ -372,7 +372,20 @@ describe('timeout and cancelling', () => {
         threaded.runTask('waitForAbort', 1),
         isWorkerError(/^Worker task 'waitForAbort' timed out after 100 ms$/)
       );
-      assert.equal(await threaded.runTask('abortedCount', null), 1);
+
+      // This backend's 100 ms timeout also covers starting the worker, which
+      // can take longer under load, so retry the count while it times out
+      let count: unknown;
+
+      for (let attempt = 0; attempt < 20 && count === undefined; attempt++) {
+        count = await threaded
+          .runTask('abortedCount', null)
+          .catch((error: unknown) => {
+            if (!(error instanceof WorkerTaskError)) throw error;
+          });
+      }
+
+      assert.equal(count, 1);
       threaded.close();
     });
   });

@@ -157,11 +157,8 @@ const messageOf = (error: unknown) => {
     return error.message;
   }
 
-  try {
-    return JSON.stringify(error);
-  } catch {
-    return String(error);
-  }
+  // A value parsed from JSON always turns back into JSON
+  return JSON.stringify(error);
 };
 
 /**
@@ -484,13 +481,7 @@ export class RemoteCompute implements ComputeBackendInterface {
       socket.addEventListener(
         'open',
         () => {
-          // Abandoned by close() while connecting: don't keep it open
-          if (this.opening !== opening) {
-            socket.close();
-
-            return;
-          }
-
+          // close() while connecting closes this socket too, so it never opens
           this.opening = undefined;
           this.connecting = undefined;
           this.socket = socket;

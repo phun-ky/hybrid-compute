@@ -78,6 +78,15 @@ describe('options', () => {
       () =>
         createRemoteCompute({
           transport: 'fetch',
+          endpoint: '',
+          canRunTasks: '*'
+        }),
+      { name: 'TypeError', message: /got an empty string/ }
+    );
+    assert.throws(
+      () =>
+        createRemoteCompute({
+          transport: 'fetch',
           endpoint: '/compute',
           canRunTasks: '*'
         }),
@@ -166,6 +175,13 @@ describe('options', () => {
       TypeError
     );
     assert.throws(
+      () =>
+        fetchTo('ok', {
+          headers: 'Bearer x' as unknown as Record<string, string>
+        }),
+      TypeError
+    );
+    assert.throws(
       () => socketTo({ headers: { authorization: 'Bearer x' } }),
       /headers only work with the fetch transport/
     );
@@ -201,12 +217,20 @@ describe('fetch transport', () => {
         return (error.detail as { code: string }).code === 'E_TASK';
       })
     );
+    await assert.rejects(
+      fetchTo('error-number').runTask('t', 1),
+      isRemoteError(/failed: 42$/, (error) => error.detail === 42)
+    );
   });
 
   test('rejects unusable responses', async () => {
     await assert.rejects(
       fetchTo('no-result').runTask('t', 1),
       isRemoteError(/neither a result nor an error/)
+    );
+    await assert.rejects(
+      fetchTo('not-object').runTask('t', 1),
+      isRemoteError(/got a reply that isn't a JSON object/)
     );
     await assert.rejects(
       fetchTo('not-json').runTask('t', 1),

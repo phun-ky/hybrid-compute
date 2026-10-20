@@ -29,6 +29,14 @@ npm run build
 npm test
 ```
 
+`npm run test:ci` runs the same tests with coverage, and fails when a package's
+own source falls below 99% of lines, 100% of functions or 95% of branches.
+Besides example-based tests, each package has property-based tests
+(`*.property.spec.ts`, with [fast-check](https://fast-check.dev/)) that check a
+rule against many generated inputs: dispatch against a model of the strategy
+rules, the local task registry against a `Set`, and that any input round-trips
+through the remote server and a worker thread.
+
 ## Commit
 
 To commit, we use

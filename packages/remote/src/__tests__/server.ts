@@ -83,10 +83,14 @@ export const startTestServer = async (): Promise<TestServerType> => {
           return json(200, { result: JSON.parse(body) });
         case '/error-string':
           return json(200, { error: 'task failed' });
+        case '/error-number':
+          return json(200, { error: 42 });
         case '/error-object':
           return json(200, { error: { code: 'E_TASK', message: 'bad input' } });
         case '/no-result':
           return json(200, { something: 'else' });
+        case '/not-object':
+          return json(200, [1, 2]);
         case '/not-json':
           response.writeHead(200, { 'content-type': 'text/plain' });
 

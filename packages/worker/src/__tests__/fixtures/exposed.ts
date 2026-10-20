@@ -12,6 +12,9 @@ exposeTasks(
     fail: () => {
       throw new Error('boom');
     },
+    failWith: (message: string) => {
+      throw new Error(message);
+    },
     unclonable: () => () => 1,
     waitForAbort: (_input: unknown, { signal }) =>
       new Promise((resolve) =>
