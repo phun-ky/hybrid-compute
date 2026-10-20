@@ -1,6 +1,6 @@
 # @hybrid-compute
 
-![@hybrid-compute banner with logo and text](./public/logo-banner.png)
+![@hybrid-compute banner with logo and text](./docs/public/logo/logo-banner.png)
 
 > **Run compute tasks wherever they run best - local, threaded, or remote - with
 > a pluggable backend architecture.**
@@ -12,6 +12,8 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/phun-ky/hybrid-compute)
 [![codecov](https://codecov.io/gh/phun-ky/hybrid-compute/graph/badge.svg?token=VA91DL7ZLZ)](https://codecov.io/gh/phun-ky/hybrid-compute)
 [![build](https://github.com/phun-ky/hybrid-compute/actions/workflows/check.yml/badge.svg)](https://github.com/phun-ky/hybrid-compute/actions/workflows/check.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/phun-ky/hybrid-compute/badge)](https://scorecard.dev/viewer/?uri=github.com/phun-ky/hybrid-compute)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15720/badge)](https://www.bestpractices.dev/projects/15720)
 
 ## About
 

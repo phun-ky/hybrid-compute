@@ -22,6 +22,8 @@ on:
       - '.browserslistrc'
       - '*.md'
       - '*.yml'
+      - '.bestpractices.json'
+      - 'vex.openvex.json'
   # No path filter on pull requests: `check` is a required status check,
   # so it has to report on every PR or the PR cannot merge
   pull_request:
@@ -58,6 +60,8 @@ jobs:
         run: npm ci
       - name: Check sibling ranges # Every package's range for a sibling must match its local version
         run: npm run check:sibling-ranges
+      - name: Check best practices answers # Every linked file, page and heading must exist
+        run: npm run check:bestpractices
       - name: Build
         run: npm run build
       - name: Lint
