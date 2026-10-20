@@ -86,6 +86,7 @@
     "bestpractices:url": "node scripts/bestpractices-url.mjs"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@fontsource/geist": "^5.3.0",
     "@fontsource/geist-mono": "^5.3.0",
     "@release-it/conventional-changelog": "^12.0.2",
@@ -93,6 +94,7 @@
     "cobertura": "^1.0.3",
     "git-cz": "^4.9.0",
     "glob-bin": "^1.0.0",
+    "publint": "^0.3.25",
     "release-it": "^21.1.1",
     "remark-github": "^12.0.0",
     "remark-toc": "^9.0.0",

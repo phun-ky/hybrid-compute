@@ -1,8 +1,10 @@
 // Check what npm would publish: pack every package, check each tarball holds
-// the files its package.json points at and no tests, then install the
-// tarballs in an empty project and import them. Run after `npm run build`.
+// the files its package.json points at and no tests, lint it with publint and
+// @arethetypeswrong/cli, then install the tarballs in an empty project, check
+// every source map resolves, and import them. Run after `npm run build`.
 import { execFileSync } from 'node:child_process';
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -11,11 +13,31 @@ import {
   writeFileSync
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PACKAGES_DIR = join(ROOT, 'packages');
+const BIN = join(ROOT, 'node_modules', '.bin');
+/** Run a linter; return its output if it fails. */
+const lint = (command, args, cwd) => {
+  try {
+    execFileSync(join(BIN, command), args, {
+      cwd,
+      encoding: 'utf8',
+      stdio: 'pipe'
+    });
+
+    return undefined;
+  } catch (error) {
+    return `${error.stdout ?? ''}${error.stderr ?? ''}`.trim();
+  }
+};
+/** Every .map file under dir. */
+const mapsIn = (dir) =>
+  readdirSync(dir, { recursive: true })
+    .filter((file) => file.endsWith('.map'))
+    .map((file) => join(dir, file));
 const npm = (args, cwd) =>
   execFileSync('npm', args, {
     cwd,
@@ -64,7 +86,16 @@ try {
       }
     }
 
-    tarballs.push(join(work, packed.filename));
+    const tarball = join(work, packed.filename);
+    // ESM only on purpose, so CommonJS callers needing import() is expected
+    const types = lint('attw', [tarball, '--profile', 'esm-only'], cwd);
+    const publint = lint('publint', ['--strict'], cwd);
+
+    if (types) problems.push(`${pkg.name}: @arethetypeswrong/cli:\n${types}`);
+
+    if (publint) problems.push(`${pkg.name}: publint:\n${publint}`);
+
+    tarballs.push(tarball);
     names.push(pkg.name);
     console.log(
       `${pkg.name}@${pkg.version}: ${files.size} files, ${packed.size} bytes`
@@ -90,6 +121,21 @@ try {
       ],
       app
     );
+
+    // Every source map must point at files that were published with it
+    for (const name of names) {
+      const installed = join(app, 'node_modules', name);
+
+      for (const map of mapsIn(installed)) {
+        for (const source of JSON.parse(readFileSync(map, 'utf8')).sources) {
+          if (!existsSync(join(dirname(map), source))) {
+            problems.push(
+              `${name}: ${relative(installed, map)} points at ${source}, which isn't published`
+            );
+          }
+        }
+      }
+    }
 
     // Import every package, and run a task through core and local
     const smoke = `
