@@ -370,7 +370,11 @@ const compute = new HybridCompute({
   worker: createThreadedCompute(new URL('./worker.js', import.meta.url), [
     'double'
   ]),
-  remote: createRemoteCompute({ transport: 'fetch', endpoint: '/api/compute' })
+  remote: createRemoteCompute({
+    transport: 'fetch',
+    endpoint: '/api/compute',
+    canRunTasks: ['double']
+  })
 });
 const result = await compute.runTask<number, number>('double', 21, 'auto');
 
@@ -444,12 +448,13 @@ sequenceDiagram
     RC->>E: POST to the configured URL, JSON { task, input }
     E-->>RC: JSON { result, error? }
   else transport: 'websocket'
-    RC->>E: send { task, input, id } on the socket opened at creation
+    RC->>E: send { task, input, id } on the socket opened by the first task
     E-->>RC: { id, result, error? }
   end
 ```
 
-An error in the reply rejects the task's Promise.
+An error in the reply, a failed request or the timeout (30 seconds by default)
+rejects the task with a `RemoteTaskError`.
 
 ## Development
 

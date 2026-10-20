@@ -317,6 +317,89 @@ describe('validating runTask', () => {
   });
 });
 
+describe('runTask options', () => {
+  test('passes the options on to the backend', async () => {
+    let received: unknown;
+    const compute = createHybridCompute({
+      local: {
+        canRun: () => true,
+        runTask: async <Input, Output>(
+          _taskName: string,
+          _input: Input,
+          options?: unknown
+        ) => {
+          received = options;
+
+          return mockOutput as unknown as Output;
+        }
+      }
+    });
+    const controller = new AbortController();
+
+    await compute.runTask(mockTaskName, mockInput, 'local', {
+      signal: controller.signal
+    });
+    assert.deepStrictEqual(received, { signal: controller.signal });
+  });
+
+  test('rejects with the reason of an already aborted signal, without running the task', async () => {
+    let ran = false;
+    const compute = createHybridCompute({
+      local: {
+        canRun: () => true,
+        runTask: async <Input, Output>() => {
+          ran = true;
+
+          return mockOutput as unknown as Output;
+        }
+      }
+    });
+    const controller = new AbortController();
+    const reason = new Error('cancelled by the user');
+
+    controller.abort(reason);
+
+    await assert.rejects(
+      () =>
+        compute.runTask(mockTaskName, mockInput, 'auto', {
+          signal: controller.signal
+        }),
+      (error: unknown) => error === reason
+    );
+    assert.strictEqual(ran, false);
+  });
+
+  test('rejects with a TypeError for options that are not an object', async () => {
+    const compute = createHybridCompute({ local: createMockBackend() });
+
+    await assert.rejects(
+      () =>
+        compute.runTask(
+          mockTaskName,
+          mockInput,
+          'auto',
+          'fast' as unknown as { signal?: AbortSignal }
+        ),
+      { name: 'TypeError', message: 'options must be an object, got string' }
+    );
+  });
+
+  test('rejects with a TypeError for a signal that is not an AbortSignal', async () => {
+    const compute = createHybridCompute({ local: createMockBackend() });
+
+    await assert.rejects(
+      () =>
+        compute.runTask(mockTaskName, mockInput, 'auto', {
+          signal: { aborted: 'no' } as unknown as AbortSignal
+        }),
+      {
+        name: 'TypeError',
+        message: 'options.signal must be an AbortSignal, got object'
+      }
+    );
+  });
+});
+
 describe('NoBackendError', () => {
   test('rejects with NoBackendError, naming the task and the strategy', async () => {
     const compute = new HybridCompute({

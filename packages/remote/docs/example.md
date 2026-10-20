@@ -28,8 +28,10 @@ using one of two transport protocols:
 - `fetch`: HTTP POST requests
 - `websocket`: Persistent WebSocket connection
 
-Each task must be known to the client (optionally restricted via `canRunTasks`)
-and supported by the server.
+Each task must be allowed on the client, by name in `canRunTasks` (or every task
+with `'*'`), and supported by the server. Each task is one JSON request and one
+JSON reply: `{ task, input }` (plus an `id` over WebSocket), answered with
+`{ result }` or `{ error }`.
 
 ---
 
@@ -139,20 +141,33 @@ wss.on('connection', (ws) => {
 
 ## Best Practices
 
-- Validate task names on both ends
-- Enforce authentication and authorization for remote compute endpoints
-- In WebSocket mode, monitor socket health and auto-reconnect if needed
-- Always wrap remote responses with task `id` for proper correlation
+- List the tasks in `canRunTasks` instead of `'*'`, so no other task's input
+  leaves the device
+- Validate task names and input on the server too
+- Enforce authentication and authorization on the server; the fetch transport
+  can send a token with the `headers` option
+- Over WebSocket, always answer with the request's `id`; the client ignores
+  replies it can't match, and they time out
+- Call `remote.close()` when you're done with a WebSocket backend; the client
+  connects on the first task and reconnects on the next task after a close
 
 ---
 
 ## Troubleshooting
 
-| Issue                           | Solution                                                        |
-| ------------------------------- | --------------------------------------------------------------- |
-| `WebSocket not connected` error | Ensure WebSocket is open before sending messages                |
-| Task not found                  | Confirm the task name is registered and listed in `canRunTasks` |
-| JSON parse error                | Ensure backend and client speak the same message protocol       |
+Every failure rejects with a `RemoteTaskError`. Its message says what went
+wrong:
+
+| Message                                     | What to check                                                        |
+| ------------------------------------------- | -------------------------------------------------------------------- |
+| `canRunTasks must be an array ...` (thrown) | Pass the task names, or `'*'` for every task                         |
+| `timed out after 30000 ms`                  | The server is slow or never answers; raise `timeout`, or fix it      |
+| `failed with HTTP 4xx` or `5xx`             | The server's status; `error.detail` holds its `error` if it sent one |
+| `failed: <message>`                         | The server answered `{ error }`; `error.detail` has the full value   |
+| `couldn't reach` or `couldn't connect to`   | The endpoint, the network, or CORS for a page on another origin      |
+| `got a reply that isn't JSON`               | The server must answer with JSON                                     |
+| `neither a result nor an error`             | The server must answer `{ result }` or `{ error }`                   |
+| `got no reply: the connection closed`       | The WebSocket closed while the task waited                           |
 
 ## References
 

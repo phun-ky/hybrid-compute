@@ -95,7 +95,11 @@ const compute = new HybridCompute({
   worker: createThreadedCompute(new URL('./worker.js', import.meta.url), [
     'double'
   ]),
-  remote: createRemoteCompute({ transport: 'fetch', endpoint: '/api/compute' })
+  remote: createRemoteCompute({
+    transport: 'fetch',
+    endpoint: '/api/compute',
+    canRunTasks: ['double']
+  })
 });
 const result = await compute.runTask<number, number>('double', 21, 'auto');
 

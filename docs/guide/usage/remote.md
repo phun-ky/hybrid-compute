@@ -3,6 +3,8 @@
 This package provides:
 
 - A remote compute backend that delegates tasks over HTTP or WebSocket
+- Timeouts, cancellation with an `AbortSignal`, and one error type,
+  `RemoteTaskError`, for every failure
 - Transport-agnostic JSON message protocol
 - Suitable for offloading work to distributed compute services
 
@@ -196,3 +198,78 @@ server.listen(3001, () => {
   );
 });
 ```
+
+## Options
+
+| Option        | Required | What it does                                                                                                                                                                           |
+| ------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `transport`   | Yes      | `'fetch'` (one HTTP `POST` per task) or `'websocket'` (one connection, reused)                                                                                                         |
+| `endpoint`    | Yes      | An `http:` or `https:` URL for fetch (relative works in a page), a `ws:` or `wss:` URL for WebSocket                                                                                   |
+| `canRunTasks` | Yes      | The task names this backend may run, or `'*'` for every task. With the `auto` strategy, any task no worker or local backend can run is sent to the endpoint, so list them when you can |
+| `timeout`     | No       | Milliseconds to wait for a reply (connecting included), default `30000`; `0` waits forever                                                                                             |
+| `headers`     | No       | Extra fetch headers: an object, or a function returning one (or a Promise of one), called before every request                                                                         |
+
+Invalid options throw a `TypeError` or `RangeError` when the backend is created.
+Creating it does no network I/O: the WebSocket connects on the first task.
+
+## Errors
+
+Every failure rejects with a `RemoteTaskError`, which has the `taskName`, the
+server's `error` value as `detail`, the HTTP `status` for fetch, and the
+underlying `cause` for network failures:
+
+```ts
+import { RemoteTaskError } from '@hybrid-compute/remote';
+
+try {
+  await remote.runTask('echo', 'hello');
+} catch (error) {
+  if (error instanceof RemoteTaskError && error.status === 401) {
+    // sign in again
+  }
+}
+```
+
+It covers an `{ error }` reply, a non-2xx status (with the server's `error`, if
+it sent one), a reply that isn't JSON or has neither `result` nor `error`, a
+server that can't be reached, a WebSocket that closes while a task waits, and
+the timeout.
+
+## Cancelling a task
+
+Pass an `AbortSignal` as the fourth argument to `runTask`. The task rejects with
+the signal's reason as soon as it aborts; a fetch request is aborted, and a late
+WebSocket reply is ignored:
+
+```ts
+const controller = new AbortController();
+const pending = compute.runTask('echo', 'hello', 'remote', {
+  signal: controller.signal
+});
+
+controller.abort();
+```
+
+## Closing the connection
+
+The WebSocket transport keeps its connection open between tasks, and connects
+again on the next task if it closes. Call `remote.close()` when you're done with
+it: tasks still waiting reject, and in Node.js the process can exit. It does
+nothing for the fetch transport.
+
+## Message format
+
+A task is one JSON request and one JSON reply, described by
+`RemoteTaskRequestInterface` and `RemoteTaskResponseInterface`:
+
+```json
+{ "task": "echo", "input": "hello", "id": 1 }
+```
+
+```json
+{ "id": 1, "result": "Echo: hello" }
+```
+
+The `id` is only used over WebSocket, where the reply must repeat it. A reply
+has either a `result` or an `error` (a message string, or an object with a
+`message`). For fetch, the status must be 2xx for a `result` to count.

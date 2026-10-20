@@ -98,6 +98,77 @@ describe('LocalCompute', () => {
   });
 });
 
+describe('cancelling with an AbortSignal', () => {
+  test('does not start the task when the signal is already aborted', async () => {
+    const compute = new LocalCompute();
+    let ran = false;
+    const controller = new AbortController();
+
+    compute.registerTask({ name: 'work', run: () => (ran = true) });
+    controller.abort(new Error('stop'));
+
+    await assert.rejects(
+      () => compute.runTask('work', undefined, { signal: controller.signal }),
+      /stop/
+    );
+    assert.strictEqual(ran, false);
+  });
+
+  test('rejects with the reason as soon as the signal aborts', async () => {
+    const compute = new LocalCompute();
+    const controller = new AbortController();
+
+    compute.registerTask({
+      name: 'slow',
+      run: () =>
+        new Promise((resolve) => setTimeout(() => resolve('late'), 1000))
+    });
+
+    const pending = compute.runTask('slow', undefined, {
+      signal: controller.signal
+    });
+
+    controller.abort(new Error('cancelled'));
+    await assert.rejects(pending, /cancelled/);
+  });
+
+  test('gives the task the signal, so it can stop itself', async () => {
+    const compute = new LocalCompute();
+    const controller = new AbortController();
+    let seen: AbortSignal | undefined;
+
+    compute.registerTask({
+      name: 'cooperative',
+      run: (_input: unknown, context) => {
+        seen = context?.signal;
+
+        return 'done';
+      }
+    });
+
+    assert.strictEqual(
+      await compute.runTask('cooperative', undefined, {
+        signal: controller.signal
+      }),
+      'done'
+    );
+    assert.strictEqual(seen, controller.signal);
+  });
+
+  test('resolves normally when the signal never aborts', async () => {
+    const compute = new LocalCompute();
+
+    compute.registerTask({ name: 'quick', run: async () => 'ok' });
+
+    assert.strictEqual(
+      await compute.runTask('quick', undefined, {
+        signal: new AbortController().signal
+      }),
+      'ok'
+    );
+  });
+});
+
 describe('registerTask validation', () => {
   test('throws a TypeError for something that is not a task object', () => {
     const compute = new LocalCompute();

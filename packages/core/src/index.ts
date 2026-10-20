@@ -5,7 +5,8 @@ export * from './types.js';
 import { NoBackendError } from './errors.js';
 import {
   ExecutionStrategyType,
-  HybridComputeOptionsInterface
+  HybridComputeOptionsInterface,
+  RunTaskOptionsInterface
 } from './types.js';
 
 /** The backends core knows, by option key. */
@@ -99,7 +100,11 @@ const toBackends = (
  * const compute = new HybridCompute({
  *   local: createLocalCompute(),
  *   worker: createThreadedCompute(workerPath, ['double']),
- *   remote: createRemoteCompute({ transport: 'fetch', endpoint: '/api/compute' })
+ *   remote: createRemoteCompute({
+ *     transport: 'fetch',
+ *     endpoint: '/api/compute',
+ *     canRunTasks: ['double']
+ *   })
  * });
  *
  * const result = await compute.runTask<number, number>('double', 21, 'auto');
@@ -138,6 +143,8 @@ export class HybridCompute {
    * @param taskName - The name of the task to execute.
    * @param input - The input payload for the task.
    * @param strategy - The execution strategy to use. Defaults to `'auto'`.
+   * @param options - Options for this call, such as an `AbortSignal` to cancel
+   * it with. They're passed on to the backend.
    *
    * @returns A Promise resolving to the task's output. It rejects with:
    * - a `TypeError` if `taskName` isn't a non-empty string or `strategy`
@@ -145,6 +152,7 @@ export class HybridCompute {
    * - a `RangeError` if `strategy` isn't one of `'auto'`, `'local'`,
    *   `'worker'` or `'remote'`
    * - a {@link NoBackendError} if no configured backend can run the task
+   * - the signal's reason, if `options.signal` is or becomes aborted
    * - whatever the backend's `runTask` rejects with
    *
    * @example
@@ -155,7 +163,8 @@ export class HybridCompute {
   async runTask<Input, Output>(
     taskName: string,
     input: Input,
-    strategy: ExecutionStrategyType = 'auto'
+    strategy: ExecutionStrategyType = 'auto',
+    options?: RunTaskOptionsInterface
   ): Promise<Output> {
     if (typeof taskName !== 'string' || taskName === '') {
       throw new TypeError(
@@ -175,11 +184,38 @@ export class HybridCompute {
       );
     }
 
+    if (options !== undefined) {
+      if (typeof options !== 'object' || options === null) {
+        throw new TypeError(
+          `options must be an object, got ${describeValue(options)}`
+        );
+      }
+
+      const { signal } = options;
+
+      if (
+        signal !== undefined &&
+        (typeof signal !== 'object' ||
+          signal === null ||
+          typeof signal.aborted !== 'boolean' ||
+          typeof signal.addEventListener !== 'function')
+      ) {
+        throw new TypeError(
+          `options.signal must be an AbortSignal, got ${describeValue(signal)}`
+        );
+      }
+
+      // Already cancelled: don't start anything
+      if (signal?.aborted) throw signal.reason;
+    }
+
     if (strategy === 'auto') {
       for (const name of AUTO_ORDER) {
         const backend = this.backends[name];
 
-        if (backend?.canRun(taskName)) return backend.runTask(taskName, input);
+        if (backend?.canRun(taskName)) {
+          return backend.runTask(taskName, input, options);
+        }
       }
 
       throw new NoBackendError(taskName, strategy);
@@ -211,7 +247,7 @@ export class HybridCompute {
       );
     }
 
-    return backend.runTask(taskName, input);
+    return backend.runTask(taskName, input, options);
   }
 }
 

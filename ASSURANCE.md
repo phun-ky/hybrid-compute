@@ -75,13 +75,14 @@ There are no secrets, accounts or personal data in the software itself.
 
 ## Common weaknesses countered
 
-| Weakness                                      | How it's countered                                                                                         |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Code injection (CWE-94)                       | No `eval` or `new Function`; task names select registered tasks, they are never executed                   |
-| Prototype pollution (CWE-1321)                | Tasks are stored in a `Map` and a `Set`, not plain objects                                                 |
-| Use of a vulnerable component (CWE-1395)      | Dependabot, dependency review on every pull request, `npm audit` before every release                      |
-| Insecure CI configuration                     | Actions pinned to commit SHAs, read-only default permissions, no untrusted input interpolated into scripts |
-| Missing integrity check on download (CWE-494) | npm provenance attestations, verifiable with `npm audit signatures`                                        |
+| Weakness                                      | How it's countered                                                                                                                       |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Code injection (CWE-94)                       | No `eval` or `new Function`; task names select registered tasks, they are never executed                                                 |
+| Prototype pollution (CWE-1321)                | Tasks are stored in a `Map` and a `Set`, not plain objects                                                                               |
+| Use of a vulnerable component (CWE-1395)      | Dependabot, dependency review on every pull request, `npm audit` before every release                                                    |
+| Insecure CI configuration                     | Actions pinned to commit SHAs, read-only default permissions, no untrusted input interpolated into scripts                               |
+| Missing integrity check on download (CWE-494) | npm provenance attestations, verifiable with `npm audit signatures`                                                                      |
+| Uncontrolled resource consumption (CWE-400)   | Remote tasks time out (30 seconds by default) and can be cancelled; WebSocket connections open only when needed and close with `close()` |
 
 ## Known gaps
 
@@ -93,12 +94,13 @@ These are tracked and are honest limits today, not hidden risks:
   reviews for 1.0 decide those checks:
   [#84](https://github.com/phun-ky/hybrid-compute/issues/84) and
   [#85](https://github.com/phun-ky/hybrid-compute/issues/85).
-- **Remote and worker results are trusted.** They are not validated, and a
-  malformed WebSocket message throws inside the message handler. Treat results
-  as input; see the security policy.
-- **No timeouts or cancellation** for remote and worker tasks yet, so a task the
-  endpoint or worker script never answers stays pending
-  ([#84](https://github.com/phun-ky/hybrid-compute/issues/84),
-  [#85](https://github.com/phun-ky/hybrid-compute/issues/85)).
+- **Results are trusted.** `remote` checks a reply's shape and ignores WebSocket
+  messages it can't match, but doesn't validate the result itself, and worker
+  results aren't checked at all. Treat results as input; see the security
+  policy.
+- **No timeout for worker tasks yet,** so a task the worker script never answers
+  stays pending unless it's cancelled with an `AbortSignal`
+  ([#85](https://github.com/phun-ky/hybrid-compute/issues/85)). Remote tasks
+  time out after 30 seconds by default.
 - **One maintainer.** Changes are not reviewed by a second person; see
   [governance](GOVERNANCE.md#continuity).

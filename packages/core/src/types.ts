@@ -39,9 +39,40 @@ export type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
  * };
  * ```
  */
+/**
+ * Options for a single `runTask` call.
+ *
+ * @property signal - Cancels the task: when it aborts, `runTask` rejects with
+ * the signal's reason. A backend stops waiting for the result; whether the
+ * work itself stops depends on the backend and the task.
+ *
+ * @example
+ * ```ts
+ * const controller = new AbortController();
+ * const pending = compute.runTask('resizeImage', blob, 'auto', {
+ *   signal: controller.signal
+ * });
+ *
+ * controller.abort(); // pending rejects with an AbortError
+ * ```
+ */
+export interface RunTaskOptionsInterface {
+  signal?: AbortSignal;
+}
+
+/**
+ * What a task's `run` gets besides its input.
+ *
+ * @property signal - The signal passed to `runTask`, if any. A long task can
+ * check `signal.aborted` or listen for `abort` to stop early.
+ */
+export interface TaskContextInterface {
+  signal?: AbortSignal;
+}
+
 export interface ComputeTaskInterface<Input = unknown, Output = unknown> {
   name: string;
-  run(input: Input): Output | Promise<Output>;
+  run(input: Input, context?: TaskContextInterface): Output | Promise<Output>;
 }
 
 /**
@@ -68,7 +99,11 @@ export interface ComputeTaskInterface<Input = unknown, Output = unknown> {
  */
 export interface ComputeBackendInterface {
   canRun(taskName: string): boolean;
-  runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
+  runTask<Input, Output>(
+    taskName: string,
+    input: Input,
+    options?: RunTaskOptionsInterface
+  ): Promise<Output>;
 }
 
 /**

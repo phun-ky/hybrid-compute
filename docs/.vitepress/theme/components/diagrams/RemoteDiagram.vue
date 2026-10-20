@@ -10,9 +10,10 @@
       <desc id="remote-desc">
         With fetch, RemoteCompute posts the task and input as JSON to the
         endpoint you configured, and reads a result or an error from the
-        response. With WebSocket, it sends the task, input and an id on the
-        socket it opened when it was created, and matches replies with the same
-        id, carrying a result or an error.
+        response. With WebSocket, it sends the task, input and an id on a socket
+        it opens for the first task and reuses, and matches replies with the
+        same id, carrying a result or an error. Both reject with a
+        RemoteTaskError on failure, and time out after 30 seconds by default.
       </desc>
       <defs>
         <marker
@@ -109,9 +110,12 @@
         Your endpoint
       </text>
       <text class="arch-mono" x="585" y="260" text-anchor="middle">
-        socket opened at creation
+        socket opened by the first task
       </text>
     </svg>
-    <figcaption>An error in the reply rejects the task's Promise.</figcaption>
+    <figcaption>
+      An error in the reply, a failed request or the timeout (30 seconds by
+      default) rejects the task with a <code>RemoteTaskError</code>.
+    </figcaption>
   </figure>
 </template>
