@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">Hybrid Compute</title>
+  <!-- Three lanes, one per backend, with a slice of work on each: blue ran,
+       orange would have blocked the main thread. Colours for light backgrounds -->
+  <rect x="3" y="5" width="14" height="6" rx="2" fill="#1f63d1"/>
+  <rect x="19" y="5" width="10" height="6" rx="2" fill="#b8bfcc"/>
+  <rect x="3" y="13" width="7" height="6" rx="2" fill="#b8bfcc"/>
+  <rect x="12" y="13" width="17" height="6" rx="2" fill="#1f63d1"/>
+  <rect x="3" y="21" width="11" height="6" rx="2" fill="#b24f00"/>
+  <rect x="16" y="21" width="13" height="6" rx="2" fill="#b8bfcc"/>
+</svg>

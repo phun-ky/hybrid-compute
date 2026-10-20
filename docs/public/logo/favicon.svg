@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The mark on a dark tile, so it reads on light and dark tab bars -->
+  <rect width="32" height="32" rx="7" fill="#16181d"/>
+  <g transform="translate(3.2 3.2) scale(.8)">
+    <rect x="3" y="5" width="14" height="6" rx="2" fill="#6aa8ff"/>
+    <rect x="19" y="5" width="10" height="6" rx="2" fill="#3a404c"/>
+    <rect x="3" y="13" width="7" height="6" rx="2" fill="#3a404c"/>
+    <rect x="12" y="13" width="17" height="6" rx="2" fill="#6aa8ff"/>
+    <rect x="3" y="21" width="11" height="6" rx="2" fill="#ff9a3d"/>
+    <rect x="16" y="21" width="13" height="6" rx="2" fill="#3a404c"/>
+  </g>
+</svg>
