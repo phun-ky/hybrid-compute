@@ -21,7 +21,7 @@ monorepo.
 
 ## API Docs
 
-[HybridCompute Core API Documentation](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/core/src/classes/HybridCompute.md)
+[HybridCompute Core API Documentation](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/core/classes/HybridCompute)
 
 ## 📦 Package Info
 

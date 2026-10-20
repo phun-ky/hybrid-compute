@@ -21,15 +21,16 @@ monorepo.
 
 ## API Docs
 
-[LocalCompute API Documentation](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/local/src/classes/LocalCompute.md)
+[LocalCompute API Documentation](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/local/classes/LocalCompute)
 
 ## 📦 Package Info
 
 This package provides:
 
-- A local (synchronous) compute backend
-- In-memory task registration and execution
-- Ideal for lightweight or fast tasks
+- A compute backend that runs tasks on the calling thread
+- In-memory task registration by unique name, with `unregisterTask` to remove
+  one
+- Ideal for small, cheap tasks; heavy work belongs in the worker backend
 
 ## Usage
 

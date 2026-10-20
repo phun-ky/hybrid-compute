@@ -88,9 +88,9 @@ There are no secrets, accounts or personal data in the software itself.
 These are tracked and are honest limits today, not hidden risks:
 
 - **Input validation is incomplete.** `core` validates its backends, task names
-  and strategies, but the backends don't validate their own options yet. The
-  remaining API reviews for 1.0 decide those checks:
-  [#83](https://github.com/phun-ky/hybrid-compute/issues/83),
+  and strategies, and `local` validates the tasks registered with it, but
+  `remote` and `worker` don't validate their own options yet. The remaining API
+  reviews for 1.0 decide those checks:
   [#84](https://github.com/phun-ky/hybrid-compute/issues/84) and
   [#85](https://github.com/phun-ky/hybrid-compute/issues/85).
 - **Remote and worker results are trusted.** They are not validated, and a

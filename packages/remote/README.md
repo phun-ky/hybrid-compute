@@ -21,7 +21,7 @@ monorepo.
 
 ## API Docs
 
-[RemoteCompute API Documentation](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/remote/src/classes/RemoteCompute.md)
+[RemoteCompute API Documentation](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/remote/classes/RemoteCompute)
 
 ## 📦 Package Info
 
@@ -47,9 +47,9 @@ const remote = createRemoteCompute({
 ```
 
 You can see
-[examples here](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/remote/docs/example.md),
+[examples here](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/docs/example.md),
 and a
-[testing guide here](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/remote/docs/testing.md)
+[testing guide here](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/docs/testing.md)
 
 ---
 

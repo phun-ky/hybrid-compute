@@ -22,20 +22,26 @@ export type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
  * @template Input The input type expected by the task.
  * @template Output The output type returned by the task.
  *
- * @property name - A unique name used to identify the task.
- * @property run - A function that takes input and returns a Promise of the output.
+ * @property name - A unique, non-empty name used to identify the task.
+ * @property run - A function that takes the input and returns the output, or a
+ * Promise of it. Synchronous work in `run` blocks the thread it runs on.
  *
  * @example
  * ```ts
- * const task: ComputeTaskInterface<number, number> = {
+ * const double: ComputeTaskInterface<number, number> = {
  *   name: 'double',
- *   run: async (x) => x * 2
+ *   run: (x) => x * 2
+ * };
+ *
+ * const fetchUser: ComputeTaskInterface<string, User> = {
+ *   name: 'fetchUser',
+ *   run: async (id) => (await fetch(`/users/${id}`)).json()
  * };
  * ```
  */
 export interface ComputeTaskInterface<Input = unknown, Output = unknown> {
   name: string;
-  run(input: Input): Promise<Output>;
+  run(input: Input): Output | Promise<Output>;
 }
 
 /**
