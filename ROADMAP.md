@@ -57,8 +57,9 @@ or an addition to an existing one, after a discussion in its issue.
   ([#86](https://github.com/phun-ky/hybrid-compute/issues/86), with the draft in
   [#32](https://github.com/phun-ky/hybrid-compute/pull/32)).
 - **More transports for `remote`**, such as WebRTC data channels.
-- **Node.js `worker_threads`** as well as browser Web Workers, depending on the
-  outcome of the `worker` API review.
+- **Node.js `worker_threads`** as well as browser Web Workers
+  ([#127](https://github.com/phun-ky/hybrid-compute/issues/127)); `worker` is
+  browser only at 1.0.
 
 ## Not planned
 

@@ -22,29 +22,51 @@ monorepo.
 ## API Docs
 
 [ThreadedCompute API Documentation](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/worker/classes/ThreadedCompute)
+and
+[exposeTasks](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/worker/functions/exposeTasks)
 
 ## 📦 Package Info
 
 This package provides:
 
-- A compute backend that runs tasks in a dedicated Web Worker
-- Asynchronous task messaging via `postMessage`
-- Useful for offloading CPU-intensive work from the main thread
+- A compute backend that runs tasks in a dedicated module Web Worker, so heavy
+  work doesn't block the main thread
+- `exposeTasks`, which turns an object of functions into a worker script
+- Timeouts, cancellation with an `AbortSignal`, and one error type,
+  `WorkerTaskError`, for every failure
 
 ## Usage
 
 ```bash
-npm install @hybrid-compute/worker
+npm install @hybrid-compute/core @hybrid-compute/worker
 ```
+
+In the worker script, `worker.ts`:
+
+```ts
+import { exposeTasks } from '@hybrid-compute/worker';
+
+exposeTasks({
+  add: ([a, b]: [number, number]) => a + b
+});
+```
+
+On the main thread:
 
 ```ts
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
-const threaded = createThreadedCompute(
-  new URL('./worker.js', import.meta.url),
-  ['add']
-);
+const threaded = createThreadedCompute({
+  url: new URL('./worker.ts', import.meta.url),
+  canRunTasks: ['add']
+});
+
+await threaded.runTask('add', [2, 3]); // 5
 ```
+
+The worker starts on the first task. Options, errors, cancelling and the message
+format are in the
+[worker guide](https://phun-ky.net/hybrid-compute/guide/usage/worker).
 
 ---
 

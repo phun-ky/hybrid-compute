@@ -278,27 +278,11 @@ npm install @hybrid-compute/worker
 Create a file named `worker.ts`:
 
 ```ts
-self.onmessage = async (event) => {
-  const { task, input, id } = event.data;
+import { exposeTasks } from '@hybrid-compute/worker';
 
-  try {
-    let result;
-
-    switch (task) {
-      case 'echo':
-        result = `Echo from Worker: ${input}`;
-        break;
-
-      // Add more cases for additional tasks
-      default:
-        throw new Error(`Unknown task: ${task}`);
-    }
-
-    self.postMessage({ id, result });
-  } catch (error) {
-    self.postMessage({ id, error: (error as Error).message });
-  }
-};
+exposeTasks({
+  echo: (input: string) => `Echo from Worker: ${input}`
+});
 ```
 
 And your `main.ts`:
@@ -308,11 +292,11 @@ import { createThreadedCompute } from '@hybrid-compute/worker';
 
 import { createHybridCompute } from '@hybrid-compute/core';
 
-// Worker must be served as a module
-const worker = createThreadedCompute(
-  new URL('./worker.ts', import.meta.url).href,
-  ['echo']
-);
+// Started as a module worker on the first task
+const worker = createThreadedCompute({
+  url: new URL('./worker.ts', import.meta.url),
+  canRunTasks: ['echo']
+});
 const compute = createHybridCompute({
   worker
 });

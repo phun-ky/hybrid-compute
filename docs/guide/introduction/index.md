@@ -78,23 +78,27 @@ main();
 
 ### Example
 
-This example expects a task setup for `double` on the backends that doubles the
-input number. `auto` is used to use first available backend that has the task
-set up.
+This example sets up a `double` task, which doubles a number, on all three
+backends. With `auto`, core uses the first backend that can run it, in the order
+worker, local, remote.
 
 ```ts
-import {
-  HybridCompute,
-  createLocalCompute,
-  createThreadedCompute,
-  createRemoteCompute
-} from '@hybrid-compute/core';
+import { HybridCompute } from '@hybrid-compute/core';
+import { createLocalCompute } from '@hybrid-compute/local';
+import { createRemoteCompute } from '@hybrid-compute/remote';
+import { createThreadedCompute } from '@hybrid-compute/worker';
+
+const local = createLocalCompute();
+
+local.registerTask({ name: 'double', run: (n: number) => n * 2 });
 
 const compute = new HybridCompute({
-  local: createLocalCompute(),
-  worker: createThreadedCompute(new URL('./worker.js', import.meta.url), [
-    'double'
-  ]),
+  local,
+  // worker.js calls exposeTasks({ double: (n: number) => n * 2 })
+  worker: createThreadedCompute({
+    url: new URL('./worker.js', import.meta.url),
+    canRunTasks: ['double']
+  }),
   remote: createRemoteCompute({
     transport: 'fetch',
     endpoint: '/api/compute',

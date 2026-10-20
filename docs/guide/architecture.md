@@ -41,7 +41,7 @@ A backend's `canRun` answers differently per package:
 | Backend  | `canRun(taskName)` is true when                                       |
 | -------- | --------------------------------------------------------------------- |
 | `local`  | a task with that name was registered with `registerTask`              |
-| `worker` | the name is in the task list passed to `createThreadedCompute`        |
+| `worker` | the name is in `canRunTasks`, and the runtime has Web Workers         |
 | `remote` | the name is in `canRunTasks`, or `canRunTasks` is `'*'` (accepts all) |
 
 ## Message formats
@@ -51,16 +51,21 @@ result to its call, so several tasks can be in flight at once.
 
 | Backend              | Sends                                                      | Receives                  |
 | -------------------- | ---------------------------------------------------------- | ------------------------- |
-| `worker`             | `postMessage({ task, input, id })`                         | `{ id, result, error? }`  |
+| `worker`             | `postMessage({ id, task, input })`, `{ id, cancel: true }` | `{ id, result, error? }`  |
 | `remote` (fetch)     | `POST` to the endpoint, JSON body `{ task, input }`        | JSON `{ result, error? }` |
 | `remote` (WebSocket) | `{ task, input, id }` on a socket opened by the first task | `{ id, result, error? }`  |
 
 An `error` in the reply rejects the task's Promise. For `remote`, every failure
 rejects with a `RemoteTaskError`: an `error` reply, a non-2xx fetch status, a
 reply that isn't usable, a connection that fails or closes, and the timeout (30
-seconds by default). Any task can also be cancelled with an `AbortSignal` passed
-to `runTask`. The worker script and the remote service are yours to write; see
-the [worker](/guide/usage/worker) and [remote](/guide/usage/remote) guides.
+seconds by default). For `worker`, every failure rejects with a
+`WorkerTaskError`: an `error` reply, a reply that isn't usable, a worker that
+crashes or doesn't load, and the timeout (none by default). Any task can also be
+cancelled with an `AbortSignal` passed to `runTask`; `worker` then sends
+`{ id, cancel: true }` so the worker script can stop. The worker script and the
+remote service are yours to write (`exposeTasks` writes the worker side for
+you); see the [worker](/guide/usage/worker) and [remote](/guide/usage/remote)
+guides.
 
 <WorkerDiagram />
 

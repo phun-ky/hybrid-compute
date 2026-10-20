@@ -301,27 +301,11 @@ npm install @hybrid-compute/worker
 Create a file named `worker.ts`:
 
 ```ts
-self.onmessage = async (event) => {
-  const { task, input, id } = event.data;
+import { exposeTasks } from '@hybrid-compute/worker';
 
-  try {
-    let result;
-
-    switch (task) {
-      case 'echo':
-        result = `Echo from Worker: ${input}`;
-        break;
-
-      // Add more cases for additional tasks
-      default:
-        throw new Error(`Unknown task: ${task}`);
-    }
-
-    self.postMessage({ id, result });
-  } catch (error) {
-    self.postMessage({ id, error: (error as Error).message });
-  }
-};
+exposeTasks({
+  echo: (input: string) => `Echo from Worker: ${input}`
+});
 ```
 
 And your `main.ts`:
@@ -330,11 +314,11 @@ And your `main.ts`:
 import { createHybridCompute } from '@hybrid-compute/core';
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
-// Worker must be served as a module
-const worker = createThreadedCompute(
-  new URL('./worker.ts', import.meta.url).href,
-  ['echo']
-);
+// Started as a module worker on the first task
+const worker = createThreadedCompute({
+  url: new URL('./worker.ts', import.meta.url),
+  canRunTasks: ['echo']
+});
 const compute = createHybridCompute({
   worker
 });
@@ -353,23 +337,27 @@ main();
 
 ## Example
 
-This example expects a task setup for `double` on the backends that doubles the
-input number. `auto` is used to use first available backend that has the task
-set up.
+This example sets up a `double` task, which doubles a number, on all three
+backends. With `auto`, core uses the first backend that can run it, in the order
+worker, local, remote.
 
 ```ts
-import {
-  HybridCompute,
-  createLocalCompute,
-  createThreadedCompute,
-  createRemoteCompute
-} from '@hybrid-compute/core';
+import { HybridCompute } from '@hybrid-compute/core';
+import { createLocalCompute } from '@hybrid-compute/local';
+import { createRemoteCompute } from '@hybrid-compute/remote';
+import { createThreadedCompute } from '@hybrid-compute/worker';
+
+const local = createLocalCompute();
+
+local.registerTask({ name: 'double', run: (n: number) => n * 2 });
 
 const compute = new HybridCompute({
-  local: createLocalCompute(),
-  worker: createThreadedCompute(new URL('./worker.js', import.meta.url), [
-    'double'
-  ]),
+  local,
+  // worker.js calls exposeTasks({ double: (n: number) => n * 2 })
+  worker: createThreadedCompute({
+    url: new URL('./worker.js', import.meta.url),
+    canRunTasks: ['double']
+  }),
   remote: createRemoteCompute({
     transport: 'fetch',
     endpoint: '/api/compute',
@@ -432,10 +420,14 @@ sequenceDiagram
   participant W as Worker script
 
   App->>TC: runTask("resize", input)
-  TC->>W: postMessage({ task, input, id })
+  TC->>W: postMessage({ id, task, input }), starting the worker on the first task
   W-->>TC: { id, result } or { id, error }
-  TC-->>App: resolve(result) or reject(error)
+  TC-->>App: resolve(result) or reject(WorkerTaskError)
 ```
+
+The worker script answers with `exposeTasks`, or by hand. A crash, a script that
+doesn't load, or the optional timeout rejects the task with a `WorkerTaskError`.
+Cancelling with an `AbortSignal` sends `{ id, cancel: true }` to the worker.
 
 ### Remote backend
 

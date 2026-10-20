@@ -1,10 +1,14 @@
-# worker
+# Usage with worker
 
 This package provides:
 
-- A compute backend that runs tasks in a dedicated Web Worker
-- Asynchronous task messaging via `postMessage`
-- Useful for offloading CPU-intensive work from the main thread
+- A compute backend that runs tasks in a dedicated module Web Worker, so heavy
+  work doesn't block the main thread
+- `exposeTasks`, which turns an object of functions into a worker script
+- Timeouts, cancellation with an `AbortSignal`, and one error type,
+  `WorkerTaskError`, for every failure
+
+[[toc]]
 
 ## Install
 
@@ -25,27 +29,11 @@ yarn add @hybrid-compute/core @hybrid-compute/worker
 Create a file named `worker.ts`:
 
 ```ts
-self.onmessage = async (event) => {
-  const { task, input, id } = event.data;
+import { exposeTasks } from '@hybrid-compute/worker';
 
-  try {
-    let result;
-
-    switch (task) {
-      case 'echo':
-        result = `Echo from Worker: ${input}`;
-        break;
-
-      // Add more cases for additional tasks
-      default:
-        throw new Error(`Unknown task: ${task}`);
-    }
-
-    self.postMessage({ id, result });
-  } catch (error) {
-    self.postMessage({ id, error: (error as Error).message });
-  }
-};
+exposeTasks({
+  echo: (input: string) => `Echo from Worker: ${input}`
+});
 ```
 
 And your `main.ts`:
@@ -54,11 +42,11 @@ And your `main.ts`:
 import { createHybridCompute } from '@hybrid-compute/core';
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
-// Worker must be served as a module
-const worker = createThreadedCompute(
-  new URL('./worker.ts', import.meta.url).href,
-  ['echo']
-);
+// Started as a module worker on the first task
+const worker = createThreadedCompute({
+  url: new URL('./worker.ts', import.meta.url),
+  canRunTasks: ['echo']
+});
 const compute = createHybridCompute({
   worker
 });
@@ -74,3 +62,118 @@ const main = async () => {
 
 main();
 ```
+
+`exposeTasks` runs the task with that name and replies with its result, or with
+an error if the task throws, rejects or doesn't exist. List the same names in
+`canRunTasks`: only those are sent to the worker.
+
+The `url` is usually `new URL('./worker.ts', import.meta.url)`, which bundlers
+such as Vite and webpack recognise: they build the worker script, with its
+imports, as a separate file.
+
+## Options
+
+| Option        | Required | What it does                                                                                     |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------ |
+| `url`         | Yes      | The worker script, as a `URL` or a string. It's started as a module worker                       |
+| `canRunTasks` | Yes      | The task names the worker script can run. A task that isn't listed rejects with `NoBackendError` |
+| `timeout`     | No       | Milliseconds to wait for a reply. No timeout by default, since workers are for long running work |
+
+Invalid options throw a `TypeError` or `RangeError` when the backend is created.
+Creating it starts no worker: the worker starts on the first task.
+
+## Errors
+
+Every failure rejects with a `WorkerTaskError`, which has the `taskName`, the
+worker script's `error` value as `detail`, and the underlying `cause` where
+there is one:
+
+```ts
+import { WorkerTaskError } from '@hybrid-compute/worker';
+
+try {
+  await worker.runTask('echo', 'hello');
+} catch (error) {
+  if (error instanceof WorkerTaskError) {
+    console.warn(error.taskName, error.detail);
+  }
+}
+```
+
+It covers an `{ error }` reply, a reply with neither `result` nor `error`, input
+or a result that can't be copied to or from the worker, the timeout, and a
+worker that crashes or whose script doesn't load. When the worker crashes, every
+task waiting for it rejects, and the next task starts a new worker.
+
+## Cancelling a task
+
+Pass an `AbortSignal` as the fourth argument to `runTask`. The task rejects with
+the signal's reason as soon as it aborts:
+
+```ts
+const controller = new AbortController();
+const pending = compute.runTask('echo', 'hello', 'worker', {
+  signal: controller.signal
+});
+
+controller.abort();
+```
+
+The worker is told to cancel the task too, on abort and when the timeout passes.
+With `exposeTasks`, each task gets a `signal` that aborts then, so long running
+work can stop early:
+
+```ts
+exposeTasks({
+  sum: (numbers: number[], { signal }) => {
+    let total = 0;
+
+    for (const n of numbers) {
+      signal.throwIfAborted();
+      total += n;
+    }
+
+    return total;
+  }
+});
+```
+
+## Closing the worker
+
+Call `worker.close()` when you're done with it: it terminates the worker, and
+tasks still waiting reject. The next task starts a new worker.
+
+## Writing the worker script by hand
+
+`exposeTasks` is optional. A worker script can follow the message format itself,
+described by `WorkerTaskMessageInterface`, `WorkerCancelMessageInterface` and
+`WorkerResultMessageInterface`:
+
+```ts
+self.onmessage = async (event) => {
+  const { id, task, input, cancel } = event.data;
+
+  // { id, cancel: true } asks to stop task id; this script can't, so it ignores it
+  if (cancel) return;
+
+  try {
+    if (task !== 'echo') throw new Error(`No task '${task}' in this worker`);
+
+    self.postMessage({ id, result: `Echo from Worker: ${input}` });
+  } catch (error) {
+    self.postMessage({ id, error: (error as Error).message });
+  }
+};
+```
+
+A reply has the task's `id` and either a `result` or an `error` (a message
+string, or an object with a `message`). Replies with an `id` no task waits for
+are ignored.
+
+## Where it runs
+
+Web Workers exist in browsers, Deno and Bun. Where there is no global `Worker`,
+as in Node.js, `canRun` returns `false`, so the `auto` strategy uses another
+backend, and calling `runTask` directly rejects with a `TypeError`. Support for
+Node.js `worker_threads` is tracked in
+[#127](https://github.com/phun-ky/hybrid-compute/issues/127).
