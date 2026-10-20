@@ -21,7 +21,7 @@ monorepo.
 
 ## API Docs
 
-[ThreadedCompute API Documentation](https://github.com/phun-ky/hybrid-compute/blob/main/docs/api/worker/src/classes/ThreadedCompute.md)
+[ThreadedCompute API Documentation](https://phun-ky.net/hybrid-compute/api/@hybrid-compute/worker/classes/ThreadedCompute)
 
 ## 📦 Package Info
 

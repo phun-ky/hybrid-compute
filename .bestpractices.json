@@ -224,7 +224,7 @@
   "version_tags_signed_status": "Unmet",
   "version_tags_signed_justification": "Release tags are annotated but not signed; releases are verified through npm provenance instead.",
   "input_validation_status": "Unmet",
-  "input_validation_justification": "core validates its backends, task names and strategies and rejects bad input with TypeError, RangeError or NoBackendError (#82). The backends do not validate their own options yet, and results from workers and remote endpoints are not validated; their checks are decided in the remaining 1.0 API reviews (#83 to #85), as the assurance case says: https://github.com/phun-ky/hybrid-compute/blob/main/ASSURANCE.md#known-gaps",
+  "input_validation_justification": "core validates its backends, task names and strategies (#82), and local validates the tasks registered with it (#83); bad input is rejected with TypeError, RangeError or NoBackendError. remote and worker do not validate their own options yet, and results from workers and remote endpoints are not validated; their checks are decided in the remaining 1.0 API reviews (#84, #85), as the assurance case says: https://github.com/phun-ky/hybrid-compute/blob/main/ASSURANCE.md#known-gaps",
   "hardening_status": "Met",
   "hardening_justification": "Strict TypeScript, no eval or dynamic code, tasks stored in a Map (no prototype pollution), no runtime dependencies outside the monorepo, validated and frozen configuration in core, read-only CI permissions with SHA-pinned actions, and CodeQL on every change.",
   "assurance_case_status": "Met",
