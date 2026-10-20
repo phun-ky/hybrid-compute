@@ -61,6 +61,7 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks || true",
     "prebuild": "npm run clean",
+    "banners": "node scripts/banners/render.mjs",
     "build": "tsc -b",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
