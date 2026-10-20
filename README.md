@@ -63,7 +63,7 @@ Includes:
 
 ## Usage
 
-```shell-session
+```sh
 npm install @hybrid-compute/core
 ```
 
@@ -195,7 +195,7 @@ app.listen(port, () => {
 
 This can be tested locally:
 
-```curl
+```sh
 curl -X POST http://localhost:3000/compute \
   -H "Content-Type: application/json" \
   -d '{"task": "echo", "input": "hello"}'
@@ -453,11 +453,11 @@ An error in the reply rejects the task's Promise.
 
 ## Development
 
-```shell-session
-// Build
-$ npm run build
-// Test
-$ npm test
+```sh
+# Build
+npm run build
+# Test
+npm test
 ```
 
 ## Contributing

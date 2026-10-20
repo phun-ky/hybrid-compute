@@ -101,7 +101,7 @@ app.listen(port, () => {
 
 This can be tested locally:
 
-```curl
+```sh
 curl -X POST http://localhost:3000/compute \
   -H "Content-Type: application/json" \
   -d '{"task": "echo", "input": "hello"}'

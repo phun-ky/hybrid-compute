@@ -13,19 +13,19 @@ and
 
 To develop **Hybrid Compute**, fork it, and then in the project root:
 
-```shell-session
+```sh
 npm i
 ```
 
 ## Build
 
-```shell-session
+```sh
 npm run build
 ```
 
 ## Test the code
 
-```shell-session
+```sh
 npm test
 ```
 
@@ -35,7 +35,7 @@ To commit, we use
 [semantic git commits with Commitizen](https://github.com/streamich/git-cz). So
 please run this when you are ready to commit your staged files:
 
-```shell-session
+```sh
 npm run commit
 ```
 
@@ -60,7 +60,7 @@ since its last release:
 A package that depends on a sibling gets a patch when the sibling's new version
 falls outside its `^` range. To see what the next release would be:
 
-```shell-session
+```sh
 npm run release:dry-run
 ```
 
