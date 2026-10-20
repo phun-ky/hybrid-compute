@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.37.2...%40hybrid-compute%2Fremote%400.38.0) (2026-10-20)
+
+### ⚠ BREAKING CHANGES
+
+* canRunTasks is required: list the task names this
+  backend may run, or pass '*' to accept every task (the old default when
+  it was left out). Invalid options now throw at construction. Failures
+  reject with RemoteTaskError instead of Error, SyntaxError or a bare
+  string; check error instanceof RemoteTaskError, and error.detail for the
+  server's error value. Non-2xx responses now fail even with a JSON
+  result. Tasks time out after 30 seconds unless you set timeout (0 turns
+  it off). The WebSocket no longer connects when the backend is created
+  but on the first task, and runTask waits for it instead of rejecting.
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.39.0 ([410c7a0](https://github.com/phun-ky/hybrid-compute/commit/410c7a00cfa43524449e6ea5ab5661208af76126))
+
+### Documentation
+
+* ✏️ document local's task rules and fix the package README links ([f8de45d](https://github.com/phun-ky/hybrid-compute/commit/f8de45dc5d7e55763132278c9ec39f171b5f588a)), closes [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+* ✏️ document remote's options, errors, cancelling and message format ([c1b56bf](https://github.com/phun-ky/hybrid-compute/commit/c1b56bfe1d7bee8386427a35c58abb92ee8fee92)), closes [#84](https://github.com/phun-ky/hybrid-compute/issues/84)
+
+### Feature
+
+* 🎸 rework remote: validated options, RemoteTaskError, WebSocket lifecycle, timeouts ([fbee2d3](https://github.com/phun-ky/hybrid-compute/commit/fbee2d3624d21123dd06c56337965574cb4e2240)), references [#84](https://github.com/phun-ky/hybrid-compute/issues/84)
+
+### Adding missing tests
+
+* 💍 measure coverage on each package's own source ([4720e44](https://github.com/phun-ky/hybrid-compute/commit/4720e443b2a1d7c5a17536258c29da730f1a0b42)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.37.2](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.37.1...%40hybrid-compute%2Fremote%400.37.2) (2026-10-20)
 
 ### Tasks
