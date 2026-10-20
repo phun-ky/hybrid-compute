@@ -15,16 +15,13 @@
     "skipChecks": true
   },
   "hooks": {
-    "after:bump": "node ../../scripts/sync-lockfile.mjs",
+    "after:bump": [
+      "node ../../scripts/sync-sibling-ranges.mjs ${name} ${version}",
+      "node ../../scripts/sync-lockfile.mjs"
+    ],
     "after:release": "echo Successfully released ${name} v${version}."
   },
   "plugins": {
-    "@release-it/bumper": {
-      "out": {
-        "file": "package.json",
-        "path": ["dependencies.@hybrid-compute/core"]
-      }
-    },
     "@release-it/conventional-changelog": {
       "header": "# Changelog",
       "preset": {
@@ -71,7 +68,16 @@
           }
         ]
       },
-      "infile": "CHANGELOG.md"
+      "infile": "CHANGELOG.md",
+      "tagOpts": {
+        "prefix": "@hybrid-compute/local@"
+      },
+      "commitsOpts": {
+        "path": "."
+      },
+      "gitRawCommitsOpts": {
+        "path": "."
+      }
     }
   }
 }

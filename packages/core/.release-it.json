@@ -15,7 +15,10 @@
     "skipChecks": true
   },
   "hooks": {
-    "after:bump": "node ../../scripts/sync-lockfile.mjs",
+    "after:bump": [
+      "node ../../scripts/sync-sibling-ranges.mjs ${name} ${version}",
+      "node ../../scripts/sync-lockfile.mjs"
+    ],
     "after:release": "echo Successfully released ${name} v${version}."
   },
   "plugins": {
@@ -65,7 +68,16 @@
           }
         ]
       },
-      "infile": "CHANGELOG.md"
+      "infile": "CHANGELOG.md",
+      "tagOpts": {
+        "prefix": "@hybrid-compute/core@"
+      },
+      "commitsOpts": {
+        "path": "."
+      },
+      "gitRawCommitsOpts": {
+        "path": "."
+      }
     }
   }
 }
