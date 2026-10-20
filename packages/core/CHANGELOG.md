@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.39.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.39.0...%40hybrid-compute%2Fcore%400.39.1) (2026-10-20)
+
+### Documentation
+
+* ✏️ document worker's options, errors, cancelling, exposeTasks and message format ([e375d0b](https://github.com/phun-ky/hybrid-compute/commit/e375d0ba93711201daabd7442d7f1ad80a6903c2)), references [#127](https://github.com/phun-ky/hybrid-compute/issues/127) [#127](https://github.com/phun-ky/hybrid-compute/issues/127) [#85](https://github.com/phun-ky/hybrid-compute/issues/85)
+
+### Bug
+
+* 🐛 publish the built files: add files to every package.json ([6cb3c1a](https://github.com/phun-ky/hybrid-compute/commit/6cb3c1a91bd0cefd9eb12e0718b183a47f68181c))
+
 ## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.38.1...%40hybrid-compute%2Fcore%400.39.0) (2026-10-20)
 
 ### Documentation
