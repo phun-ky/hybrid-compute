@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.39.0...%40hybrid-compute%2Fremote%401.0.0) (2026-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@1.0.0 ([14e36ca](https://github.com/phun-ky/hybrid-compute/commit/14e36ca7e565d0617b5d1c5cee07a4900396bfb8))
+
+### Refactoring
+
+* 💡 remove two branches remote can never take ([c0f44a1](https://github.com/phun-ky/hybrid-compute/commit/c0f44a1d6d6c74fd68a9d15888bea2497e743d85)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
+### Adding missing tests
+
+* 💍 cover remote's empty endpoint, non-object headers, non-object replies and number errors ([dd76ea5](https://github.com/phun-ky/hybrid-compute/commit/dd76ea5c4126b9852ea5ecaf10ca92ffd5953e25)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+* 💍 property-based tests with fast-check ([5f74311](https://github.com/phun-ky/hybrid-compute/commit/5f743113eb7cc9969964cd828d8c0f6971ca45e3)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.38.1...%40hybrid-compute%2Fremote%400.39.0) (2026-10-20)
 
 ### ⚠ BREAKING CHANGES
