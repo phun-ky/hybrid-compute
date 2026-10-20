@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.37.2](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.1...%40hybrid-compute%2Fworker%400.37.2) (2026-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.38.0 ([4a1bb07](https://github.com/phun-ky/hybrid-compute/commit/4a1bb07a39a78ab1021d11f3acf88aa2e3281e0a))
+
 ## [0.37.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.0...%40hybrid-compute%2Fworker%400.37.1) (2026-10-20)
 
 ### Feature
