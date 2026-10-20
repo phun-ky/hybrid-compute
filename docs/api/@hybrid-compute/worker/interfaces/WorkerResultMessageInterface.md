@@ -1,43 +1,37 @@
 [Documentation](../../../index.md) / [@hybrid-compute/worker](../index.md) /
 WorkerResultMessageInterface
 
-# Interface: WorkerResultMessageInterface
+# Interface: WorkerResultMessageInterface\<Output>
 
 Defined in:
-[types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L48)
+[packages/worker/src/types.ts:72](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L72)
 
-The message format sent from a Web Worker back to the main thread upon task
-completion.
-
-This message includes the result of the task execution or an error message if
-the task failed.
+What the worker script sends back: the task's `id` with either a `result` or an
+`error`. An `error` (a message string, or an object with a `message`) rejects
+the task with a `WorkerTaskError`.
 
 ## Example
 
 ```ts
-const response: WorkerResultMessageInterface = {
-  id: 1,
-  result: 42
-};
-postMessage(response);
+self.postMessage({ id: 1, result: 42 } satisfies WorkerResultMessageInterface);
 ```
 
-## See
+## Type Parameters
 
-https://developer.mozilla.org/en-US/docs/Web/API/Web\_Workers\_API/Using\_web\_workers
+### Output
+
+`Output` = `unknown`
 
 ## Properties
 
 ### error?
 
 ```ts
-optional error?: string;
+optional error?: unknown;
 ```
 
 Defined in:
-[types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L52)
-
-An optional error message if the task failed.
+[packages/worker/src/types.ts:75](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L75)
 
 ---
 
@@ -48,19 +42,15 @@ id: number;
 ```
 
 Defined in:
-[types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L49)
-
-The unique identifier that matches a previously sent task message.
+[packages/worker/src/types.ts:73](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L73)
 
 ---
 
-### result
+### result?
 
 ```ts
-result: any;
+optional result?: Output;
 ```
 
 Defined in:
-[types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L51)
-
-The result of the task execution (if successful).
+[packages/worker/src/types.ts:74](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L74)

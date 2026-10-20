@@ -4,24 +4,33 @@ ThreadedCompute
 # Class: ThreadedCompute
 
 Defined in:
-[index.ts:27](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L27)
+[packages/worker/src/index.ts:111](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L111)
 
-`ThreadedCompute` is a compute backend that runs tasks in a dedicated Web
-Worker.
+ThreadedCompute is a backend that runs tasks in a dedicated module Web Worker,
+so heavy work doesn't block the main thread.
 
-It manages communication with the worker via `postMessage`, assigns unique task
-request IDs, and resolves results asynchronously. Tasks are registered by name
-during construction and mapped internally for availability checks.
+It starts the worker on the first task, not when it's created, sends each task
+with an id and matches the replies by id. Write the worker script with
+[exposeTasks](../functions/exposeTasks.md), or by hand following
+[WorkerTaskMessageInterface](../interfaces/WorkerTaskMessageInterface.md) and
+[WorkerResultMessageInterface](../interfaces/WorkerResultMessageInterface.md).
+
+Every failure (an `error` in the reply, a crash, the timeout) rejects with a
+[WorkerTaskError](WorkerTaskError.md). If the worker crashes, a new one starts
+on the next task. Call [ThreadedCompute.close](#close) when you're done with it.
+
+Web Workers only exist in browsers (and Deno and Bun): where there is no global
+`Worker`, `canRun` returns `false`, so the `auto` strategy uses another backend.
 
 ## Example
 
 ```ts
-const threaded = new ThreadedCompute(new URL('./worker.js', import.meta.url), [
-  'add'
-]);
+const threaded = createThreadedCompute({
+  url: new URL('./worker.js', import.meta.url),
+  canRunTasks: ['add']
+});
 
 const result = await threaded.runTask<number, number>('add', 5);
-console.log(result); // Output from worker
 ```
 
 ## See
@@ -37,32 +46,34 @@ https://developer.mozilla.org/en-US/docs/Web/API/Worker
 ### Constructor
 
 ```ts
-new ThreadedCompute(workerPath: string, taskNames: string[]): ThreadedCompute;
+new ThreadedCompute(options: ThreadedComputeOptionsInterface): ThreadedCompute;
 ```
 
 Defined in:
-[index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L47)
+[packages/worker/src/index.ts:127](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L127)
 
-Constructs a new `ThreadedCompute` backend with a specified worker and list of
-available task names.
+Creates the backend. It checks the options, and starts no worker until the first
+task.
 
 #### Parameters
 
-##### workerPath
+##### options
 
-`string`
+[`ThreadedComputeOptionsInterface`](../interfaces/ThreadedComputeOptionsInterface.md)
 
-Path to the worker script (typically a URL via `import.meta.url`).
-
-##### taskNames
-
-`string`\[]
-
-A list of task identifiers this worker is capable of executing.
+The worker script, the tasks it can run and, optionally, a timeout.
 
 #### Returns
 
 `ThreadedCompute`
+
+#### Throws
+
+For a missing or wrongly typed option.
+
+#### Throws
+
+For a negative timeout.
 
 ## Methods
 
@@ -73,9 +84,9 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:68](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L68)
+[packages/worker/src/index.ts:138](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L138)
 
-Checks whether the current worker is registered to handle a given task.
+Determines if this backend can run the given task.
 
 #### Parameters
 
@@ -83,13 +94,13 @@ Checks whether the current worker is registered to handle a given task.
 
 `string`
 
-The name of the task to check.
+Name of the task.
 
 #### Returns
 
 `boolean`
 
-`true` if the task is supported, otherwise `false`.
+`true` if the task is in `canRunTasks` and this runtime has Web Workers.
 
 #### Implementation of
 
@@ -97,19 +108,37 @@ The name of the task to check.
 
 ---
 
-### runTask()
+### close()
 
 ```ts
-runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
+close(): void;
 ```
 
 Defined in:
-[index.ts:90](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L90)
+[packages/worker/src/index.ts:265](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L265)
 
-Runs a task inside the Web Worker.
+Terminates the worker, if one is running. Tasks still waiting for a reply reject
+with a [WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
 
-The task is assigned a unique ID and sent via `postMessage`. The result or error
-is resolved asynchronously when the worker responds.
+#### Returns
+
+`void`
+
+---
+
+### runTask()
+
+```ts
+runTask<Input, Output>(
+   taskName: string,
+   input: Input,
+options?: RunTaskOptionsInterface): Promise<Output>;
+```
+
+Defined in:
+[packages/worker/src/index.ts:165](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L165)
+
+Runs a task in the worker and waits for its reply.
 
 #### Type Parameters
 
@@ -117,13 +146,13 @@ is resolved asynchronously when the worker responds.
 
 `Input`
 
-The input type for the task.
+The input type of the task.
 
 ##### Output
 
 `Output`
 
-The output type returned by the task.
+The output type of the task.
 
 #### Parameters
 
@@ -131,19 +160,30 @@ The output type returned by the task.
 
 `string`
 
-The name of the task to execute.
+The name of the task to run.
 
 ##### input
 
 `Input`
 
-The input payload for the task.
+The input for the task. It's copied with the structured clone algorithm, so it
+can't hold functions or DOM nodes.
+
+##### options?
+
+[`RunTaskOptionsInterface`](../../core/interfaces/RunTaskOptionsInterface.md)
+
+Options for this call. With a `signal`, `runTask` rejects with the signal's
+reason as soon as it aborts, and the worker is told to cancel the task.
 
 #### Returns
 
 [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<`Output`>
 
-A Promise resolving to the task output.
+A Promise resolving to the reply's `result`. It rejects with a `NoBackendError`
+(from `@hybrid-compute/core`) if the task isn't in `canRunTasks`, a `TypeError`
+if this runtime has no Web Workers, a [WorkerTaskError](WorkerTaskError.md) if
+the task fails, and with the signal's reason if the call is cancelled.
 
 #### Example
 

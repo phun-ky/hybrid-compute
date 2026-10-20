@@ -5,29 +5,22 @@ createThreadedCompute
 
 ```ts
 function createThreadedCompute(
-  workerPath: string,
-  tasks: string[]
+  options: ThreadedComputeOptionsInterface
 ): ThreadedCompute;
 ```
 
 Defined in:
-[index.ts:116](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L116)
+[packages/worker/src/index.ts:385](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L385)
 
-Factory function to create a new `ThreadedCompute` backend.
+Creates a ThreadedCompute backend.
 
 ## Parameters
 
-### workerPath
+### options
 
-`string`
+[`ThreadedComputeOptionsInterface`](../interfaces/ThreadedComputeOptionsInterface.md)
 
-The module worker file path (e.g. `new URL('./worker.js', import.meta.url)`).
-
-### tasks
-
-`string`\[]
-
-A list of supported task names this worker can execute.
+The worker script, the tasks it can run and, optionally, a timeout.
 
 ## Returns
 
@@ -35,10 +28,19 @@ A list of supported task names this worker can execute.
 
 A new `ThreadedCompute` instance.
 
+## Throws
+
+For a missing or wrongly typed option.
+
+## Throws
+
+For a negative timeout.
+
 ## Example
 
 ```ts
-const backend = createThreadedCompute(new URL('./worker.js', import.meta.url), [
-  'resizeImage'
-]);
+const backend = createThreadedCompute({
+  url: new URL('./worker.js', import.meta.url),
+  canRunTasks: ['resizeImage']
+});
 ```

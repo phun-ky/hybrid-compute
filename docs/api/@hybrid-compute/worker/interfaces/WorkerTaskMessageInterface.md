@@ -1,27 +1,34 @@
 [Documentation](../../../index.md) / [@hybrid-compute/worker](../index.md) /
 WorkerTaskMessageInterface
 
-# Interface: WorkerTaskMessageInterface
+# Interface: WorkerTaskMessageInterface\<Input>
 
 Defined in:
-[types.ts:21](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L21)
+[packages/worker/src/types.ts:41](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L41)
 
-The message format sent from the main thread to a Web Worker when executing a
-task.
-
-This message includes a task name, its input payload, and a unique ID used to
-match the response from the worker.
+What the worker script receives for each task: the task name, its input and an
+`id`, which the reply must repeat. The input is copied with the structured clone
+algorithm, so it can't hold functions or DOM nodes.
 
 ## Example
 
 ```ts
 const message: WorkerTaskMessageInterface = {
+  id: 1,
   task: 'double',
-  input: 21,
-  id: 1
+  input: 21
 };
-worker.postMessage(message);
 ```
+
+## See
+
+https://developer.mozilla.org/en-US/docs/Web/API/Web\_Workers\_API/Structured\_clone\_algorithm
+
+## Type Parameters
+
+### Input
+
+`Input` = `unknown`
 
 ## Properties
 
@@ -32,22 +39,18 @@ id: number;
 ```
 
 Defined in:
-[types.ts:25](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L25)
-
-A unique identifier for correlating the response message.
+[packages/worker/src/types.ts:42](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L42)
 
 ---
 
 ### input
 
 ```ts
-input: any;
+input: Input;
 ```
 
 Defined in:
-[types.ts:24](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L24)
-
-The input data for the task. This can be any JSON-serializable value.
+[packages/worker/src/types.ts:44](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L44)
 
 ---
 
@@ -58,6 +61,4 @@ task: string;
 ```
 
 Defined in:
-[types.ts:22](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L22)
-
-The name of the task to be executed in the worker.
+[packages/worker/src/types.ts:43](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L43)

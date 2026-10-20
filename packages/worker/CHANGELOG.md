@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.3...%40hybrid-compute%2Fworker%400.38.0) (2026-10-20)
+
+### ⚠ BREAKING CHANGES
+
+* createThreadedCompute and the ThreadedCompute constructor
+  take an options object: createThreadedCompute({ url, canRunTasks }) instead
+  of createThreadedCompute(url, taskNames). Error replies reject with a
+  WorkerTaskError instead of the raw error value. A task that isn't in
+  canRunTasks rejects with NoBackendError instead of being sent.
+
+### Documentation
+
+* ✏️ document worker's options, errors, cancelling, exposeTasks and message format ([e375d0b](https://github.com/phun-ky/hybrid-compute/commit/e375d0ba93711201daabd7442d7f1ad80a6903c2)), references [#127](https://github.com/phun-ky/hybrid-compute/issues/127) [#127](https://github.com/phun-ky/hybrid-compute/issues/127) [#85](https://github.com/phun-ky/hybrid-compute/issues/85)
+
+### Feature
+
+* 🎸 worker API review: options object, WorkerTaskError, exposeTasks, timeouts, cancellation ([f7f3d6f](https://github.com/phun-ky/hybrid-compute/commit/f7f3d6f2ecec6bc84ceec3034833f135b06080b4)), references [#85](https://github.com/phun-ky/hybrid-compute/issues/85)
+
 ## [0.37.3](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.37.2...%40hybrid-compute%2Fworker%400.37.3) (2026-10-20)
 
 ### Tasks
