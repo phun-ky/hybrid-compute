@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.39.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.39.0...%40hybrid-compute%2Flocal%400.39.1) (2026-10-20)
+
+### Bug
+
+* 🐛 publish the built files: add files to every package.json ([6cb3c1a](https://github.com/phun-ky/hybrid-compute/commit/6cb3c1a91bd0cefd9eb12e0718b183a47f68181c))
+
 ## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.38.0...%40hybrid-compute%2Flocal%400.39.0) (2026-10-20)
 
 ### Tasks
