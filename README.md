@@ -8,6 +8,10 @@
 > **Run compute tasks wherever they run best - local, threaded, or remote - with
 > a pluggable backend architecture.**
 
+**1.0 is out:**
+[release notes](https://phun-ky.net/hybrid-compute/guide/releases/1.0) and
+[upgrading from 0.x](https://phun-ky.net/hybrid-compute/guide/upgrading).
+
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](http://makeapullrequest.com)
 [![SemVer 2.0](https://img.shields.io/badge/SemVer-2.0-green.svg)](http://semver.org/spec/v2.0.0.html)

@@ -214,6 +214,15 @@ export default defineConfig({
           ]
         },
         {
+          text: 'Releases',
+          collapsed: false,
+          items: [
+            { text: 'Release notes', link: '/guide/releases/' },
+            { text: '1.0 release notes', link: '/guide/releases/1.0' },
+            { text: 'Upgrading', link: '/guide/upgrading' }
+          ]
+        },
+        {
           text: 'Development',
           collapsed: false,
           items: [

@@ -85,6 +85,10 @@ const sliceStyle = (s: Slice) => ({
 <template>
   <div class="hp">
     <section class="d-wrap hero">
+      <a class="d-mono release" :href="withBase('/guide/releases/1.0')"
+        ><span class="dot" aria-hidden="true"></span>1.0 is out: what changed
+        &rarr;</a
+      >
       <p class="d-mono eyebrow">hybrid-compute · local, worker, remote</p>
       <h1>
         Keep the main thread free.<br /><span
@@ -262,6 +266,29 @@ const sliceStyle = (s: Slice) => ({
   padding-top: 80px;
   max-width: 1000px;
   margin-left: max(0px, calc((100% - 1240px) / 2));
+}
+.release {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding: 5px 12px;
+  border: 1px solid var(--d-line);
+  border-radius: 999px;
+  background: var(--d-bg2);
+  color: var(--d-muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+.release:hover {
+  border-color: var(--d-accent);
+  color: var(--d-text);
+}
+.release .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--d-accent);
 }
 .eyebrow {
   margin: 0 0 18px;
