@@ -86,10 +86,13 @@ const toBackends = (
  * across different backends (local, worker, or remote) using a flexible strategy.
  *
  * It supports four strategies:
- * - `'local'`: Forces execution on the local (main thread) backend.
- * - `'worker'`: Forces execution on a threaded/WebWorker backend.
- * - `'remote'`: Forces execution on a remote/server backend.
- * - `'auto'`: Automatically selects the first available backend that supports the task.
+ * - `'local'`, `'worker'`, `'remote'`: use that backend, if it is configured
+ *   and its `canRun(taskName)` returns true.
+ * - `'auto'` (the default): use the first backend whose `canRun(taskName)`
+ *   returns true, in the order worker, local, remote.
+ *
+ * The constructor checks the backends it's given and keeps a frozen copy.
+ * `createHybridCompute` is the usual way to create one.
  *
  * @example
  * ```ts
@@ -109,7 +112,13 @@ export class HybridCompute {
   /**
    * Creates a new HybridCompute orchestrator.
    *
-   * @param backends - An object containing optional local, worker, and remote backends.
+   * @param backends - An object with at least one of the local, worker and
+   * remote backends. A backend given as `undefined` is skipped.
+   *
+   * @throws {TypeError} If `backends` isn't an object, a backend lacks
+   * `canRun` or `runTask`, or no backend is given.
+   * @throws {RangeError} If `backends` has a key other than local, worker or
+   * remote.
    */
   constructor(backends: HybridComputeOptionsInterface) {
     this.backends = toBackends(backends);
@@ -118,7 +127,10 @@ export class HybridCompute {
   /**
    * Runs a task using the specified execution strategy.
    *
-   * If `strategy` is `'auto'`, it will try the worker, then local, then remote backend in order of priority.
+   * With `'auto'`, it tries the worker, then the local, then the remote
+   * backend, and runs the task on the first whose `canRun(taskName)` returns
+   * true. With an explicit strategy, that backend must be configured and its
+   * `canRun(taskName)` must return true.
    *
    * @typeParam Input - The type of the input expected by the task.
    * @typeParam Output - The expected output type returned by the task.
@@ -127,9 +139,13 @@ export class HybridCompute {
    * @param input - The input payload for the task.
    * @param strategy - The execution strategy to use. Defaults to `'auto'`.
    *
-   * @returns A Promise resolving to the task's output.
-   *
-   * @throws If no backend is available or able to run the task.
+   * @returns A Promise resolving to the task's output. It rejects with:
+   * - a `TypeError` if `taskName` isn't a non-empty string or `strategy`
+   *   isn't a string
+   * - a `RangeError` if `strategy` isn't one of `'auto'`, `'local'`,
+   *   `'worker'` or `'remote'`
+   * - a {@link NoBackendError} if no configured backend can run the task
+   * - whatever the backend's `runTask` rejects with
    *
    * @example
    * ```ts
@@ -200,10 +216,16 @@ export class HybridCompute {
 }
 
 /**
- * Factory function for creating a HybridCompute instance.
+ * Create a HybridCompute orchestrator: the usual way to start.
  *
- * @param backends - Configuration options specifying available backends.
+ * @param backends - An object with at least one of the local, worker and
+ * remote backends.
  * @returns A new HybridCompute orchestrator.
+ *
+ * @throws {TypeError} If `backends` isn't an object, a backend lacks
+ * `canRun` or `runTask`, or no backend is given.
+ * @throws {RangeError} If `backends` has a key other than local, worker or
+ * remote.
  *
  * @example
  * ```ts

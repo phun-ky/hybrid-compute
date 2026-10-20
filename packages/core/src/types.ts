@@ -1,10 +1,13 @@
 /**
  * The strategy used to determine which compute backend to use.
  *
- * - `auto`: Automatically select the best backend available.
- * - `local`: Run tasks directly on the main thread.
- * - `worker`: Offload tasks to WebWorker or thread-based compute.
- * - `remote`: Offload tasks to a remote server or service.
+ * - `auto`: the first backend whose `canRun` returns true, in the order
+ *   worker, local, remote.
+ * - `local`: the local backend, which runs tasks on the calling thread.
+ * - `worker`: the worker backend, which runs tasks in a Web Worker.
+ * - `remote`: the remote backend, which sends tasks to a server or service.
+ *
+ * An explicit strategy uses that backend only if its `canRun` returns true.
  *
  * @example
  * ```ts
@@ -39,7 +42,8 @@ export interface ComputeTaskInterface<Input = unknown, Output = unknown> {
  * Represents a backend capable of executing registered compute tasks.
  *
  * Each backend must be able to:
- * - Determine if it can run a given task (`canRun`)
+ * - Determine if it can run a given task (`canRun`). Core asks this before
+ *   every task, for every strategy.
  * - Execute a named task with input and return a Promise of output (`runTask`)
  *
  * @template Input The input type for task execution.
@@ -64,11 +68,12 @@ export interface ComputeBackendInterface {
 /**
  * Configuration options for initializing the HybridCompute orchestrator.
  *
- * Backends are optional, and can be combined or omitted based on the environment or needs.
+ * Each backend is optional, but at least one must be given, and no other
+ * keys are allowed.
  *
- * @property local - A local synchronous compute backend (main thread).
- * @property worker - A background-thread compute backend (e.g. WebWorker).
- * @property remote - A server-side or cloud compute backend.
+ * @property local - A backend that runs tasks on the calling thread.
+ * @property worker - A backend that runs tasks in a Web Worker.
+ * @property remote - A backend that sends tasks to a server or service.
  *
  * @example
  * ```ts

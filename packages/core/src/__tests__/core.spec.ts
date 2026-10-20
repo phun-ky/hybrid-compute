@@ -20,7 +20,7 @@ function createMockBackend(): ComputeBackendInterface {
       taskName: string,
       input: Input
     ): Promise<Output> => {
-      // mock response — force-cast for test purposes
+      // mock response, force-cast for test purposes
       return 42 as unknown as Output;
     }
   };
