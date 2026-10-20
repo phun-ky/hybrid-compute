@@ -64,7 +64,7 @@ describe('options', () => {
   });
 
   test('requires a url: a URL or a non-empty string', () => {
-    for (const url of [undefined, '', 42, {}]) {
+    for (const url of ['', 42, {}]) {
       assert.throws(
         () => createThreadedCompute(options({ url, canRunTasks: ['echo'] })),
         {
@@ -85,6 +85,26 @@ describe('options', () => {
         TypeError
       );
     }
+  });
+
+  test('requires exactly one of url and createWorker', () => {
+    for (const value of [
+      { canRunTasks: ['echo'] },
+      { url: './worker.js', createWorker: () => ({}), canRunTasks: ['echo'] }
+    ]) {
+      assert.throws(() => createThreadedCompute(options(value)), {
+        name: 'TypeError',
+        message: /^Give either url or createWorker/
+      });
+    }
+
+    assert.throws(
+      () =>
+        createThreadedCompute(
+          options({ createWorker: 'worker.js', canRunTasks: ['echo'] })
+        ),
+      { name: 'TypeError', message: /^createWorker must be a function/ }
+    );
   });
 
   test('checks the timeout', () => {
@@ -359,6 +379,69 @@ describe('runTask with a hand written worker script', () => {
       );
       assert.equal(await threaded.runTask('echo', 'kept'), 'kept');
       threaded.close();
+    });
+  });
+});
+
+describe('createWorker', () => {
+  test('starts the worker with the factory, on the first task and again after close()', async () => {
+    await withWorker(async () => {
+      let calls = 0;
+      const threaded = createThreadedCompute({
+        createWorker: () => {
+          calls++;
+
+          return new ThreadWorker(fixture('exposed')) as unknown as Worker;
+        },
+        canRunTasks: ['double']
+      });
+
+      assert.equal(calls, 0);
+      assert.equal(await threaded.runTask('double', 4), 8);
+      assert.equal(await threaded.runTask('double', 5), 10);
+      assert.equal(calls, 1);
+      threaded.close();
+      assert.equal(await threaded.runTask('double', 6), 12);
+      assert.equal(calls, 2);
+      threaded.close();
+    });
+  });
+
+  test('rejects with WorkerTaskError when the factory throws', async () => {
+    await withWorker(async () => {
+      const failure = new Error('no workers here');
+      const threaded = createThreadedCompute({
+        createWorker: () => {
+          throw failure;
+        },
+        canRunTasks: ['echo']
+      });
+
+      await assert.rejects(
+        threaded.runTask('echo', 1),
+        isWorkerError(
+          /^Worker task 'echo' couldn't start createWorker$/,
+          (error) => error.cause === failure
+        )
+      );
+    });
+  });
+
+  test('rejects with WorkerTaskError when the factory returns something else', async () => {
+    await withWorker(async () => {
+      for (const value of [undefined, {}, { postMessage: () => {} }]) {
+        const threaded = createThreadedCompute({
+          createWorker: () => value as unknown as Worker,
+          canRunTasks: ['echo']
+        });
+
+        await assert.rejects(
+          threaded.runTask('echo', 1),
+          isWorkerError(
+            /couldn't start: createWorker returned .*, not a Worker$/
+          )
+        );
+      }
     });
   });
 });
