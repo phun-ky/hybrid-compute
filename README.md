@@ -314,9 +314,11 @@ And your `main.ts`:
 import { createHybridCompute } from '@hybrid-compute/core';
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
-// Started as a module worker on the first task
 const worker = createThreadedCompute({
-  url: new URL('./worker.ts', import.meta.url),
+  // Started on the first task. Bundlers build worker.ts because they see
+  // new Worker(new URL(...)) written out in full
+  createWorker: () =>
+    new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }),
   canRunTasks: ['echo']
 });
 const compute = createHybridCompute({
@@ -355,7 +357,8 @@ const compute = new HybridCompute({
   local,
   // worker.js calls exposeTasks({ double: (n: number) => n * 2 })
   worker: createThreadedCompute({
-    url: new URL('./worker.js', import.meta.url),
+    createWorker: () =>
+      new Worker(new URL('./worker.js', import.meta.url), { type: 'module' }),
     canRunTasks: ['double']
   }),
   remote: createRemoteCompute({

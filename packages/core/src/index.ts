@@ -99,7 +99,13 @@ const toBackends = (
  * ```ts
  * const compute = new HybridCompute({
  *   local: createLocalCompute(),
- *   worker: createThreadedCompute({ url: workerUrl, canRunTasks: ['double'] }),
+ *   worker: createThreadedCompute({
+ *     createWorker: () =>
+ *       new Worker(new URL('./double.worker.js', import.meta.url), {
+ *         type: 'module'
+ *       }),
+ *     canRunTasks: ['double']
+ *   }),
  *   remote: createRemoteCompute({
  *     transport: 'fetch',
  *     endpoint: '/api/compute',

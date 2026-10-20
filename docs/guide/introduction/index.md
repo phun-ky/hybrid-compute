@@ -100,7 +100,8 @@ const compute = new HybridCompute({
   local,
   // worker.js calls exposeTasks({ double: (n: number) => n * 2 })
   worker: createThreadedCompute({
-    url: new URL('./worker.js', import.meta.url),
+    createWorker: () =>
+      new Worker(new URL('./worker.js', import.meta.url), { type: 'module' }),
     canRunTasks: ['double']
   }),
   remote: createRemoteCompute({

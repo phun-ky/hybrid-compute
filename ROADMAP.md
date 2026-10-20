@@ -55,9 +55,6 @@ below 1.0.
 Ideas that fit the project but have no date. Each would start as a 0.x package
 or an addition to an existing one, after a discussion in its issue.
 
-- **A WebAssembly backend**
-  ([#86](https://github.com/phun-ky/hybrid-compute/issues/86), with the draft in
-  [#32](https://github.com/phun-ky/hybrid-compute/pull/32)).
 - **More transports for `remote`**, such as WebRTC data channels.
 - **Node.js `worker_threads`** as well as browser Web Workers
   ([#127](https://github.com/phun-ky/hybrid-compute/issues/127)); `worker` is
@@ -69,6 +66,10 @@ or an addition to an existing one, after a discussion in its issue.
   isolate what the task does. Local tasks run with your application's rights.
 - **Authentication and transport security in `remote`.** Use `https:` and `wss:`
   endpoints, and authenticate on the server side.
+- **A WebAssembly backend.** A WebAssembly module's exports are functions, so
+  they run as `local` tasks or in a worker with `exposeTasks`; see the
+  [WebAssembly guide](https://phun-ky.net/hybrid-compute/guide/usage/wasm)
+  ([#86](https://github.com/phun-ky/hybrid-compute/issues/86)).
 - **A hosted compute service.** The project provides libraries; you run the
   remote endpoint yourself.
 - **Collecting data.** The packages and the website don't collect, store or send

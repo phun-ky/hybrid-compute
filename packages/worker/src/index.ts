@@ -40,11 +40,27 @@ const toSettings = (options: unknown) => {
     );
   }
 
-  const { url, canRunTasks, timeout } = options;
+  const { url, createWorker, canRunTasks, timeout } = options;
 
-  if (!(url instanceof URL) && (typeof url !== 'string' || url === '')) {
+  if ((url === undefined) === (createWorker === undefined)) {
+    throw new TypeError(
+      'Give either url or createWorker: url for a worker script served as it is, createWorker when a bundler builds it'
+    );
+  }
+
+  if (
+    url !== undefined &&
+    !(url instanceof URL) &&
+    (typeof url !== 'string' || url === '')
+  ) {
     throw new TypeError(
       `url must be a URL or a non-empty string, got ${describeValue(url)}`
+    );
+  }
+
+  if (createWorker !== undefined && typeof createWorker !== 'function') {
+    throw new TypeError(
+      `createWorker must be a function that returns a new Worker, got ${describeValue(createWorker)}`
     );
   }
 
@@ -73,7 +89,13 @@ const toSettings = (options: unknown) => {
   }
 
   return {
-    url: url as string | URL,
+    // One way to start a worker, whichever option was given
+    createWorker:
+      (createWorker as (() => Worker) | undefined) ??
+      (() => new Worker(url as string | URL, { type: 'module' })),
+    // For error messages
+    source:
+      createWorker === undefined ? `the worker ${String(url)}` : 'createWorker',
     tasks: new Set(canRunTasks as string[]) as ReadonlySet<string>,
     timeout: (timeout as number | undefined) ?? 0
   };
@@ -96,14 +118,27 @@ const toSettings = (options: unknown) => {
  * global `Worker`, `canRun` returns `false`, so the `auto` strategy uses
  * another backend.
  *
- * @example
+ * @example With a bundler
  * ```ts
+ * // Vite and webpack build the worker script when they see this literal
+ * // new Worker(new URL(...)), so keep it written out in full
  * const threaded = createThreadedCompute({
- *   url: new URL('./worker.js', import.meta.url),
+ *   createWorker: () =>
+ *     new Worker(new URL('./add.worker.ts', import.meta.url), {
+ *       type: 'module'
+ *     }),
  *   canRunTasks: ['add']
  * });
  *
  * const result = await threaded.runTask<number, number>('add', 5);
+ * ```
+ *
+ * @example Without a bundler
+ * ```ts
+ * const threaded = createThreadedCompute({
+ *   url: '/workers/add.worker.js',
+ *   canRunTasks: ['add']
+ * });
  * ```
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Worker
@@ -118,8 +153,8 @@ export class ThreadedCompute implements ComputeBackendInterface {
    * Creates the backend. It checks the options, and starts no worker until
    * the first task.
    *
-   * @param options - The worker script, the tasks it can run and,
-   * optionally, a timeout.
+   * @param options - The worker script (`url` or `createWorker`), the tasks
+   * it can run and, optionally, a timeout.
    *
    * @throws {TypeError} For a missing or wrongly typed option.
    * @throws {RangeError} For a negative timeout.
@@ -277,12 +312,23 @@ export class ThreadedCompute implements ComputeBackendInterface {
     let worker: Worker;
 
     try {
-      worker = new Worker(this.settings.url, { type: 'module' });
+      worker = this.settings.createWorker();
     } catch (error) {
       throw new WorkerTaskError(
         taskName,
-        `Worker task '${taskName}' couldn't start the worker ${String(this.settings.url)}`,
+        `Worker task '${taskName}' couldn't start ${this.settings.source}`,
         { cause: error }
+      );
+    }
+
+    if (
+      typeof worker?.postMessage !== 'function' ||
+      typeof worker.addEventListener !== 'function' ||
+      typeof worker.terminate !== 'function'
+    ) {
+      throw new WorkerTaskError(
+        taskName,
+        `Worker task '${taskName}' couldn't start: createWorker returned ${describeValue(worker)}, not a Worker`
       );
     }
 
@@ -367,8 +413,8 @@ export class ThreadedCompute implements ComputeBackendInterface {
 /**
  * Creates a ThreadedCompute backend.
  *
- * @param options - The worker script, the tasks it can run and,
- * optionally, a timeout.
+ * @param options - The worker script (`url` or `createWorker`), the tasks it
+ * can run and, optionally, a timeout.
  * @returns A new `ThreadedCompute` instance.
  *
  * @throws {TypeError} For a missing or wrongly typed option.
@@ -377,7 +423,10 @@ export class ThreadedCompute implements ComputeBackendInterface {
  * @example
  * ```ts
  * const backend = createThreadedCompute({
- *   url: new URL('./worker.js', import.meta.url),
+ *   createWorker: () =>
+ *     new Worker(new URL('./resize.worker.ts', import.meta.url), {
+ *       type: 'module'
+ *     }),
  *   canRunTasks: ['resizeImage']
  * });
  * ```
