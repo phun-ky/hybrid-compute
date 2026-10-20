@@ -1,23 +1,41 @@
-import {
+import { NoBackendError } from '@hybrid-compute/core';
+import type {
   ComputeBackendInterface,
   ComputeTaskInterface
 } from '@hybrid-compute/core';
 
+/** A registered task: its name and its run function, frozen at registration. */
+type RegisteredTaskType = Readonly<{
+  name: string;
+  run: (input: unknown) => unknown;
+}>;
+
+/** What a value is, for error messages: null, an array, or its typeof. */
+const describeValue = (value: unknown) => {
+  if (value === null) return 'null';
+
+  if (Array.isArray(value)) return 'an array';
+
+  if (value === '') return 'an empty string';
+
+  return typeof value;
+};
+
 /**
- * LocalCompute is a compute backend that executes tasks directly
- * on the main thread (synchronously in the JavaScript event loop).
+ * LocalCompute is a compute backend that runs tasks on the calling thread:
+ * the main thread in a page, or whichever worker or Node.js thread creates it.
  *
- * It stores registered tasks in memory and dispatches them by name.
- *
- * This backend is ideal for lightweight tasks or environments
- * where worker threads or remote execution are unavailable.
+ * It keeps the registered tasks in memory and runs them by name. A task's
+ * synchronous work runs before `runTask` returns, so it suits small, cheap
+ * tasks; heavy work belongs in the worker backend.
  *
  * @example
  * ```ts
  * const local = new LocalCompute();
+ *
  * local.registerTask({
  *   name: 'square',
- *   run: async (n: number) => n * n
+ *   run: (n: number) => n * n
  * });
  *
  * const result = await local.runTask<number, number>('square', 5);
@@ -25,21 +43,64 @@ import {
  * ```
  */
 export class LocalCompute implements ComputeBackendInterface {
-  /**
-   * In-memory task registry, keyed by task name.
-   */
-  private tasks: Map<string, ComputeTaskInterface<unknown, unknown>> =
-    new Map();
+  /** The registered tasks, keyed by name. */
+  private readonly tasks = new Map<string, RegisteredTaskType>();
 
   /**
-   * Registers a new task to be executed by this backend.
+   * Registers a task with this backend. The task is copied, so changing the
+   * object afterwards has no effect.
    *
    * @typeParam Input - The input type expected by the task.
    * @typeParam Output - The output type returned by the task.
-   * @param task - A named compute task with an async `run` function.
+   * @param task - A task with a unique, non-empty `name` and a `run` function,
+   * which may return the output or a Promise of it.
+   *
+   * @throws {TypeError} If `task` isn't an object, its `name` isn't a
+   * non-empty string, or it has no `run` function.
+   * @throws {RangeError} If a task with the same name is already registered.
+   * Call {@link LocalCompute.unregisterTask} first to replace it.
    */
-  registerTask<Input, Output>(task: ComputeTaskInterface<Input, Output>) {
-    this.tasks.set(task.name, task);
+  registerTask<Input, Output>(task: ComputeTaskInterface<Input, Output>): void {
+    if (typeof task !== 'object' || task === null || Array.isArray(task)) {
+      throw new TypeError(
+        `registerTask expects a task object with a name and a run function, got ${describeValue(task)}`
+      );
+    }
+
+    if (typeof task.name !== 'string' || task.name === '') {
+      throw new TypeError(
+        `A task's name must be a non-empty string, got ${describeValue(task.name)}`
+      );
+    }
+
+    if (typeof task.run !== 'function') {
+      throw new TypeError(`Task '${task.name}' must have a run function`);
+    }
+
+    if (this.tasks.has(task.name)) {
+      throw new RangeError(
+        `A task named '${task.name}' is already registered; call unregisterTask('${task.name}') first to replace it`
+      );
+    }
+
+    // Bound to the task, so a run that uses `this` works as before
+    this.tasks.set(
+      task.name,
+      Object.freeze({
+        name: task.name,
+        run: task.run.bind(task) as (input: unknown) => unknown
+      })
+    );
+  }
+
+  /**
+   * Removes a registered task.
+   *
+   * @param taskName - The name of the task to remove.
+   * @returns `true` if a task was removed, `false` if none had that name.
+   */
+  unregisterTask(taskName: string): boolean {
+    return this.tasks.delete(taskName);
   }
 
   /**
@@ -53,14 +114,15 @@ export class LocalCompute implements ComputeBackendInterface {
   }
 
   /**
-   * Executes a registered task with the given input.
+   * Runs a registered task with the given input.
    *
    * @typeParam Input - The expected input type of the task.
    * @typeParam Output - The expected output type of the task.
    * @param taskName - The name of the task to run.
    * @param input - The input data to pass to the task.
-   * @returns A Promise resolving to the task’s output.
-   * @throws If the task is not found in the local registry.
+   * @returns A Promise resolving to the task's output. It rejects with a
+   * `NoBackendError` (from `@hybrid-compute/core`) if no task has that name,
+   * and with whatever the task throws or rejects with.
    *
    * @example
    * ```ts
@@ -71,26 +133,30 @@ export class LocalCompute implements ComputeBackendInterface {
     taskName: string,
     input: Input
   ): Promise<Output> {
-    const task = this.tasks.get(taskName) as ComputeTaskInterface<
-      Input,
-      Output
-    >;
+    const task = this.tasks.get(taskName);
 
-    if (!task) throw new Error(`Local task '${taskName}' not found.`);
+    if (!task) {
+      throw new NoBackendError(
+        taskName,
+        'local',
+        `No local task '${taskName}' is registered`
+      );
+    }
 
-    return task.run(input);
+    return (await task.run(input)) as Output;
   }
 }
 
 /**
- * Factory function to create a new LocalCompute backend instance.
+ * Creates a LocalCompute backend with no tasks registered.
  *
- * @returns A new `LocalCompute` instance with empty task registry.
+ * @returns A new `LocalCompute` instance.
  *
  * @example
  * ```ts
- * const compute = createLocalCompute();
- * compute.runTask(…);
+ * const local = createLocalCompute();
+ *
+ * local.registerTask({ name: 'echo', run: (input: string) => input });
  * ```
  */
 export function createLocalCompute() {
