@@ -42,13 +42,15 @@ There are no secrets, accounts or personal data in the software itself.
 ```
 
 1. **Contributor to repository.** Every change arrives as a pull request. The
-   ruleset on `main` requires the Checks workflow (build, lint, type-check, docs
-   check and tests), the DCO sign-off, dependency review and CodeQL results with
-   no errors and no high or critical security alerts before a merge.
+   ruleset on `main` requires the Checks workflow (build, a check that every
+   package packs, installs and imports, lint, type-check, docs check and tests),
+   the DCO sign-off, dependency review and CodeQL results with no errors and no
+   high or critical security alerts before a merge.
 2. **Repository to npm.** Releases are built and published by GitHub Actions
    with npm trusted publishing (OIDC). There is no long-lived npm token to
-   steal, every package gets a signed provenance attestation, and `npm audit`
-   blocks a release with a known high or critical runtime vulnerability.
+   steal, every package gets a signed provenance attestation, `npm audit` blocks
+   a release with a known high or critical runtime vulnerability, and nothing is
+   published unless every package packs, installs and imports.
 3. **npm to application.** Users can check that what they installed was built
    from this repository with `npm audit signatures`.
 4. **Application to backends.** The application chooses the backends, the worker

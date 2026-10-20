@@ -140,6 +140,8 @@ for (const entry of packages) {
 if (DRY_RUN) process.exit(0);
 
 run(['run', 'build']);
+// Never publish a tarball that can't be installed and imported
+run(['run', 'check:pack']);
 run(['run', 'docs:gen']);
 // Stage only the regenerated API docs, so the first release commit carries
 // them and nothing else from the working tree slips in

@@ -64,6 +64,8 @@ jobs:
         run: npm run check:bestpractices
       - name: Build
         run: npm run build
+      - name: Check the packages # Pack, install and import them as npm would publish them
+        run: npm run check:pack
       - name: Lint
         run: npm run lint
       - name: Check formatting

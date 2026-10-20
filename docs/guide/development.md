@@ -64,6 +64,15 @@ falls outside its `^` range. To see what the next release would be:
 npm run release:dry-run
 ```
 
+Before publishing anything, the release builds the packages and runs the same
+check as CI: each package is packed as npm would publish it (only `dist` and
+`CHANGELOG.md`, listed in `files`), installed into an empty project and
+imported. Run it yourself after a build:
+
+```sh
+npm run build && npm run check:pack
+```
+
 ## Clean code
 
 [ESLint](https://eslint.org/), [Prettier](https://prettier.io/) and
