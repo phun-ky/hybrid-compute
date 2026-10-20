@@ -57,7 +57,8 @@ On the main thread:
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
 const threaded = createThreadedCompute({
-  url: new URL('./worker.ts', import.meta.url),
+  createWorker: () =>
+    new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }),
   canRunTasks: ['add']
 });
 

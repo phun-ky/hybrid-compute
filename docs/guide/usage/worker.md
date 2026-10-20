@@ -42,9 +42,11 @@ And your `main.ts`:
 import { createHybridCompute } from '@hybrid-compute/core';
 import { createThreadedCompute } from '@hybrid-compute/worker';
 
-// Started as a module worker on the first task
 const worker = createThreadedCompute({
-  url: new URL('./worker.ts', import.meta.url),
+  // Started on the first task. Bundlers build worker.ts because they see
+  // new Worker(new URL(...)) written out in full
+  createWorker: () =>
+    new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }),
   canRunTasks: ['echo']
 });
 const compute = createHybridCompute({
@@ -67,17 +69,33 @@ main();
 an error if the task throws, rejects or doesn't exist. List the same names in
 `canRunTasks`: only those are sent to the worker.
 
-The `url` is usually `new URL('./worker.ts', import.meta.url)`, which bundlers
-such as Vite and webpack recognise: they build the worker script, with its
-imports, as a separate file.
+## Bundlers
+
+Vite and webpack build a worker script, with its imports, only when they see
+`new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })`
+written out in full. That's why the example passes a `createWorker` function
+with that expression in it. Passing
+`url: new URL('./worker.ts', import.meta.url)` instead doesn't work with a
+bundler: Vite leaves the worker script out of the build, and webpack copies it
+as it is, with its imports unresolved, so the worker fails to load.
+
+Use `url` for a worker script that is served as it is, without a bundler:
+
+```ts
+const worker = createThreadedCompute({
+  url: '/workers/worker.js',
+  canRunTasks: ['echo']
+});
+```
 
 ## Options
 
-| Option        | Required | What it does                                                                                     |
-| ------------- | -------- | ------------------------------------------------------------------------------------------------ |
-| `url`         | Yes      | The worker script, as a `URL` or a string. It's started as a module worker                       |
-| `canRunTasks` | Yes      | The task names the worker script can run. A task that isn't listed rejects with `NoBackendError` |
-| `timeout`     | No       | Milliseconds to wait for a reply. No timeout by default, since workers are for long running work |
+| Option         | Required               | What it does                                                                                                                        |
+| -------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `createWorker` | This or `url`          | A function that returns a new module `Worker`. Called on the first task, and again to start a new worker after a crash or `close()` |
+| `url`          | This or `createWorker` | The worker script, as a `URL` or a string, for a script served without a bundler. It's started as a module worker                   |
+| `canRunTasks`  | Yes                    | The task names the worker script can run. A task that isn't listed rejects with `NoBackendError`                                    |
+| `timeout`      | No                     | Milliseconds to wait for a reply. No timeout by default, since workers are for long running work                                    |
 
 Invalid options throw a `TypeError` or `RangeError` when the backend is created.
 Creating it starts no worker: the worker starts on the first task.
