@@ -10,7 +10,7 @@ function createThreadedCompute(
 ```
 
 Defined in:
-[packages/worker/src/index.ts:385](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L385)
+[packages/worker/src/index.ts:434](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L434)
 
 Creates a ThreadedCompute backend.
 
@@ -20,7 +20,8 @@ Creates a ThreadedCompute backend.
 
 [`ThreadedComputeOptionsInterface`](../interfaces/ThreadedComputeOptionsInterface.md)
 
-The worker script, the tasks it can run and, optionally, a timeout.
+The worker script (`url` or `createWorker`), the tasks it can run and,
+optionally, a timeout.
 
 ## Returns
 
@@ -40,7 +41,10 @@ For a negative timeout.
 
 ```ts
 const backend = createThreadedCompute({
-  url: new URL('./worker.js', import.meta.url),
+  createWorker: () =>
+    new Worker(new URL('./resize.worker.ts', import.meta.url), {
+      type: 'module'
+    }),
   canRunTasks: ['resizeImage']
 });
 ```

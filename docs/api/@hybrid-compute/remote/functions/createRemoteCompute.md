@@ -10,7 +10,7 @@ function createRemoteCompute(
 ```
 
 Defined in:
-[packages/remote/src/index.ts:572](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L572)
+[packages/remote/src/index.ts:563](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L563)
 
 Creates a RemoteCompute backend.
 

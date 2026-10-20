@@ -11,7 +11,7 @@ type WorkerTaskType<Input, Output> = (
 ```
 
 Defined in:
-[packages/worker/src/types.ts:86](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L86)
+[packages/worker/src/types.ts:96](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L96)
 
 A task in the worker script, for [exposeTasks](../functions/exposeTasks.md). It
 gets the input and a context with a `signal`, which aborts when the caller

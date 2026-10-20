@@ -4,7 +4,7 @@ ThreadedCompute
 # Class: ThreadedCompute
 
 Defined in:
-[packages/worker/src/index.ts:111](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L111)
+[packages/worker/src/index.ts:146](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L146)
 
 ThreadedCompute is a backend that runs tasks in a dedicated module Web Worker,
 so heavy work doesn't block the main thread.
@@ -22,15 +22,27 @@ on the next task. Call [ThreadedCompute.close](#close) when you're done with it.
 Web Workers only exist in browsers (and Deno and Bun): where there is no global
 `Worker`, `canRun` returns `false`, so the `auto` strategy uses another backend.
 
-## Example
+## Examples
 
 ```ts
+// Vite and webpack build the worker script when they see this literal
+// new Worker(new URL(...)), so keep it written out in full
 const threaded = createThreadedCompute({
-  url: new URL('./worker.js', import.meta.url),
+  createWorker: () =>
+    new Worker(new URL('./add.worker.ts', import.meta.url), {
+      type: 'module'
+    }),
   canRunTasks: ['add']
 });
 
 const result = await threaded.runTask<number, number>('add', 5);
+```
+
+```ts
+const threaded = createThreadedCompute({
+  url: '/workers/add.worker.js',
+  canRunTasks: ['add']
+});
 ```
 
 ## See
@@ -50,7 +62,7 @@ new ThreadedCompute(options: ThreadedComputeOptionsInterface): ThreadedCompute;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:127](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L127)
+[packages/worker/src/index.ts:162](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L162)
 
 Creates the backend. It checks the options, and starts no worker until the first
 task.
@@ -61,7 +73,8 @@ task.
 
 [`ThreadedComputeOptionsInterface`](../interfaces/ThreadedComputeOptionsInterface.md)
 
-The worker script, the tasks it can run and, optionally, a timeout.
+The worker script (`url` or `createWorker`), the tasks it can run and,
+optionally, a timeout.
 
 #### Returns
 
@@ -84,7 +97,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:138](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L138)
+[packages/worker/src/index.ts:173](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L173)
 
 Determines if this backend can run the given task.
 
@@ -115,7 +128,7 @@ close(): void;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:265](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L265)
+[packages/worker/src/index.ts:300](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L300)
 
 Terminates the worker, if one is running. Tasks still waiting for a reply reject
 with a [WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
@@ -136,7 +149,7 @@ options?: RunTaskOptionsInterface): Promise<Output>;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:165](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L165)
+[packages/worker/src/index.ts:200](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L200)
 
 Runs a task in the worker and waits for its reply.
 

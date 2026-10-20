@@ -4,7 +4,7 @@ HybridCompute
 # Class: HybridCompute
 
 Defined in:
-[packages/core/src/index.ts:114](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L114)
+[packages/core/src/index.ts:120](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L120)
 
 The HybridCompute class acts as an orchestrator to delegate compute tasks across
 different backends (local, worker, or remote) using a flexible strategy.
@@ -24,7 +24,13 @@ The constructor checks the backends it's given and keeps a frozen copy.
 ```ts
 const compute = new HybridCompute({
   local: createLocalCompute(),
-  worker: createThreadedCompute({ url: workerUrl, canRunTasks: ['double'] }),
+  worker: createThreadedCompute({
+    createWorker: () =>
+      new Worker(new URL('./double.worker.js', import.meta.url), {
+        type: 'module'
+      }),
+    canRunTasks: ['double']
+  }),
   remote: createRemoteCompute({
     transport: 'fetch',
     endpoint: '/api/compute',
@@ -45,7 +51,7 @@ new HybridCompute(backends: HybridComputeOptionsInterface): HybridCompute;
 ```
 
 Defined in:
-[packages/core/src/index.ts:128](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L128)
+[packages/core/src/index.ts:134](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L134)
 
 Creates a new HybridCompute orchestrator.
 
@@ -84,7 +90,7 @@ options?: RunTaskOptionsInterface): Promise<Output>;
 ```
 
 Defined in:
-[packages/core/src/index.ts:163](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L163)
+[packages/core/src/index.ts:169](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L169)
 
 Runs a task using the specified execution strategy.
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.40.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.39.0...%40hybrid-compute%2Fworker%400.40.0) (2026-10-20)
+
+### Documentation
+
+* ✏️ use createWorker in every worker example, and explain why bundlers need it ([b407e8d](https://github.com/phun-ky/hybrid-compute/commit/b407e8d22a32526c9dfe59842078a45cbe20dfa7)), references [#132](https://github.com/phun-ky/hybrid-compute/issues/132)
+
+### Feature
+
+* 🎸 add createWorker, so bundlers build the worker script ([7cd67f1](https://github.com/phun-ky/hybrid-compute/commit/7cd67f16c01867953cb8984069103cfa48cedd21)), closes [#132](https://github.com/phun-ky/hybrid-compute/issues/132)
+
+### Adding missing tests
+
+* 💍 make worker's timeout test robust under load, and never leave a thread running ([f612e52](https://github.com/phun-ky/hybrid-compute/commit/f612e52b0b295424af5e2072a32e6ad48fd64fc0)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+* 💍 property-based tests with fast-check ([5f74311](https://github.com/phun-ky/hybrid-compute/commit/5f743113eb7cc9969964cd828d8c0f6971ca45e3)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.38.1...%40hybrid-compute%2Fworker%400.39.0) (2026-10-20)
 
 ### ⚠ BREAKING CHANGES

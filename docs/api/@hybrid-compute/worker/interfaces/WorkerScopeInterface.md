@@ -4,7 +4,7 @@ WorkerScopeInterface
 # Interface: WorkerScopeInterface
 
 Defined in:
-[packages/worker/src/types.ts:96](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L96)
+[packages/worker/src/types.ts:106](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L106)
 
 Where [exposeTasks](../functions/exposeTasks.md) listens and replies. Defaults
 to the worker's global scope (`self`); pass another one to adapt it, for example
@@ -21,7 +21,7 @@ addEventListener(type: "message", listener: (event: {
 ```
 
 Defined in:
-[packages/worker/src/types.ts:97](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L97)
+[packages/worker/src/types.ts:107](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L107)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ postMessage(message: unknown): void;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:101](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L101)
+[packages/worker/src/types.ts:111](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L111)
 
 #### Parameters
 

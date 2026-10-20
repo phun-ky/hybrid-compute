@@ -4,7 +4,7 @@ RemoteCompute
 # Class: RemoteCompute
 
 Defined in:
-[packages/remote/src/index.ts:208](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L208)
+[packages/remote/src/index.ts:205](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L205)
 
 RemoteCompute is a backend that sends tasks to a remote service, over HTTP with
 fetch or over a WebSocket.
@@ -62,7 +62,7 @@ new RemoteCompute(options: RemoteComputeOptionsInterface): RemoteCompute;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:227](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L227)
+[packages/remote/src/index.ts:224](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L224)
 
 Creates the backend. It checks the options, and does no network I/O until the
 first task.
@@ -98,7 +98,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:238](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L238)
+[packages/remote/src/index.ts:235](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L235)
 
 Determines if this backend may run the given task.
 
@@ -129,7 +129,7 @@ close(): void;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:279](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L279)
+[packages/remote/src/index.ts:276](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L276)
 
 Closes the WebSocket, if one is open or opening. Tasks still waiting for a reply
 reject with a [RemoteTaskError](RemoteTaskError.md). The next task opens a new
@@ -151,7 +151,7 @@ options?: RunTaskOptionsInterface): Promise<Output>;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:258](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L258)
+[packages/remote/src/index.ts:255](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L255)
 
 Sends a task to the remote service and waits for its reply.
 
