@@ -9,37 +9,21 @@ milestones.
 
 ## Planned
 
-### A stable 1.0
+### 1.0, and keeping it stable
 
-All four packages (`core`, `local`, `remote` and `worker`) go to 1.0 together: a
-promise that their API won't break without a major version. Before that, the
-[1.0 milestone](https://github.com/phun-ky/hybrid-compute/milestone/4) settles
-every decision that would be a breaking change afterwards:
+All four packages (`core`, `local`, `remote` and `worker`) reached 1.0 in
+October 2026 ([#89](https://github.com/phun-ky/hybrid-compute/issues/89)), after
+an API review of each, modern package exports, and tests enforced in CI; see the
+[1.0 release notes](https://phun-ky.net/hybrid-compute/guide/releases/1.0). From
+here:
 
-- **An API review of each package:** `core`
-  ([#82](https://github.com/phun-ky/hybrid-compute/issues/82)), `local`
-  ([#83](https://github.com/phun-ky/hybrid-compute/issues/83)), `remote`
-  ([#84](https://github.com/phun-ky/hybrid-compute/issues/84)) and `worker`
-  ([#85](https://github.com/phun-ky/hybrid-compute/issues/85)): naming, argument
-  order, option shapes, input validation, error behaviour, and for `remote` and
-  `worker` timeouts, cancellation and the message format.
-- **Modern TypeScript configuration and package exports**
-  ([#87](https://github.com/phun-ky/hybrid-compute/issues/87)): ES2022, ES
-  modules only, an `exports` map with a `types` condition, and only built files
-  and their source in the published packages, checked with publint and
-  `@arethetypeswrong/cli`.
-- **Tests** ([#88](https://github.com/phun-ky/hybrid-compute/issues/88)): a
-  coverage threshold in CI (99% of lines, 100% of functions, 95% of branches per
-  package) and property-based tests with fast-check.
-- **The 1.0 release itself**
-  ([#89](https://github.com/phun-ky/hybrid-compute/issues/89)), with release
-  notes and a migration guide.
-
-Below 1.0 a minor release may contain breaking changes. From 1.0 on, the current
-major is supported as a whole and the previous one gets high and critical
-security fixes for 6 months; see the
-[security policy](SECURITY.md#supported-versions). Packages added later start
-below 1.0.
+- **No breaking changes in 1.x.** The current major is supported as a whole and
+  the previous one gets high and critical security fixes for 6 months; see the
+  [security policy](SECURITY.md#supported-versions).
+- **Deprecations before removals:** a deprecated API keeps working through one
+  full major, and every major comes with release notes and an
+  [upgrading guide](https://phun-ky.net/hybrid-compute/guide/upgrading).
+- **Packages added later start below 1.0**, so their API can settle first.
 
 ### Project health
 

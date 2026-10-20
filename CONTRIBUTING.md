@@ -185,6 +185,10 @@ by Dependabot are exempt.
   release. Mark it `@deprecated` with its replacement and the major it will be
   removed in. It keeps working through one full major: deprecated during 1.x or
   at 2.0, it can be removed in 3.0 at the earliest.
+- Every major release also gets release notes in `docs/guide/releases` and a set
+  of release banners in `docs/public/images`: banner, og, square and portrait,
+  each at 1x and 2x. Write the content in `scripts/banners/<release>.mjs` (copy
+  the previous one) and run `npm run banners -- <release>`.
 - Don't commit regenerated API docs (`docs/api`); each release regenerates them.
   Run `npm run docs:check` instead.
 - Open a pull request against `main`. The Checks workflow builds, lints,

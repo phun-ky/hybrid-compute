@@ -6,30 +6,27 @@ clear of known vulnerabilities is described under [Dependencies](#dependencies).
 
 ## Supported Versions
 
-The packages are below 1.0, so their API can still change in a minor release.
-Until 1.0:
+Support follows the major version:
 
-| Release                                | Supported |
-| -------------------------------------- | --------- |
-| Latest release of each package (`0.x`) | ✅        |
-| Older `0.x` releases                   | ❌        |
-
-To get a fix, upgrade to the newest release. Read the changelog first: below
-1.0, a minor release may contain breaking changes.
-
-From 1.0, support follows the major version:
+| Release                  | Supported                               |
+| ------------------------ | --------------------------------------- |
+| `1.x`, the current major | ✅                                      |
+| `0.x`                    | ❌ no more releases now that 1.0 is out |
 
 - **The current major is supported as a whole.** Fixes are released as a new
   patch or minor of it, and upgrading within a major never breaks your code.
   That includes deprecated APIs, as long as the major ships them.
 - **The previous major gets fixes for high and critical vulnerabilities for 6
   months** after the next major is released, as a patch on its latest release.
-  `0.x` gets no more releases once 1.0 is out.
 - **Security comes before the deprecation grace period.** If a vulnerability
   can't be fixed without breaking an API, the fix may change or remove it in a
   patch or minor release instead of waiting for a major. The change is kept as
   small as possible, and the advisory and the release notes say what changed and
   why.
+
+To get a fix, upgrade to the newest release of your major. To move from 0.x,
+follow the
+[upgrading guide](https://phun-ky.net/hybrid-compute/guide/upgrading).
 
 Every package is covered: `@hybrid-compute/core`, `local`, `remote` and
 `worker`.
