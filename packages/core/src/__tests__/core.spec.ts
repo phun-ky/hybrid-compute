@@ -112,8 +112,8 @@ describe('HybridCompute', () => {
 
   test('falls back in auto strategy if earlier backends cannot run', async () => {
     const compute = new HybridCompute({
-      worker: createMockBackend(),
-      local: createMockBackend(),
+      worker: createNonRunnableMockBackend(),
+      local: createNonRunnableMockBackend(),
       remote: createMockBackend()
     });
 
@@ -121,13 +121,42 @@ describe('HybridCompute', () => {
     assert.strictEqual(result, mockOutput);
   });
 
-  test('throws if no backend matches the strategy', async () => {
-    const compute = new HybridCompute({});
+  test('rejects when the explicit backend is not configured', async () => {
+    const compute = new HybridCompute({ worker: createMockBackend() });
 
     await assert.rejects(
       () => compute.runTask(mockTaskName, mockInput, 'local'),
-      /No backend available/
+      (error: unknown) =>
+        error instanceof NoBackendError &&
+        error.strategy === 'local' &&
+        /No local backend is configured for task 'double'/.test(error.message)
     );
+  });
+
+  test('rejects when the explicit backend cannot run the task, without running it', async () => {
+    const compute = new HybridCompute({
+      worker: createNonRunnableMockBackend()
+    });
+
+    await assert.rejects(
+      () => compute.runTask(mockTaskName, mockInput, 'worker'),
+      (error: unknown) =>
+        error instanceof NoBackendError &&
+        /The worker backend can't run task 'double'/.test(error.message)
+    );
+  });
+
+  test('asks canRun with the task name for an explicit strategy', async () => {
+    const asked: string[] = [];
+    const compute = new HybridCompute({
+      remote: {
+        canRun: (taskName) => (asked.push(taskName), true),
+        runTask: async <Input, Output>() => mockOutput as unknown as Output
+      }
+    });
+
+    await compute.runTask(mockTaskName, mockInput, 'remote');
+    assert.deepStrictEqual(asked, [mockTaskName]);
   });
 
   test('throws if no backend can run in auto strategy', async () => {

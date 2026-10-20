@@ -1,4 +1,5 @@
 export * from './errors.js';
+
 export * from './types.js';
 
 import { isNotString } from '@phun-ky/typeof';
@@ -8,6 +9,9 @@ import {
   ExecutionStrategyType,
   HybridComputeOptionsInterface
 } from './types.js';
+
+/** The order in which the auto strategy tries the backends. */
+const AUTO_ORDER = Object.freeze(['worker', 'local', 'remote'] as const);
 
 /**
  * The HybridCompute class acts as an orchestrator to delegate compute tasks
@@ -74,23 +78,43 @@ export class HybridCompute {
       strategy = 'auto';
     }
 
-    if (strategy === 'local' && this.backends.local) {
-      return this.backends.local.runTask(taskName, input);
-    } else if (strategy === 'worker' && this.backends.worker) {
-      return this.backends.worker.runTask(taskName, input);
-    } else if (strategy === 'remote' && this.backends.remote) {
-      return this.backends.remote.runTask(taskName, input);
-    } else if (strategy === 'auto') {
-      if (this.backends.worker?.canRun(taskName)) {
-        return this.backends.worker.runTask(taskName, input);
-      } else if (this.backends.local?.canRun(taskName)) {
-        return this.backends.local.runTask(taskName, input);
-      } else if (this.backends.remote?.canRun(taskName)) {
-        return this.backends.remote.runTask(taskName, input);
+    if (strategy === 'auto') {
+      for (const name of AUTO_ORDER) {
+        const backend = this.backends[name];
+
+        if (backend?.canRun(taskName)) return backend.runTask(taskName, input);
       }
+
+      throw new NoBackendError(taskName, strategy);
     }
 
-    throw new NoBackendError(taskName, strategy);
+    // An explicit strategy uses that backend, if it's configured and can run
+    // the task. The own-property check keeps names like 'toString' off the
+    // prototype chain.
+    const backend = Object.prototype.hasOwnProperty.call(
+      this.backends,
+      strategy
+    )
+      ? this.backends[strategy]
+      : undefined;
+
+    if (!backend) {
+      throw new NoBackendError(
+        taskName,
+        strategy,
+        `No ${strategy} backend is configured for task '${taskName}'`
+      );
+    }
+
+    if (!backend.canRun(taskName)) {
+      throw new NoBackendError(
+        taskName,
+        strategy,
+        `The ${strategy} backend can't run task '${taskName}'`
+      );
+    }
+
+    return backend.runTask(taskName, input);
   }
 }
 
