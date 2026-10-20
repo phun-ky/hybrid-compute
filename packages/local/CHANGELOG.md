@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.40.0...%40hybrid-compute%2Flocal%401.0.0) (2026-10-20)
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@1.0.0 ([14e36ca](https://github.com/phun-ky/hybrid-compute/commit/14e36ca7e565d0617b5d1c5cee07a4900396bfb8))
+
+### Adding missing tests
+
+* 💍 property-based tests with fast-check ([5f74311](https://github.com/phun-ky/hybrid-compute/commit/5f743113eb7cc9969964cd828d8c0f6971ca45e3)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.40.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.39.1...%40hybrid-compute%2Flocal%400.40.0) (2026-10-20)
 
 ### ⚠ BREAKING CHANGES
