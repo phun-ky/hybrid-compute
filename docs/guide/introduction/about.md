@@ -164,56 +164,27 @@ Backends are interfaces; DI by design.
 
 **Hybrid-Compute** Core is the orchestration layer. It doesn't execute work
 itself; it routes tasks to whichever backend is available and appropriate. The
-Local backend runs tasks on the main JS thread for minimal overhead, the Worker
+Local backend runs tasks on the calling thread for minimal overhead, the Worker
 backend offloads work to a Web Worker to keep the UI responsive, and the Remote
 backend calls out to a server over HTTP or WebSocket. Each backend is pluggable
-and can be added or omitted depending on your deployment needs.
+and can be added or omitted depending on your deployment needs: each one depends
+on core and implements its `ComputeBackendInterface`, and core imports none of
+them.
 
-```mermaid
-%%{init: { "flowchart": {"markdownAutoWrap":"false",
-                          "wrappingWidth": "600", "subGraphTitleMargin": { "bottom": 12 }}}}%%
-flowchart TD
- subgraph s1["Hybrid-Compute"]
-        HC(["@hybrid-compute/core"])
-        Local(["@hybrid-compute/local"])
-        Worker(["@hybrid-compute/worker"])
-        Remote(["@hybrid-compute/remote"])
-  end
-    HC -- uses --> Local & Worker & Remote
-    Local -. executes task locally .-> TaskLocal(["ComputeTask"])
-    Worker -. delegates task to .-> WW(["WebWorker"])
-    Remote -. calls .-> HTTP(["HTTP API"]) & WS(["WebSocket API"])
-```
+<PackagesDiagram />
 
 ### Task Dispatch Flow (@hybrid-compute/core)
 
 `runTask(taskName, input, strategy)` accepts a **routing strategy**. If you pass
-`local`, `worker`, or `remote`, the call is dispatched directly to that backend.
-With `auto`, **Hybrid-Compute** checks backend **capabilities** (i.e., whether a
-backend can run the named task) and selects one accordingly. In the diagram, the
-**fallback order** for `auto` is `worker → local → remote`. No matter which
-backend runs the work, you always get a `Promise<Output>` and a consistent error
-surface if no backend can handle the task.
+`local`, `worker`, or `remote`, the call is dispatched directly to that backend,
+without asking it whether it can run the task. With `auto`, **Hybrid-Compute**
+checks backend **capabilities** (i.e., whether a backend can run the named task)
+and selects one accordingly. In the diagram, the **fallback order** for `auto`
+is `worker → local → remote`. No matter which backend runs the work, you always
+get a `Promise<Output>` and a consistent error surface if no backend can handle
+the task.
 
-```mermaid
-%%{ init: {"theme": "default",
-           "themeVariables": { "wrap": "false" },
-           "flowchart": { "markdownAutoWrap":"false",
-                          "wrappingWidth": "600" }
-           }
-}%%
-flowchart TD
-  A(["runTask(taskName, input, strategy)"]) --> B{Strategy}
-  B -->|local| C([local.runTask])
-  B -->|worker| D([worker.runTask])
-  B -->|remote| E([remote.runTask])
-  B -->|auto| F{canRun?}
-
-  F -->|worker| D
-  F -->|local| C
-  F -->|remote| E
-  D & C & E --> G([Promise<Output>])
-```
+<DispatchDiagram />
 
 ### Threaded Worker Lifecycle (@hybrid-compute/worker)
 
@@ -224,44 +195,19 @@ The Worker backend then resolves the original promise on the main thread. This
 separation keeps heavy computations off the UI thread while preserving a simple,
 promise-based API.
 
-```mermaid
-sequenceDiagram
-  participant MainThread
-  participant ThreadedCompute
-  participant WebWorker
-
-  MainThread->>ThreadedCompute: runTask("task", input)
-  ThreadedCompute->>WebWorker: postMessage({ id, task, input })
-  WebWorker-->>ThreadedCompute: postMessage({ id, result })
-  ThreadedCompute-->>MainThread: resolve(result)
-
-```
+<WorkerDiagram />
 
 ### Remote Compute Flow (@hybrid-compute/remote)
 
 The Remote backend abstracts transport details behind the same `runTask()` call.
-For Fetch, it sends a `POST /compute` with JSON `{ task, input }` and resolves
-with the server's `{ result }` (or surfaces `{ error }`). For WebSocket, it
-sends `{ id, task, input }` and correlates responses `{ id, result|error }` to
-the originating request. In both cases, the Remote backend normalizes responses
-so the calling code doesn't care how the work was transported, only that it
-completed successfully.
+For Fetch, it sends a `POST` to the endpoint you configured, with JSON
+`{ task, input }`, and resolves with the server's `{ result }` (or surfaces
+`{ error }`). For WebSocket, it sends `{ id, task, input }` and correlates
+responses `{ id, result|error }` to the originating request. In both cases an
+error in the reply rejects the Promise, so the calling code doesn't care how the
+work was transported.
 
-```mermaid
-%%{init: { "flowchart": { "subGraphTitleMargin": { "bottom": 12 }}}}%%
-flowchart TD
-  subgraph RemoteCompute
-    RC(["runTask()"])
-    RC --> T{Transport}
-    T -->|fetch| F([POST /compute])
-    T -->|websocket| WS(["WebSocket.send()"])
-  end
-
-  F --> JSON(["JSON-RPC{task,input}"])
-  WS --> JSON
-  JSON -->|response| RC
-
-```
+<RemoteDiagram />
 
 ## Developer Experience
 

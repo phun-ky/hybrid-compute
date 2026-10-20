@@ -208,10 +208,17 @@ body {
   color: var(--d-faint);
 }
 
+/* Tables fill the column on wider screens; on a phone a wide table scrolls
+   sideways in its own box (VitePress's default) instead of widening the page */
 .vp-doc table {
-  display: table;
-  width: 100%;
   border-collapse: collapse;
+}
+
+@media (min-width: 640px) {
+  .vp-doc table {
+    display: table;
+    width: 100%;
+  }
 }
 
 .vp-doc tr,
@@ -273,9 +280,15 @@ body {
   background: var(--d-bg2);
 }
 
+.vp-doc figure.arch {
+  /* On a phone the diagram scrolls sideways instead of shrinking its text */
+  overflow-x: auto;
+}
+
 .vp-doc figure.arch svg {
   display: block;
   width: 100%;
+  min-width: 640px;
   height: auto;
 }
 
@@ -313,4 +326,54 @@ body {
   fill: var(--d-faint);
   font-family: var(--d-mono);
   font-size: 12px;
+}
+
+/* A reply, or a dependency that isn't a call */
+.arch-dashed {
+  stroke-dasharray: 6 5;
+}
+
+/* Arrowheads, drawn in the colour of their line */
+.arch-head {
+  fill: var(--d-accent);
+}
+
+.arch-head-error {
+  fill: var(--d-blocking);
+}
+
+/* The path taken when nothing can run the task */
+.arch-error {
+  stroke: var(--d-blocking);
+}
+
+.arch-box.arch-error {
+  stroke-width: 2;
+}
+
+.arch-line.arch-error {
+  stroke-dasharray: 6 5;
+}
+
+.arch-mono.arch-error-text {
+  fill: var(--d-blocking);
+}
+
+/* A participant's lifeline in a sequence */
+.arch-lifeline {
+  stroke: var(--d-line);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+}
+
+/* A group of boxes, such as one transport */
+.arch-panel {
+  fill: none;
+  stroke: var(--d-line);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.arch-mono.arch-strong {
+  fill: var(--d-text);
 }

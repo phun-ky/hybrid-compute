@@ -17,35 +17,11 @@ an application installs `core` plus only the backends it uses.
 | `worker` | `ThreadedCompute`: runs tasks in a Web Worker through `postMessage`              | `core`               |
 | `remote` | `RemoteCompute`: sends tasks to an endpoint over `fetch` or WebSocket            | `core`               |
 
+<PackagesDiagram />
+
 ## How a task is dispatched
 
-<figure class="arch">
-<svg viewBox="0 0 780 300" role="img" aria-labelledby="arch-title arch-desc">
-<title id="arch-title">How runTask reaches a backend</title>
-<desc id="arch-desc">The application calls runTask on core. Core picks the local, worker or remote backend from the strategy, and every backend returns a Promise to the application.</desc>
-<rect class="arch-box" x="10" y="120" width="180" height="60" rx="6" />
-<text class="arch-label" x="100" y="146" text-anchor="middle">Application</text>
-<text class="arch-mono" x="100" y="166" text-anchor="middle">runTask(name, input)</text>
-<path class="arch-line" d="M190 150 H230" />
-<rect class="arch-box arch-core" x="230" y="105" width="240" height="90" rx="6" />
-<text class="arch-label" x="350" y="135" text-anchor="middle">core</text>
-<text class="arch-mono" x="350" y="157" text-anchor="middle">strategy</text>
-<text class="arch-mono" x="350" y="177" text-anchor="middle">auto · local · worker · remote</text>
-<path class="arch-line" d="M470 130 C505 130 505 50 540 50" />
-<path class="arch-line" d="M470 150 H540" />
-<path class="arch-line" d="M470 170 C505 170 505 250 540 250" />
-<rect class="arch-box" x="540" y="20" width="230" height="60" rx="6" />
-<text class="arch-label" x="655" y="45" text-anchor="middle">local</text>
-<text class="arch-mono" x="655" y="65" text-anchor="middle">same thread · registered task</text>
-<rect class="arch-box" x="540" y="120" width="230" height="60" rx="6" />
-<text class="arch-label" x="655" y="145" text-anchor="middle">worker</text>
-<text class="arch-mono" x="655" y="165" text-anchor="middle">Web Worker · postMessage</text>
-<rect class="arch-box" x="540" y="220" width="230" height="60" rx="6" />
-<text class="arch-label" x="655" y="245" text-anchor="middle">remote</text>
-<text class="arch-mono" x="655" y="265" text-anchor="middle">fetch or WebSocket · JSON</text>
-</svg>
-<figcaption>Every backend returns a Promise of the task's output.</figcaption>
-</figure>
+<DispatchDiagram />
 
 `runTask(taskName, input, strategy = 'auto')` on `core` picks the backend:
 
@@ -78,6 +54,10 @@ result to its call, so several tasks can be in flight at once.
 An `error` in the reply rejects the task's Promise. The worker script and the
 remote service are yours to write; see the [worker](/guide/usage/worker) and
 [remote](/guide/usage/remote) guides.
+
+<WorkerDiagram />
+
+<RemoteDiagram />
 
 ## Design
 
