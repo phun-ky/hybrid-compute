@@ -42,7 +42,8 @@ import { createRemoteCompute } from '@hybrid-compute/remote';
 
 const remote = createRemoteCompute({
   transport: 'fetch',
-  endpoint: '/api/compute'
+  endpoint: '/api/compute',
+  canRunTasks: ['summarize']
 });
 ```
 
