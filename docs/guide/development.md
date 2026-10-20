@@ -42,6 +42,28 @@ npm run commit
 When you are done with your development, create a PR with the original
 repository :)
 
+## Releases
+
+Releases run automatically when a pull request is merged. Each package is
+versioned on its own, and only packages with something to release get a new
+version. What counts is the conventional commits that touch what a package
+publishes (its source without tests, `package.json`, `README.md` and `LICENSE`)
+since its last release:
+
+| Commit                                             | Release                       |
+| -------------------------------------------------- | ----------------------------- |
+| Breaking change (`feat!:` or `BREAKING CHANGE:`)   | Major (minor while below 1.0) |
+| `feat`                                             | Minor                         |
+| `fix`, `perf`, `revert`                            | Patch                         |
+| `chore`, `docs`, `ci`, `test`, `style`, `refactor` | None                          |
+
+A package that depends on a sibling gets a patch when the sibling's new version
+falls outside its `^` range. To see what the next release would be:
+
+```shell-session
+npm run release:dry-run
+```
+
 ## Clean code
 
 [ESLint](https://eslint.org/), [Prettier](https://prettier.io/) and
