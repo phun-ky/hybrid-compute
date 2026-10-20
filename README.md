@@ -1,6 +1,9 @@
 # @hybrid-compute
 
-![@hybrid-compute banner with logo and text](./docs/public/logo/logo-banner.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/logo/banner-dark.png">
+  <img alt="Hybrid Compute: three lanes of work, with the tagline: run each task where it fits, locally, in a worker, or remotely" src="./docs/public/logo/banner-light.png">
+</picture>
 
 > **Run compute tasks wherever they run best - local, threaded, or remote - with
 > a pluggable backend architecture.**

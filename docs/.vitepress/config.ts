@@ -23,6 +23,41 @@ export default defineConfig({
   // Dark first, like a profiler; the toggle switches to light
   appearance: 'dark',
   head: [
+    // head links aren't prefixed with base, so they carry /hybrid-compute/
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/hybrid-compute/logo/favicon.svg'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/hybrid-compute/logo/favicon-32.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        href: '/hybrid-compute/logo/apple-touch-icon.png'
+      }
+    ],
+    ['meta', { property: 'og:image:width', content: '2400' }],
+    ['meta', { property: 'og:image:height', content: '1260' }],
+    [
+      'meta',
+      {
+        property: 'og:image:alt',
+        content:
+          'The Hybrid Compute logo, three lanes of work, with the name and the tagline'
+      }
+    ],
     [
       'meta',
       { property: 'og:url', content: 'https://phun-ky.net/hybrid-compute/' }
@@ -55,8 +90,7 @@ export default defineConfig({
       'meta',
       {
         property: 'og:image',
-        content:
-          'https://repository-images.githubusercontent.com/992105751/b7ca30bb-f4b8-4dcf-9331-f9f9c8d45e3e'
+        content: 'https://phun-ky.net/hybrid-compute/logo/social@2x.png'
       }
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -87,8 +121,7 @@ export default defineConfig({
       'meta',
       {
         name: 'twitter:image',
-        content:
-          'https://repository-images.githubusercontent.com/992105751/b7ca30bb-f4b8-4dcf-9331-f9f9c8d45e3e'
+        content: 'https://phun-ky.net/hybrid-compute/logo/social@2x.png'
       }
     ]
   ],
@@ -109,7 +142,8 @@ export default defineConfig({
     },
     siteTitle: 'Hybrid Compute',
     logo: {
-      src: '/logo/logo.svg',
+      light: '/logo/mark.svg',
+      dark: '/logo/mark-dark.svg',
       alt: 'Hybrid Compute logo'
     },
     nav: [

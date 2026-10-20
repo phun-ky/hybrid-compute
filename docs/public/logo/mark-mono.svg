@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title" fill="currentColor">
+  <title id="title">Hybrid Compute</title>
+  <!-- One colour: the slices that ran are solid, the idle ones faint -->
+  <rect x="3" y="5" width="14" height="6" rx="2"/>
+  <rect x="19" y="5" width="10" height="6" rx="2" opacity=".35"/>
+  <rect x="3" y="13" width="7" height="6" rx="2" opacity=".35"/>
+  <rect x="12" y="13" width="17" height="6" rx="2"/>
+  <rect x="3" y="21" width="11" height="6" rx="2"/>
+  <rect x="16" y="21" width="13" height="6" rx="2" opacity=".35"/>
+</svg>
