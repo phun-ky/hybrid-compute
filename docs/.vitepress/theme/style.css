@@ -208,10 +208,17 @@ body {
   color: var(--d-faint);
 }
 
+/* Tables fill the column on wider screens; on a phone a wide table scrolls
+   sideways in its own box (VitePress's default) instead of widening the page */
 .vp-doc table {
-  display: table;
-  width: 100%;
   border-collapse: collapse;
+}
+
+@media (min-width: 640px) {
+  .vp-doc table {
+    display: table;
+    width: 100%;
+  }
 }
 
 .vp-doc tr,
