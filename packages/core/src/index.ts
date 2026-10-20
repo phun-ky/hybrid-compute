@@ -2,16 +2,84 @@ export * from './errors.js';
 
 export * from './types.js';
 
-import { isNotString } from '@phun-ky/typeof';
-
 import { NoBackendError } from './errors.js';
 import {
   ExecutionStrategyType,
   HybridComputeOptionsInterface
 } from './types.js';
 
+/** The backends core knows, by option key. */
+const BACKEND_NAMES = Object.freeze(['local', 'worker', 'remote'] as const);
+/** Every valid strategy. */
+const STRATEGIES: readonly string[] = Object.freeze(['auto', ...BACKEND_NAMES]);
 /** The order in which the auto strategy tries the backends. */
 const AUTO_ORDER = Object.freeze(['worker', 'local', 'remote'] as const);
+/** What a value is, for error messages: null, an array, or its typeof. */
+const describeValue = (value: unknown) => {
+  if (value === null) return 'null';
+
+  if (Array.isArray(value)) return 'an array';
+
+  if (value === '') return 'an empty string';
+
+  return typeof value;
+};
+/**
+ * Check the backends given to the constructor, and return a frozen copy of
+ * the ones that are set, so changing the options object later has no effect.
+ *
+ * @throws {TypeError} If `backends` isn't an object, a backend lacks canRun or
+ * runTask, or no backend is given.
+ * @throws {RangeError} If `backends` has a key other than local, worker or
+ * remote, which is most likely a typo.
+ */
+const toBackends = (
+  backends: unknown
+): Readonly<HybridComputeOptionsInterface> => {
+  if (
+    typeof backends !== 'object' ||
+    backends === null ||
+    Array.isArray(backends)
+  ) {
+    throw new TypeError(
+      `HybridCompute expects an object with local, worker and/or remote backends, got ${describeValue(backends)}`
+    );
+  }
+
+  const chosen: HybridComputeOptionsInterface = {};
+
+  for (const [name, backend] of Object.entries(backends)) {
+    if (!(BACKEND_NAMES as readonly string[]).includes(name)) {
+      throw new RangeError(
+        `Unknown backend '${name}'; use ${BACKEND_NAMES.join(', ')}`
+      );
+    }
+
+    // Leaving a backend out with undefined, e.g. { worker: maybeWorker }, is fine
+    if (backend === undefined) continue;
+
+    if (
+      typeof backend !== 'object' ||
+      backend === null ||
+      typeof backend.canRun !== 'function' ||
+      typeof backend.runTask !== 'function'
+    ) {
+      throw new TypeError(
+        `The ${name} backend must be an object with canRun and runTask functions`
+      );
+    }
+
+    chosen[name as (typeof BACKEND_NAMES)[number]] = backend;
+  }
+
+  if (Object.keys(chosen).length === 0) {
+    throw new TypeError(
+      `HybridCompute needs at least one backend: ${BACKEND_NAMES.join(', ')}`
+    );
+  }
+
+  return Object.freeze(chosen);
+};
 
 /**
  * The HybridCompute class acts as an orchestrator to delegate compute tasks
@@ -36,7 +104,7 @@ const AUTO_ORDER = Object.freeze(['worker', 'local', 'remote'] as const);
  * ```
  */
 export class HybridCompute {
-  private backends: HybridComputeOptionsInterface;
+  private readonly backends: Readonly<HybridComputeOptionsInterface>;
 
   /**
    * Creates a new HybridCompute orchestrator.
@@ -44,7 +112,7 @@ export class HybridCompute {
    * @param backends - An object containing optional local, worker, and remote backends.
    */
   constructor(backends: HybridComputeOptionsInterface) {
-    this.backends = backends;
+    this.backends = toBackends(backends);
   }
 
   /**
@@ -73,9 +141,22 @@ export class HybridCompute {
     input: Input,
     strategy: ExecutionStrategyType = 'auto'
   ): Promise<Output> {
-    if (isNotString(strategy)) {
-      console.info("Wrong type passed for `strategy`, defaulting to 'auto'");
-      strategy = 'auto';
+    if (typeof taskName !== 'string' || taskName === '') {
+      throw new TypeError(
+        `taskName must be a non-empty string, got ${describeValue(taskName)}`
+      );
+    }
+
+    if (typeof strategy !== 'string') {
+      throw new TypeError(
+        `strategy must be a string, got ${describeValue(strategy)}`
+      );
+    }
+
+    if (!STRATEGIES.includes(strategy)) {
+      throw new RangeError(
+        `Unknown strategy '${strategy}'; use ${STRATEGIES.join(', ')}`
+      );
     }
 
     if (strategy === 'auto') {

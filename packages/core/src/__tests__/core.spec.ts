@@ -50,17 +50,6 @@ describe('HybridCompute', () => {
     assert.strictEqual(result, mockOutput);
   });
 
-  test('runs task with missing strategy, should default to auto', async () => {
-    const compute = new HybridCompute({ worker: createMockBackend() });
-
-    const result = await compute.runTask(
-      mockTaskName,
-      mockInput,
-      2 as unknown as ExecutionStrategyType
-    );
-    assert.strictEqual(result, mockOutput);
-  });
-
   test('runs task using remote strategy', async () => {
     const compute = new HybridCompute({ remote: createMockBackend() });
 
@@ -169,6 +158,161 @@ describe('HybridCompute', () => {
     await assert.rejects(
       () => compute.runTask(mockTaskName, mockInput, 'auto'),
       /No backend available/
+    );
+  });
+});
+
+describe('validating the backends', () => {
+  test('throws a TypeError for something that is not an object', () => {
+    for (const value of [undefined, null, 'local', 42, []]) {
+      assert.throws(
+        () =>
+          new HybridCompute(
+            value as unknown as ConstructorParameters<typeof HybridCompute>[0]
+          ),
+        TypeError
+      );
+    }
+  });
+
+  test('throws a RangeError for an unknown key, such as a typo', () => {
+    assert.throws(
+      () =>
+        createHybridCompute({ wokrer: createMockBackend() } as unknown as {
+          worker: ComputeBackendInterface;
+        }),
+      {
+        name: 'RangeError',
+        message: "Unknown backend 'wokrer'; use local, worker, remote"
+      }
+    );
+  });
+
+  test('throws a TypeError for a backend without canRun and runTask', () => {
+    assert.throws(
+      () =>
+        createHybridCompute({
+          worker: {} as unknown as ComputeBackendInterface
+        }),
+      {
+        name: 'TypeError',
+        message:
+          'The worker backend must be an object with canRun and runTask functions'
+      }
+    );
+  });
+
+  test('throws a TypeError when no backend is given', () => {
+    assert.throws(() => createHybridCompute({}), {
+      name: 'TypeError',
+      message: 'HybridCompute needs at least one backend: local, worker, remote'
+    });
+    assert.throws(() => createHybridCompute({ worker: undefined }), TypeError);
+  });
+
+  test('skips a backend given as undefined', async () => {
+    const compute = createHybridCompute({
+      worker: undefined,
+      local: createMockBackend()
+    });
+
+    assert.strictEqual(
+      await compute.runTask(mockTaskName, mockInput, 'auto'),
+      mockOutput
+    );
+  });
+
+  test('accepts class instances, whose methods live on the prototype', async () => {
+    class Backend implements ComputeBackendInterface {
+      canRun() {
+        return true;
+      }
+
+      async runTask<Input, Output>() {
+        return mockOutput as unknown as Output;
+      }
+    }
+
+    const compute = createHybridCompute({ local: new Backend() });
+
+    assert.strictEqual(
+      await compute.runTask(mockTaskName, mockInput, 'local'),
+      mockOutput
+    );
+  });
+
+  test('keeps its own copy, so changing the options later has no effect', async () => {
+    const options: { local?: ComputeBackendInterface } = {
+      local: createMockBackend()
+    };
+    const compute = createHybridCompute(options);
+
+    delete options.local;
+
+    assert.strictEqual(
+      await compute.runTask(mockTaskName, mockInput, 'local'),
+      mockOutput
+    );
+  });
+});
+
+describe('validating runTask', () => {
+  const compute = createHybridCompute({ local: createMockBackend() });
+
+  test('rejects with a TypeError for a task name that is not a non-empty string', async () => {
+    for (const taskName of [42, '', undefined, null]) {
+      await assert.rejects(
+        () => compute.runTask(taskName as unknown as string, mockInput),
+        TypeError
+      );
+    }
+
+    await assert.rejects(() => compute.runTask('', mockInput), {
+      message: 'taskName must be a non-empty string, got an empty string'
+    });
+  });
+
+  test('rejects with a TypeError for a strategy that is not a string', async () => {
+    await assert.rejects(
+      () =>
+        compute.runTask(
+          mockTaskName,
+          mockInput,
+          2 as unknown as ExecutionStrategyType
+        ),
+      { name: 'TypeError', message: 'strategy must be a string, got number' }
+    );
+  });
+
+  test('rejects with a RangeError for an unknown strategy', async () => {
+    for (const strategy of ['gpu', '', 'Auto', 'toString', '__proto__']) {
+      await assert.rejects(
+        () =>
+          compute.runTask(
+            mockTaskName,
+            mockInput,
+            strategy as ExecutionStrategyType
+          ),
+        RangeError,
+        strategy
+      );
+    }
+
+    await assert.rejects(
+      () =>
+        compute.runTask(
+          mockTaskName,
+          mockInput,
+          'gpu' as ExecutionStrategyType
+        ),
+      { message: "Unknown strategy 'gpu'; use auto, local, worker, remote" }
+    );
+  });
+
+  test('defaults to the auto strategy when none is given', async () => {
+    assert.strictEqual(
+      await compute.runTask(mockTaskName, mockInput),
+      mockOutput
     );
   });
 });
