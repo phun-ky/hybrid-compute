@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.40.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.39.1...%40hybrid-compute%2Flocal%400.40.0) (2026-10-20)
+
+### ⚠ BREAKING CHANGES
+
+* the packages are compiled to ES2022 instead of ES2020.
+  They need Node.js 22 (as engines already says) or a browser from 2022 or
+
+### Tasks
+
+* 🤖 @hybrid-compute/core@0.40.0 ([7a36295](https://github.com/phun-ky/hybrid-compute/commit/7a3629597fa33cd43867ccf283f8d4a4cfd4052f))
+* 🤖 compile to ES2022, publish src, and add an exports map ([da90b30](https://github.com/phun-ky/hybrid-compute/commit/da90b30788ad52b33bd99f7739d8d32191024464)), references [#87](https://github.com/phun-ky/hybrid-compute/issues/87)
+
 ## [0.39.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.39.0...%40hybrid-compute%2Flocal%400.39.1) (2026-10-20)
 
 ### Bug
