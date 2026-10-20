@@ -262,3 +262,55 @@ body {
 .VPHome {
   padding-bottom: 0 !important;
 }
+
+/* ---------- Diagrams: inline SVG coloured from the tokens ---------- */
+
+.vp-doc figure.arch {
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid var(--d-line);
+  border-radius: 6px;
+  background: var(--d-bg2);
+}
+
+.vp-doc figure.arch svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.vp-doc figure.arch figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--d-faint);
+}
+
+.arch-box {
+  fill: var(--d-bg);
+  stroke: var(--d-line);
+  stroke-width: 1.5;
+}
+
+.arch-core {
+  stroke: var(--d-accent);
+  stroke-width: 2;
+}
+
+.arch-line {
+  fill: none;
+  stroke: var(--d-accent);
+  stroke-width: 2;
+}
+
+.arch-label {
+  fill: var(--d-text);
+  font-family: var(--d-font);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.arch-mono {
+  fill: var(--d-faint);
+  font-family: var(--d-mono);
+  font-size: 12px;
+}

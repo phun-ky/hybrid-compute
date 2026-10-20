@@ -192,7 +192,11 @@ export default withMermaid(
           },
           {
             text: 'Development',
-            link: '/guide/development'
+            collapsed: false,
+            items: [
+              { text: 'Development setup', link: '/guide/development' },
+              { text: 'Architecture', link: '/guide/architecture' }
+            ]
           }
         ],
         '/api/': [
