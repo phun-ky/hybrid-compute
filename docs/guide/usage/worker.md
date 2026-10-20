@@ -195,3 +195,9 @@ as in Node.js, `canRun` returns `false`, so the `auto` strategy uses another
 backend, and calling `runTask` directly rejects with a `TypeError`. Support for
 Node.js `worker_threads` is tracked in
 [#127](https://github.com/phun-ky/hybrid-compute/issues/127).
+
+## WebAssembly
+
+To run a WebAssembly module off the main thread, load it in the worker script
+and expose its functions; the [WebAssembly guide](/guide/usage/wasm) walks
+through it with Rust.

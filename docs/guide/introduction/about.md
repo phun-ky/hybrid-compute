@@ -74,11 +74,11 @@ Tools become portable tasks with uniform invocation.
 
 :::
 
-### Media & Numeric Processing (WASM Ready)
+### Media & Numeric Processing (WebAssembly)
 
-| **Problem:**                                               | **Solution:**                                                                                                          | **Backends:**                        |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| Images/vectors/audio transforms must be fast and portable. | Use **WASM** (planned backend) in **worker** or **local** for native-like speed; **remote** only for large/batch jobs. | `wasm` (planned), `worker`, `remote` |
+| **Problem:**                                               | **Solution:**                                                                                                                                                                                     | **Backends:**               |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| Images/vectors/audio transforms must be fast and portable. | Compile to **WebAssembly** and run it in a **worker** (or **local** for quick calls) for native-like speed; **remote** only for large/batch jobs. See the [WebAssembly guide](/guide/usage/wasm). | `worker`, `local`, `remote` |
 
 ::: tip **Why use Hybrid-Compute?**
 
