@@ -141,7 +141,12 @@ in CI on every pull request, and a pull request that fails them can't be merged.
 - **Bug fixes must come with a regression test** that fails without the fix.
 - **Changes to the release scripts** come with tests in `scripts/__tests__`, run
   by `npm run test:scripts`.
-- Coverage should not drop. CI uploads a coverage report for every pull request.
+- **Coverage must not drop.** `npm run test:ci` fails when a package's own
+  source falls below 99% of lines, 100% of functions or 95% of branches, and CI
+  uploads a coverage report for every pull request.
+- **Property-based tests** with [fast-check](https://fast-check.dev/) live next
+  to the other tests as `*.property.spec.ts`. Add one when a rule holds for
+  every input, such as how a task is dispatched or that a message round-trips.
 
 #### Developer Certificate of Origin
 
