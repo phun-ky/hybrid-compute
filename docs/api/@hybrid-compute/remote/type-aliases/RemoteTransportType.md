@@ -8,17 +8,10 @@ type RemoteTransportType = 'fetch' | 'websocket';
 ```
 
 Defined in:
-[types.ts:13](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L13)
+[packages/remote/src/types.ts:8](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L8)
 
-Represents the communication method used by the `RemoteCompute` backend to
-interact with a remote server.
+The transport used to reach the remote service.
 
-- `'fetch'`: Sends HTTP POST requests for each task.
-- `'websocket'`: Maintains a persistent WebSocket connection for bi-directional
-  messaging.
-
-## Example
-
-```ts
-const transport: RemoteTransportType = 'fetch';
-```
+- `fetch`: one HTTP `POST` per task.
+- `websocket`: one connection, opened on the first task and reused, with tasks
+  matched to replies by `id`.

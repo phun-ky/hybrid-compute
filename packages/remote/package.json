@@ -37,7 +37,7 @@
     "test:ci": "glob-bin -c \"node --import tsx --test --no-warnings --experimental-test-coverage --test-coverage-include='src/**/*.ts' --test-coverage-exclude='src/**/__tests__/**' --test-coverage-exclude='src/types.ts' --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@hybrid-compute/core": "^0.38.0"
+    "@hybrid-compute/core": "^0.39.0"
   },
   "devDependencies": {
     "eslint": "^9.27.0",

@@ -4,27 +4,26 @@ RemoteCompute
 # Class: RemoteCompute
 
 Defined in:
-[index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L47)
+[packages/remote/src/index.ts:208](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L208)
 
-RemoteCompute is a backend that delegates compute tasks to a remote API using
-either HTTP requests (fetch) or a persistent WebSocket connection.
+RemoteCompute is a backend that sends tasks to a remote service, over HTTP with
+fetch or over a WebSocket.
 
-It supports bidirectional communication, which is useful for low-latency or
-streaming scenarios using WebSocket, or traditional stateless interaction using
-fetch.
+Each task is one JSON request and one JSON reply; see
+[RemoteTaskRequestInterface](../interfaces/RemoteTaskRequestInterface.md) and
+[RemoteTaskResponseInterface](../interfaces/RemoteTaskResponseInterface.md) for
+the message format. Every failure (an `error` in the reply, an unusable
+response, a timeout, an unreachable server) rejects with a
+[RemoteTaskError](RemoteTaskError.md).
 
-## Remarks
-
-WebSocket-based transport allows concurrent request handling via an internal
-request/response map using `id`. This is useful when running multiple tasks in
-parallel.
-
-Fetch transport is simpler and more interoperable with typical REST APIs.
+The WebSocket transport connects on the first task, not when it's created,
+reuses the connection, and connects again on the next task after it closes. Call
+[RemoteCompute.close](#close) when you're done with it.
 
 ## Examples
 
 ```ts
-const remote = new RemoteCompute({
+const remote = createRemoteCompute({
   transport: 'fetch',
   endpoint: 'https://api.example.com/compute',
   canRunTasks: ['translateText']
@@ -34,13 +33,15 @@ const result = await remote.runTask('translateText', { text: 'hello' });
 ```
 
 ```ts
-const remote = new RemoteCompute({
+const remote = createRemoteCompute({
   transport: 'websocket',
   endpoint: 'wss://api.example.com/ws',
   canRunTasks: ['analyzeSentiment']
 });
 
 const result = await remote.runTask('analyzeSentiment', { text: 'It works!' });
+
+remote.close();
 ```
 
 ## See
@@ -61,9 +62,10 @@ new RemoteCompute(options: RemoteComputeOptionsInterface): RemoteCompute;
 ```
 
 Defined in:
-[index.ts:66](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L66)
+[packages/remote/src/index.ts:227](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L227)
 
-Initializes the remote compute backend.
+Creates the backend. It checks the options, and does no network I/O until the
+first task.
 
 #### Parameters
 
@@ -71,11 +73,21 @@ Initializes the remote compute backend.
 
 [`RemoteComputeOptionsInterface`](../interfaces/RemoteComputeOptionsInterface.md)
 
-Transport type and endpoint configuration.
+The transport, endpoint, allowed tasks and, optionally, a timeout and fetch
+headers.
 
 #### Returns
 
 `RemoteCompute`
+
+#### Throws
+
+For a missing or wrongly typed option.
+
+#### Throws
+
+For an unknown transport, an endpoint with the wrong URL scheme, or a negative
+timeout.
 
 ## Methods
 
@@ -86,9 +98,9 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:91](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L91)
+[packages/remote/src/index.ts:238](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L238)
 
-Determines if this backend is allowed to handle the given task.
+Determines if this backend may run the given task.
 
 #### Parameters
 
@@ -102,7 +114,7 @@ Name of the task.
 
 `boolean`
 
-`true` if task is permitted, or if no restrictions are set.
+`true` if the task is in `canRunTasks`, or if `canRunTasks` is `'*'`.
 
 #### Implementation of
 
@@ -110,16 +122,38 @@ Name of the task.
 
 ---
 
-### runTask()
+### close()
 
 ```ts
-runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
+close(): void;
 ```
 
 Defined in:
-[index.ts:105](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L105)
+[packages/remote/src/index.ts:279](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L279)
 
-Executes the specified task using remote communication.
+Closes the WebSocket, if one is open or opening. Tasks still waiting for a reply
+reject with a [RemoteTaskError](RemoteTaskError.md). The next task opens a new
+connection. Does nothing for the fetch transport.
+
+#### Returns
+
+`void`
+
+---
+
+### runTask()
+
+```ts
+runTask<Input, Output>(
+   taskName: string,
+   input: Input,
+options?: RunTaskOptionsInterface): Promise<Output>;
+```
+
+Defined in:
+[packages/remote/src/index.ts:258](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L258)
+
+Sends a task to the remote service and waits for its reply.
 
 #### Type Parameters
 
@@ -147,13 +181,22 @@ Name of the remote task.
 
 `Input`
 
-Input data to send.
+Input data to send. It must be serialisable as JSON.
+
+##### options?
+
+[`RunTaskOptionsInterface`](../../core/interfaces/RunTaskOptionsInterface.md)
+
+Options for this call, such as an `AbortSignal`.
 
 #### Returns
 
 [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<`Output`>
 
-A promise resolving to the result from the server.
+A Promise resolving to the reply's `result`. It rejects with a
+[RemoteTaskError](RemoteTaskError.md) if the task fails, the reply is unusable,
+the timeout passes or the server can't be reached, and with the signal's reason
+if the call is cancelled.
 
 #### Implementation of
 

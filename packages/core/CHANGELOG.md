@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.39.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.38.1...%40hybrid-compute%2Fcore%400.39.0) (2026-10-20)
+
+### Documentation
+
+* ✏️ document remote's options, errors, cancelling and message format ([c1b56bf](https://github.com/phun-ky/hybrid-compute/commit/c1b56bfe1d7bee8386427a35c58abb92ee8fee92)), closes [#84](https://github.com/phun-ky/hybrid-compute/issues/84)
+
+### Feature
+
+* 🎸 cancel a task with an AbortSignal ([b8e6de9](https://github.com/phun-ky/hybrid-compute/commit/b8e6de94745785d15051642df69d334c6dfa05c8)), references [#84](https://github.com/phun-ky/hybrid-compute/issues/84)
+
 ## [0.38.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.38.0...%40hybrid-compute%2Fcore%400.38.1) (2026-10-20)
 
 ### Documentation

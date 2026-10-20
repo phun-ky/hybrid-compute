@@ -4,7 +4,7 @@ LocalCompute
 # Class: LocalCompute
 
 Defined in:
-[index.ts:45](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L45)
+[index.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L47)
 
 LocalCompute is a compute backend that runs tasks on the calling thread: the
 main thread in a page, or whichever worker or Node.js thread creates it.
@@ -52,7 +52,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:112](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L112)
+[index.ts:114](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L114)
 
 Determines whether the backend has a task by this name.
 
@@ -83,7 +83,7 @@ registerTask<Input, Output>(task: ComputeTaskInterface<Input, Output>): void;
 ```
 
 Defined in:
-[index.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L63)
+[index.ts:65](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L65)
 
 Registers a task with this backend. The task is copied, so changing the object
 afterwards has no effect.
@@ -131,11 +131,14 @@ If a task with the same name is already registered. Call
 ### runTask()
 
 ```ts
-runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
+runTask<Input, Output>(
+   taskName: string,
+   input: Input,
+options?: RunTaskOptionsInterface): Promise<Output>;
 ```
 
 Defined in:
-[index.ts:132](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L132)
+[index.ts:139](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L139)
 
 Runs a registered task with the given input.
 
@@ -167,13 +170,22 @@ The name of the task to run.
 
 The input data to pass to the task.
 
+##### options?
+
+[`RunTaskOptionsInterface`](../../core/interfaces/RunTaskOptionsInterface.md)
+
+Options for this call. With a `signal`, the task gets the signal as
+`run(input, { signal })`, and `runTask` rejects with the signal's reason as soon
+as it aborts. An async task keeps running unless it stops itself; synchronous
+work can't be interrupted.
+
 #### Returns
 
 [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<`Output`>
 
 A Promise resolving to the task's output. It rejects with a `NoBackendError`
-(from `@hybrid-compute/core`) if no task has that name, and with whatever the
-task throws or rejects with.
+(from `@hybrid-compute/core`) if no task has that name, with the signal's reason
+if it's aborted, and with whatever the task throws or rejects with.
 
 #### Example
 
@@ -194,7 +206,7 @@ unregisterTask(taskName: string): boolean;
 ```
 
 Defined in:
-[index.ts:102](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L102)
+[index.ts:104](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L104)
 
 Removes a registered task.
 

@@ -4,38 +4,36 @@ RemoteComputeOptionsInterface
 # Interface: RemoteComputeOptionsInterface
 
 Defined in:
-[types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L34)
+[packages/remote/src/types.ts:45](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L45)
 
-Configuration options for initializing a `RemoteCompute` backend.
+Options for [createRemoteCompute](../functions/createRemoteCompute.md).
 
 ## Example
 
 ```ts
 const options: RemoteComputeOptionsInterface = {
-  transport: 'websocket',
-  endpoint: 'wss://api.example.com/ws',
-  canRunTasks: ['resizeImage', 'generatePDF']
+  transport: 'fetch',
+  endpoint: 'https://api.example.com/compute',
+  canRunTasks: ['translate'],
+  timeout: 10_000,
+  headers: async () => ({ Authorization: `Bearer ${await getToken()}` })
 };
 ```
 
-## See
-
-- https://developer.mozilla.org/en-US/docs/Web/API/fetch
-- https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
-
 ## Properties
 
-### canRunTasks?
+### canRunTasks
 
 ```ts
-optional canRunTasks?: string[];
+canRunTasks: readonly string[] | "*";
 ```
 
 Defined in:
-[types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L37)
+[packages/remote/src/types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L48)
 
-An optional list of task names this backend can handle. If omitted, it is
-assumed the backend can attempt all tasks.
+The tasks this backend may run, or `'*'` for every task. Every task it accepts
+is sent over the network, so with the `auto` strategy, `'*'` means any task no
+worker or local backend can run goes to the remote service.
 
 ---
 
@@ -46,9 +44,37 @@ endpoint: string;
 ```
 
 Defined in:
-[types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L36)
+[packages/remote/src/types.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L47)
 
-The server URL for handling task requests.
+The URL to send tasks to: `http:` or `https:` for fetch (a relative URL works in
+a browser page), `ws:` or `wss:` for WebSocket.
+
+---
+
+### headers?
+
+```ts
+optional headers?: RemoteHeadersType;
+```
+
+Defined in:
+[packages/remote/src/types.ts:50](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L50)
+
+Extra request headers for the fetch transport.
+
+---
+
+### timeout?
+
+```ts
+optional timeout?: number;
+```
+
+Defined in:
+[packages/remote/src/types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L49)
+
+How long to wait for a reply, in milliseconds, before rejecting with a
+`RemoteTaskError`. Defaults to 30000; `0` waits forever.
 
 ---
 
@@ -59,6 +85,6 @@ transport: RemoteTransportType;
 ```
 
 Defined in:
-[types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L35)
+[packages/remote/src/types.ts:46](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L46)
 
-The transport mechanism to use (`fetch` or `websocket`).
+`'fetch'` or `'websocket'`.

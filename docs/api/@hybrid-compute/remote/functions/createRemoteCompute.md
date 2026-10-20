@@ -10,9 +10,9 @@ function createRemoteCompute(
 ```
 
 Defined in:
-[index.ts:143](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L143)
+[packages/remote/src/index.ts:572](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L572)
 
-Factory to create a RemoteCompute instance with given options.
+Creates a RemoteCompute backend.
 
 ## Parameters
 
@@ -20,10 +20,20 @@ Factory to create a RemoteCompute instance with given options.
 
 [`RemoteComputeOptionsInterface`](../interfaces/RemoteComputeOptionsInterface.md)
 
-Remote connection configuration.
+The transport, endpoint, allowed tasks and, optionally, a timeout and fetch
+headers.
 
 ## Returns
 
 [`RemoteCompute`](../classes/RemoteCompute.md)
 
-Instance of RemoteCompute.
+A new RemoteCompute instance.
+
+## Throws
+
+For a missing or wrongly typed option.
+
+## Throws
+
+For an unknown transport, an endpoint with the wrong URL scheme, or a negative
+timeout.

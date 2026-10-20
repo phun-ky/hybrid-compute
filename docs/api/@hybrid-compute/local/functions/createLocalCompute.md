@@ -8,7 +8,7 @@ function createLocalCompute(): LocalCompute;
 ```
 
 Defined in:
-[index.ts:162](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L162)
+[index.ts:187](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L187)
 
 Creates a LocalCompute backend with no tasks registered.
 
