@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.37.2...%40hybrid-compute%2Flocal%400.38.0) (2026-10-20)
+
+### ⚠ BREAKING CHANGES
+
+* registerTask now validates its task and refuses a name
+  that is already registered. Give every task a unique, non-empty name
+  and a run function; to replace a task, call unregisterTask(name) first.
+  LocalCompute.runTask now rejects a missing task with NoBackendError and
+  the message "No local task 'x' is registered"; match on NoBackendError
+  instead of the old "Local task 'x' not found." message.
+
+### Documentation
+
+* ✏️ document local's task rules and fix the package README links ([f8de45d](https://github.com/phun-ky/hybrid-compute/commit/f8de45dc5d7e55763132278c9ec39f171b5f588a)), closes [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+
+### Feature
+
+* 🎸 validate local tasks, refuse duplicate names, add unregisterTask ([ab98a3c](https://github.com/phun-ky/hybrid-compute/commit/ab98a3cf7101914d37b958aa70dcc0d3a17061f7)), references [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+
+### Adding missing tests
+
+* 💍 measure coverage on each package's own source ([4720e44](https://github.com/phun-ky/hybrid-compute/commit/4720e443b2a1d7c5a17536258c29da730f1a0b42)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.37.2](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Flocal%400.37.1...%40hybrid-compute%2Flocal%400.37.2) (2026-10-20)
 
 ### Tasks
