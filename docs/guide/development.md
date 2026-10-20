@@ -65,9 +65,13 @@ npm run release:dry-run
 ```
 
 Before publishing anything, the release builds the packages and runs the same
-check as CI: each package is packed as npm would publish it (only `dist` and
-`CHANGELOG.md`, listed in `files`), installed into an empty project and
-imported. Run it yourself after a build:
+check as CI. Each package is packed as npm would publish it (`dist`, `src`
+without tests, and `CHANGELOG.md`, listed in `files`) and linted with
+[publint](https://publint.dev/) and
+[`@arethetypeswrong/cli`](https://github.com/arethetypeswrong/arethetypeswrong.github.io).
+The tarballs are then installed into an empty project, every source map is
+checked to point at published files, and every package is imported. Run it
+yourself after a build:
 
 ```sh
 npm run build && npm run check:pack
