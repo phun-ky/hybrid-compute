@@ -22,10 +22,7 @@ export class WorkerTaskError extends Error {
   readonly taskName: string;
 
   /** The worker script's `error` value as it was sent, if it sent one. */
-  readonly detail?: unknown;
-
-  /** The underlying error or event, such as a worker crash, if there is one. */
-  readonly cause?: unknown;
+  declare readonly detail?: unknown;
 
   /**
    * @param taskName - The name of the task that failed.
@@ -38,11 +35,13 @@ export class WorkerTaskError extends Error {
     message: string,
     details: { detail?: unknown; cause?: unknown } = {}
   ) {
-    super(message);
+    // Error's own cause option (ES2022), only when there is a cause
+    super(
+      message,
+      details.cause === undefined ? undefined : { cause: details.cause }
+    );
     this.name = 'WorkerTaskError';
     this.taskName = taskName;
-
-    if (details.cause !== undefined) this.cause = details.cause;
 
     if ('detail' in details) this.detail = details.detail;
   }

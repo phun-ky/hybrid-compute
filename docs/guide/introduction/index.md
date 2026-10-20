@@ -4,12 +4,16 @@
 
 ### Prerequisites for package install
 
-- [Node.js](https://nodejs.org/) version 22.9.0 or higher
-- npm version 11.0.0 or higher
+- [Node.js](https://nodejs.org/) 22 or later, or a browser from 2022 or later
+  (Chrome 93, Firefox 92, Safari 15.4)
+- npm 10.8.2 or later
 
 ::: info
 
-**Hybrid Compute** is a collection of ESM packages
+**Hybrid Compute** is a collection of ES modules, compiled to ES2022, with
+TypeScript types included. There is no CommonJS build: from CommonJS, use
+`await import('@hybrid-compute/core')`, or `require()` on Node.js 22.12 or
+later.
 
 :::
 

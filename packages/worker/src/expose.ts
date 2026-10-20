@@ -98,7 +98,7 @@ export function exposeTasks(
     running.set(id, controller);
 
     try {
-      if (!Object.prototype.hasOwnProperty.call(tasks, name)) {
+      if (!Object.hasOwn(tasks, name)) {
         throw new Error(`No task '${name}' in this worker`);
       }
 

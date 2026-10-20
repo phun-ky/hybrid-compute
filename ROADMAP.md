@@ -24,8 +24,10 @@ every decision that would be a breaking change afterwards:
   order, option shapes, input validation, error behaviour, and for `remote` and
   `worker` timeouts, cancellation and the message format.
 - **Modern TypeScript configuration and package exports**
-  ([#87](https://github.com/phun-ky/hybrid-compute/issues/87)): an `exports` map
-  with a `types` condition, and only built files in the published packages.
+  ([#87](https://github.com/phun-ky/hybrid-compute/issues/87)): ES2022, ES
+  modules only, an `exports` map with a `types` condition, and only built files
+  and their source in the published packages, checked with publint and
+  `@arethetypeswrong/cli`.
 - **Tests** ([#88](https://github.com/phun-ky/hybrid-compute/issues/88)):
   keeping each package's own code fully covered (today all four are at 100% of
   lines) with a threshold in CI, and property-based tests.
