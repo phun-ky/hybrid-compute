@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.37.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.37.0...%40hybrid-compute%2Fremote%400.37.1) (2026-10-20)
+
+### Feature
+
+* 🎸 release only the packages that changed, in dependency order ([1a4c5c7](https://github.com/phun-ky/hybrid-compute/commit/1a4c5c78ac2e0a82d854f8750d785f441b997c6b)), closes [#75](https://github.com/phun-ky/hybrid-compute/issues/75)
+
+### Bug
+
+* 🐛 depend on core with a ^ range instead of an exact version ([1e20ff0](https://github.com/phun-ky/hybrid-compute/commit/1e20ff00ad11140419529aa844f0345b584fb7ce)), closes [#76](https://github.com/phun-ky/hybrid-compute/issues/76)
+
 ## [0.37.0](https://github.com/phun-ky/hybrid-compute/compare/@hybrid-compute/remote@0.36.0...@hybrid-compute/remote@0.37.0) (2026-10-19)
 
 ### Tasks

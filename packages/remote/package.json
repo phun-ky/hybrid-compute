@@ -1,6 +1,6 @@
 {
   "name": "@hybrid-compute/remote",
-  "version": "0.37.0",
+  "version": "0.37.1",
   "description": "Remote compute backend using fetch or WebSocket transport for distributed task execution.",
   "keywords": [
     "remote",
