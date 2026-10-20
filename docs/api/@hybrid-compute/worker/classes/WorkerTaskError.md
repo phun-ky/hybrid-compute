@@ -44,7 +44,7 @@ new WorkerTaskError(
 ```
 
 Defined in:
-[packages/worker/src/errors.ts:36](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/errors.ts#L36)
+[packages/worker/src/errors.ts:33](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/errors.ts#L33)
 
 #### Parameters
 
@@ -87,13 +87,16 @@ Error.constructor;
 ### cause?
 
 ```ts
-readonly optional cause?: unknown;
+optional cause?: unknown;
 ```
 
-Defined in:
-[packages/worker/src/errors.ts:28](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/errors.ts#L28)
+Defined in: node_modules/typescript/lib/lib.es2022.error.d.ts:26
 
-The underlying error or event, such as a worker crash, if there is one.
+#### Inherited from
+
+```ts
+Error.cause;
+```
 
 ---
 

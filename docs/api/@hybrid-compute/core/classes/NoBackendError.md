@@ -75,6 +75,22 @@ Error.constructor;
 
 ## Properties
 
+### cause?
+
+```ts
+optional cause?: unknown;
+```
+
+Defined in: node_modules/typescript/lib/lib.es2022.error.d.ts:26
+
+#### Inherited from
+
+```ts
+Error.cause;
+```
+
+---
+
 ### message
 
 ```ts

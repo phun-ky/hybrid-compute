@@ -44,7 +44,7 @@ new RemoteTaskError(
 ```
 
 Defined in:
-[packages/remote/src/errors.ts:38](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/errors.ts#L38)
+[packages/remote/src/errors.ts:35](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/errors.ts#L35)
 
 #### Parameters
 
@@ -92,13 +92,16 @@ Error.constructor;
 ### cause?
 
 ```ts
-readonly optional cause?: unknown;
+optional cause?: unknown;
 ```
 
-Defined in:
-[packages/remote/src/errors.ts:30](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/errors.ts#L30)
+Defined in: node_modules/typescript/lib/lib.es2022.error.d.ts:26
 
-The underlying error, such as a network failure, if there is one.
+#### Inherited from
+
+```ts
+Error.cause;
+```
 
 ---
 
