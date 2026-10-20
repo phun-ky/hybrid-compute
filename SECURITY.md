@@ -1,10 +1,8 @@
 # Security Policy
 
-`@hybrid-compute/core` has one runtime dependency,
-[`@phun-ky/typeof`](https://github.com/phun-ky/typeof) (MIT). `local`, `remote`
-and `worker` depend only on `core`. How dependencies are chosen, tracked and
-kept clear of known vulnerabilities is described under
-[Dependencies](#dependencies).
+`@hybrid-compute/core` has no runtime dependencies. `local`, `remote` and
+`worker` depend only on `core`. How dependencies are chosen, tracked and kept
+clear of known vulnerabilities is described under [Dependencies](#dependencies).
 
 ## Supported Versions
 

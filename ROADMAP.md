@@ -27,8 +27,9 @@ every decision that would be a breaking change afterwards:
   ([#87](https://github.com/phun-ky/hybrid-compute/issues/87)): an `exports` map
   with a `types` condition, and only built files in the published packages.
 - **Tests** ([#88](https://github.com/phun-ky/hybrid-compute/issues/88)):
-  coverage of at least 80% in every package (core is at 74% today), a coverage
-  threshold in CI, and property-based tests.
+  keeping every package at 80% coverage or more (today core is at 87%, local
+  100%, remote 89% and worker 84%) with a threshold in CI, and property-based
+  tests.
 - **The 1.0 release itself**
   ([#89](https://github.com/phun-ky/hybrid-compute/issues/89)), with release
   notes and a migration guide.

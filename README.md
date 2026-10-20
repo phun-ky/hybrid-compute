@@ -392,27 +392,27 @@ flowchart BT
   Local["@hybrid-compute/local<br/>LocalCompute"] -->|implements| Core
   Worker["@hybrid-compute/worker<br/>ThreadedCompute"] -->|implements| Core
   Remote["@hybrid-compute/remote<br/>RemoteCompute"] -->|implements| Core
-  Core["@hybrid-compute/core<br/>HybridCompute, interfaces"] -.->|depends on| Typeof["@phun-ky/typeof"]
+  Core["@hybrid-compute/core<br/>HybridCompute, interfaces, NoBackendError"]
 ```
 
 ### Task dispatch
 
-With `local`, `worker` or `remote`, core uses that backend if it is set, without
-asking `canRun`. With `auto`, it uses the first backend whose `canRun(name)` is
-true, in the order worker, local, remote. If nothing matches, `runTask` rejects
-with an `Error`.
+With `local`, `worker` or `remote`, core uses that backend if it is set and its
+`canRun(name)` is true. With `auto`, it uses the first backend whose
+`canRun(name)` is true, in the order worker, local, remote. If nothing matches,
+`runTask` rejects with an `Error`.
 
 ```mermaid
 flowchart LR
   App["runTask(name, input, strategy)"] --> S{strategy}
-  S -->|"local / worker / remote"| Direct["that backend, if set"]
+  S -->|"local / worker / remote"| Direct["that backend, if set and canRun"]
   S -->|auto| W{"worker.canRun?"}
   W -->|yes| WR[worker.runTask]
   W -->|no| L{"local.canRun?"}
   L -->|yes| LR[local.runTask]
   L -->|no| R{"remote.canRun?"}
   R -->|yes| RR[remote.runTask]
-  R -->|no| E["Error: No backend available"]
+  R -->|no| E["NoBackendError"]
   Direct --> P["Promise of the output"]
   WR --> P
   LR --> P

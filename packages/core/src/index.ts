@@ -1,21 +1,98 @@
+export * from './errors.js';
+
 export * from './types.js';
 
-import { isNotString } from '@phun-ky/typeof';
-
+import { NoBackendError } from './errors.js';
 import {
   ExecutionStrategyType,
   HybridComputeOptionsInterface
 } from './types.js';
+
+/** The backends core knows, by option key. */
+const BACKEND_NAMES = Object.freeze(['local', 'worker', 'remote'] as const);
+/** Every valid strategy. */
+const STRATEGIES: readonly string[] = Object.freeze(['auto', ...BACKEND_NAMES]);
+/** The order in which the auto strategy tries the backends. */
+const AUTO_ORDER = Object.freeze(['worker', 'local', 'remote'] as const);
+/** What a value is, for error messages: null, an array, or its typeof. */
+const describeValue = (value: unknown) => {
+  if (value === null) return 'null';
+
+  if (Array.isArray(value)) return 'an array';
+
+  if (value === '') return 'an empty string';
+
+  return typeof value;
+};
+/**
+ * Check the backends given to the constructor, and return a frozen copy of
+ * the ones that are set, so changing the options object later has no effect.
+ *
+ * @throws {TypeError} If `backends` isn't an object, a backend lacks canRun or
+ * runTask, or no backend is given.
+ * @throws {RangeError} If `backends` has a key other than local, worker or
+ * remote, which is most likely a typo.
+ */
+const toBackends = (
+  backends: unknown
+): Readonly<HybridComputeOptionsInterface> => {
+  if (
+    typeof backends !== 'object' ||
+    backends === null ||
+    Array.isArray(backends)
+  ) {
+    throw new TypeError(
+      `HybridCompute expects an object with local, worker and/or remote backends, got ${describeValue(backends)}`
+    );
+  }
+
+  const chosen: HybridComputeOptionsInterface = {};
+
+  for (const [name, backend] of Object.entries(backends)) {
+    if (!(BACKEND_NAMES as readonly string[]).includes(name)) {
+      throw new RangeError(
+        `Unknown backend '${name}'; use ${BACKEND_NAMES.join(', ')}`
+      );
+    }
+
+    // Leaving a backend out with undefined, e.g. { worker: maybeWorker }, is fine
+    if (backend === undefined) continue;
+
+    if (
+      typeof backend !== 'object' ||
+      backend === null ||
+      typeof backend.canRun !== 'function' ||
+      typeof backend.runTask !== 'function'
+    ) {
+      throw new TypeError(
+        `The ${name} backend must be an object with canRun and runTask functions`
+      );
+    }
+
+    chosen[name as (typeof BACKEND_NAMES)[number]] = backend;
+  }
+
+  if (Object.keys(chosen).length === 0) {
+    throw new TypeError(
+      `HybridCompute needs at least one backend: ${BACKEND_NAMES.join(', ')}`
+    );
+  }
+
+  return Object.freeze(chosen);
+};
 
 /**
  * The HybridCompute class acts as an orchestrator to delegate compute tasks
  * across different backends (local, worker, or remote) using a flexible strategy.
  *
  * It supports four strategies:
- * - `'local'`: Forces execution on the local (main thread) backend.
- * - `'worker'`: Forces execution on a threaded/WebWorker backend.
- * - `'remote'`: Forces execution on a remote/server backend.
- * - `'auto'`: Automatically selects the first available backend that supports the task.
+ * - `'local'`, `'worker'`, `'remote'`: use that backend, if it is configured
+ *   and its `canRun(taskName)` returns true.
+ * - `'auto'` (the default): use the first backend whose `canRun(taskName)`
+ *   returns true, in the order worker, local, remote.
+ *
+ * The constructor checks the backends it's given and keeps a frozen copy.
+ * `createHybridCompute` is the usual way to create one.
  *
  * @example
  * ```ts
@@ -30,21 +107,30 @@ import {
  * ```
  */
 export class HybridCompute {
-  private backends: HybridComputeOptionsInterface;
+  private readonly backends: Readonly<HybridComputeOptionsInterface>;
 
   /**
    * Creates a new HybridCompute orchestrator.
    *
-   * @param backends - An object containing optional local, worker, and remote backends.
+   * @param backends - An object with at least one of the local, worker and
+   * remote backends. A backend given as `undefined` is skipped.
+   *
+   * @throws {TypeError} If `backends` isn't an object, a backend lacks
+   * `canRun` or `runTask`, or no backend is given.
+   * @throws {RangeError} If `backends` has a key other than local, worker or
+   * remote.
    */
   constructor(backends: HybridComputeOptionsInterface) {
-    this.backends = backends;
+    this.backends = toBackends(backends);
   }
 
   /**
    * Runs a task using the specified execution strategy.
    *
-   * If `strategy` is `'auto'`, it will try the worker, then local, then remote backend in order of priority.
+   * With `'auto'`, it tries the worker, then the local, then the remote
+   * backend, and runs the task on the first whose `canRun(taskName)` returns
+   * true. With an explicit strategy, that backend must be configured and its
+   * `canRun(taskName)` must return true.
    *
    * @typeParam Input - The type of the input expected by the task.
    * @typeParam Output - The expected output type returned by the task.
@@ -53,9 +139,13 @@ export class HybridCompute {
    * @param input - The input payload for the task.
    * @param strategy - The execution strategy to use. Defaults to `'auto'`.
    *
-   * @returns A Promise resolving to the task's output.
-   *
-   * @throws If no backend is available or able to run the task.
+   * @returns A Promise resolving to the task's output. It rejects with:
+   * - a `TypeError` if `taskName` isn't a non-empty string or `strategy`
+   *   isn't a string
+   * - a `RangeError` if `strategy` isn't one of `'auto'`, `'local'`,
+   *   `'worker'` or `'remote'`
+   * - a {@link NoBackendError} if no configured backend can run the task
+   * - whatever the backend's `runTask` rejects with
    *
    * @example
    * ```ts
@@ -67,38 +157,75 @@ export class HybridCompute {
     input: Input,
     strategy: ExecutionStrategyType = 'auto'
   ): Promise<Output> {
-    if (isNotString(strategy)) {
-      console.info("Wrong type passed for `strategy`, defaulting to 'auto'");
-      strategy = 'auto';
+    if (typeof taskName !== 'string' || taskName === '') {
+      throw new TypeError(
+        `taskName must be a non-empty string, got ${describeValue(taskName)}`
+      );
     }
 
-    if (strategy === 'local' && this.backends.local) {
-      return this.backends.local.runTask(taskName, input);
-    } else if (strategy === 'worker' && this.backends.worker) {
-      return this.backends.worker.runTask(taskName, input);
-    } else if (strategy === 'remote' && this.backends.remote) {
-      return this.backends.remote.runTask(taskName, input);
-    } else if (strategy === 'auto') {
-      if (this.backends.worker?.canRun(taskName)) {
-        return this.backends.worker.runTask(taskName, input);
-      } else if (this.backends.local?.canRun(taskName)) {
-        return this.backends.local.runTask(taskName, input);
-      } else if (this.backends.remote?.canRun(taskName)) {
-        return this.backends.remote.runTask(taskName, input);
+    if (typeof strategy !== 'string') {
+      throw new TypeError(
+        `strategy must be a string, got ${describeValue(strategy)}`
+      );
+    }
+
+    if (!STRATEGIES.includes(strategy)) {
+      throw new RangeError(
+        `Unknown strategy '${strategy}'; use ${STRATEGIES.join(', ')}`
+      );
+    }
+
+    if (strategy === 'auto') {
+      for (const name of AUTO_ORDER) {
+        const backend = this.backends[name];
+
+        if (backend?.canRun(taskName)) return backend.runTask(taskName, input);
       }
+
+      throw new NoBackendError(taskName, strategy);
     }
 
-    throw new Error(
-      `No backend available for task '${taskName}' using strategy '${strategy}'`
-    );
+    // An explicit strategy uses that backend, if it's configured and can run
+    // the task. The own-property check keeps names like 'toString' off the
+    // prototype chain.
+    const backend = Object.prototype.hasOwnProperty.call(
+      this.backends,
+      strategy
+    )
+      ? this.backends[strategy]
+      : undefined;
+
+    if (!backend) {
+      throw new NoBackendError(
+        taskName,
+        strategy,
+        `No ${strategy} backend is configured for task '${taskName}'`
+      );
+    }
+
+    if (!backend.canRun(taskName)) {
+      throw new NoBackendError(
+        taskName,
+        strategy,
+        `The ${strategy} backend can't run task '${taskName}'`
+      );
+    }
+
+    return backend.runTask(taskName, input);
   }
 }
 
 /**
- * Factory function for creating a HybridCompute instance.
+ * Create a HybridCompute orchestrator: the usual way to start.
  *
- * @param backends - Configuration options specifying available backends.
+ * @param backends - An object with at least one of the local, worker and
+ * remote backends.
  * @returns A new HybridCompute orchestrator.
+ *
+ * @throws {TypeError} If `backends` isn't an object, a backend lacks
+ * `canRun` or `runTask`, or no backend is given.
+ * @throws {RangeError} If `backends` has a key other than local, worker or
+ * remote.
  *
  * @example
  * ```ts

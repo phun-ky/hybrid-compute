@@ -9,7 +9,7 @@
       <title id="packages-title">The packages and their dependencies</title>
       <desc id="packages-desc">
         The local, worker and remote packages each depend on core and implement
-        its ComputeBackendInterface. Core depends only on @phun-ky/typeof.
+        its ComputeBackendInterface. Core has no runtime dependencies.
       </desc>
       <defs>
         <marker
@@ -38,16 +38,6 @@
       </text>
       <text class="arch-mono" x="390" y="68" text-anchor="middle">
         HybridCompute · interfaces
-      </text>
-
-      <path
-        class="arch-line arch-dashed"
-        d="M525 52 H588"
-        marker-end="url(#packages-arrow)"
-      />
-      <rect class="arch-box" x="590" y="32" width="180" height="40" rx="6" />
-      <text class="arch-mono arch-strong" x="680" y="57" text-anchor="middle">
-        @phun-ky/typeof
       </text>
 
       <path

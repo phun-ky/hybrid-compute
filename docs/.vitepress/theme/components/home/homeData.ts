@@ -26,15 +26,15 @@ export const ROUTE_NOTES: Record<Strategy, string[]> = {
     'auto takes the first match of worker, local, remote'
   ],
   local: [
-    `strategy ${quoted('local')}, and a local backend is set`,
+    `strategy ${quoted('local')}, and the local backend can run it`,
     'runs on the main thread'
   ],
   worker: [
-    `strategy ${quoted('worker')}, and a worker backend is set`,
+    `strategy ${quoted('worker')}, and the worker backend can run it`,
     'runs off the main thread'
   ],
   remote: [
-    `strategy ${quoted('remote')}, and a remote backend is set`,
+    `strategy ${quoted('remote')}, and the remote backend can run it`,
     'the input leaves the device as JSON'
   ]
 };
