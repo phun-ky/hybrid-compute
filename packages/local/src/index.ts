@@ -1,13 +1,15 @@
 import { NoBackendError } from '@hybrid-compute/core';
 import type {
   ComputeBackendInterface,
-  ComputeTaskInterface
+  ComputeTaskInterface,
+  RunTaskOptionsInterface,
+  TaskContextInterface
 } from '@hybrid-compute/core';
 
 /** A registered task: its name and its run function, frozen at registration. */
 type RegisteredTaskType = Readonly<{
   name: string;
-  run: (input: unknown) => unknown;
+  run: (input: unknown, context: TaskContextInterface) => unknown;
 }>;
 
 /** What a value is, for error messages: null, an array, or its typeof. */
@@ -88,7 +90,7 @@ export class LocalCompute implements ComputeBackendInterface {
       task.name,
       Object.freeze({
         name: task.name,
-        run: task.run.bind(task) as (input: unknown) => unknown
+        run: task.run.bind(task) as RegisteredTaskType['run']
       })
     );
   }
@@ -120,9 +122,14 @@ export class LocalCompute implements ComputeBackendInterface {
    * @typeParam Output - The expected output type of the task.
    * @param taskName - The name of the task to run.
    * @param input - The input data to pass to the task.
+   * @param options - Options for this call. With a `signal`, the task gets the
+   * signal as `run(input, { signal })`, and `runTask` rejects with the
+   * signal's reason as soon as it aborts. An async task keeps running unless
+   * it stops itself; synchronous work can't be interrupted.
    * @returns A Promise resolving to the task's output. It rejects with a
    * `NoBackendError` (from `@hybrid-compute/core`) if no task has that name,
-   * and with whatever the task throws or rejects with.
+   * with the signal's reason if it's aborted, and with whatever the task
+   * throws or rejects with.
    *
    * @example
    * ```ts
@@ -131,7 +138,8 @@ export class LocalCompute implements ComputeBackendInterface {
    */
   async runTask<Input, Output>(
     taskName: string,
-    input: Input
+    input: Input,
+    options?: RunTaskOptionsInterface
   ): Promise<Output> {
     const task = this.tasks.get(taskName);
 
@@ -143,7 +151,24 @@ export class LocalCompute implements ComputeBackendInterface {
       );
     }
 
-    return (await task.run(input)) as Output;
+    const signal = options?.signal;
+
+    // Already cancelled: don't start the task
+    if (signal?.aborted) throw signal.reason;
+
+    const result = task.run(input, { signal });
+
+    if (!signal) return (await result) as Output;
+
+    // Settle with the task, or with the signal's reason if it aborts first
+    return new Promise<Output>((resolve, reject) => {
+      const onAbort = () => reject(signal.reason);
+
+      signal.addEventListener('abort', onAbort, { once: true });
+      Promise.resolve(result)
+        .then((value) => resolve(value as Output), reject)
+        .finally(() => signal.removeEventListener('abort', onAbort));
+    });
   }
 }
 
