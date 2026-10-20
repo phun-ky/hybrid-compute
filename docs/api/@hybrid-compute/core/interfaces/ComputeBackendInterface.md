@@ -4,7 +4,7 @@ ComputeBackendInterface
 # Interface: ComputeBackendInterface
 
 Defined in:
-[packages/core/src/types.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L63)
+[packages/core/src/types.ts:69](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L69)
 
 Represents a backend capable of executing registered compute tasks.
 
@@ -43,7 +43,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/core/src/types.ts:64](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L64)
+[packages/core/src/types.ts:70](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L70)
 
 #### Parameters
 
@@ -64,7 +64,7 @@ runTask<Input, Output>(taskName: string, input: Input): Promise<Output>;
 ```
 
 Defined in:
-[packages/core/src/types.ts:65](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L65)
+[packages/core/src/types.ts:71](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L71)
 
 #### Type Parameters
 

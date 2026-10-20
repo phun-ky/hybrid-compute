@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.38.1](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.38.0...%40hybrid-compute%2Fcore%400.38.1) (2026-10-20)
+
+### Documentation
+
+* ✏️ document local's task rules and fix the package README links ([f8de45d](https://github.com/phun-ky/hybrid-compute/commit/f8de45dc5d7e55763132278c9ec39f171b5f588a)), closes [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+
+### Bug
+
+* 🐛 let a task's run return a plain value as well as a Promise ([318164c](https://github.com/phun-ky/hybrid-compute/commit/318164c07841789112195719517cb177db71ec6b)), references [#83](https://github.com/phun-ky/hybrid-compute/issues/83)
+
+### Adding missing tests
+
+* 💍 measure coverage on each package's own source ([4720e44](https://github.com/phun-ky/hybrid-compute/commit/4720e443b2a1d7c5a17536258c29da730f1a0b42)), references [#88](https://github.com/phun-ky/hybrid-compute/issues/88)
+
 ## [0.38.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.37.0...%40hybrid-compute%2Fcore%400.38.0) (2026-10-20)
 
 ### ⚠ BREAKING CHANGES

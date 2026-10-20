@@ -8,19 +8,20 @@ function createLocalCompute(): LocalCompute;
 ```
 
 Defined in:
-[index.ts:96](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L96)
+[index.ts:162](https://github.com/phun-ky/hybrid-compute/blob/main/packages/local/src/index.ts#L162)
 
-Factory function to create a new LocalCompute backend instance.
+Creates a LocalCompute backend with no tasks registered.
 
 ## Returns
 
 [`LocalCompute`](../classes/LocalCompute.md)
 
-A new `LocalCompute` instance with empty task registry.
+A new `LocalCompute` instance.
 
 ## Example
 
 ```ts
-const compute = createLocalCompute();
-compute.runTask(…);
+const local = createLocalCompute();
+
+local.registerTask({ name: 'echo', run: (input: string) => input });
 ```

@@ -4,16 +4,21 @@ ComputeTaskInterface
 # Interface: ComputeTaskInterface\<Input, Output>
 
 Defined in:
-[packages/core/src/types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L36)
+[packages/core/src/types.ts:42](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L42)
 
 Describes a unit of work that can be executed by a compute backend.
 
 ## Example
 
 ```ts
-const task: ComputeTaskInterface<number, number> = {
+const double: ComputeTaskInterface<number, number> = {
   name: 'double',
-  run: async (x) => x * 2
+  run: (x) => x * 2
+};
+
+const fetchUser: ComputeTaskInterface<string, User> = {
+  name: 'fetchUser',
+  run: async (id) => (await fetch(`/users/${id}`)).json()
 };
 ```
 
@@ -40,22 +45,25 @@ name: string;
 ```
 
 Defined in:
-[packages/core/src/types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L37)
+[packages/core/src/types.ts:43](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L43)
 
-A unique name used to identify the task.
+A unique, non-empty name used to identify the task.
 
 ## Methods
 
 ### run()
 
 ```ts
-run(input: Input): Promise<Output>;
+run(input: Input):
+  | Output
+| Promise<Output>;
 ```
 
 Defined in:
-[packages/core/src/types.ts:38](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L38)
+[packages/core/src/types.ts:44](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L44)
 
-A function that takes input and returns a Promise of the output.
+A function that takes the input and returns the output, or a Promise of it.
+Synchronous work in `run` blocks the thread it runs on.
 
 #### Parameters
 
@@ -65,4 +73,5 @@ A function that takes input and returns a Promise of the output.
 
 #### Returns
 
+| `Output` |
 [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<`Output`>
