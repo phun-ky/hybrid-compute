@@ -21,13 +21,10 @@ export class RemoteTaskError extends Error {
   readonly taskName: string;
 
   /** The server's `error` value as it was sent, if the server sent one. */
-  readonly detail?: unknown;
+  declare readonly detail?: unknown;
 
   /** The HTTP status, for the fetch transport. */
-  readonly status?: number;
-
-  /** The underlying error, such as a network failure, if there is one. */
-  readonly cause?: unknown;
+  declare readonly status?: number;
 
   /**
    * @param taskName - The name of the task that failed.
@@ -40,11 +37,13 @@ export class RemoteTaskError extends Error {
     message: string,
     details: { detail?: unknown; status?: number; cause?: unknown } = {}
   ) {
-    super(message);
+    // Error's own cause option (ES2022), only when there is a cause
+    super(
+      message,
+      details.cause === undefined ? undefined : { cause: details.cause }
+    );
     this.name = 'RemoteTaskError';
     this.taskName = taskName;
-
-    if (details.cause !== undefined) this.cause = details.cause;
 
     if ('detail' in details) this.detail = details.detail;
 

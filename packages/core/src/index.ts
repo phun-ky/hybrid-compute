@@ -224,10 +224,7 @@ export class HybridCompute {
     // An explicit strategy uses that backend, if it's configured and can run
     // the task. The own-property check keeps names like 'toString' off the
     // prototype chain.
-    const backend = Object.prototype.hasOwnProperty.call(
-      this.backends,
-      strategy
-    )
+    const backend = Object.hasOwn(this.backends, strategy)
       ? this.backends[strategy]
       : undefined;
 
