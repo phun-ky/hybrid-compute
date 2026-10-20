@@ -47,7 +47,7 @@
     "test:ci": "glob-bin -c \"node --enable-source-maps --import tsx --test --no-warnings --experimental-test-coverage --test-coverage-lines=99 --test-coverage-functions=100 --test-coverage-branches=95 --test-coverage-include='src/**/*.ts' --test-coverage-exclude='src/**/__tests__/**' --test-coverage-exclude='src/types.ts' --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout\" \"**/__tests__/**/*.spec.ts\""
   },
   "dependencies": {
-    "@hybrid-compute/core": "^0.40.0"
+    "@hybrid-compute/core": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^9.27.0",
