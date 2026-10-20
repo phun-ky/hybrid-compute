@@ -58,9 +58,8 @@ There are no secrets, accounts or personal data in the software itself.
 
 ## Secure design principles
 
-- **Economy of mechanism.** Each package is a few hundred lines with one runtime
-  dependency in total (`@phun-ky/typeof`, in `core`), which keeps them simple to
-  review.
+- **Economy of mechanism.** Each package is a few hundred lines with no runtime
+  dependencies outside the monorepo, which keeps them simple to review.
 - **Fail-safe defaults.** When no configured backend matches the strategy,
   `runTask` rejects with an error, and an unknown local task throws. (A task
   sent to a worker script that doesn't handle it can still wait forever; see the
@@ -88,10 +87,9 @@ There are no secrets, accounts or personal data in the software itself.
 
 These are tracked and are honest limits today, not hidden risks:
 
-- **Input validation is incomplete.** `core` falls back to `auto` with a console
-  message instead of rejecting a wrong `strategy`, and the other inputs are not
-  validated at run time. The API reviews for 1.0 decide the checks:
-  [#82](https://github.com/phun-ky/hybrid-compute/issues/82),
+- **Input validation is incomplete.** `core` validates its backends, task names
+  and strategies, but the backends don't validate their own options yet. The
+  remaining API reviews for 1.0 decide those checks:
   [#83](https://github.com/phun-ky/hybrid-compute/issues/83),
   [#84](https://github.com/phun-ky/hybrid-compute/issues/84) and
   [#85](https://github.com/phun-ky/hybrid-compute/issues/85).

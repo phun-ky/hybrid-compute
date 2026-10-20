@@ -10,12 +10,12 @@ release.
 `ComputeBackendInterface` from `core`, and nothing else depends on a backend, so
 an application installs `core` plus only the backends it uses.
 
-| Package  | Contains                                                                         | Runtime dependencies |
-| -------- | -------------------------------------------------------------------------------- | -------------------- |
-| `core`   | `HybridCompute` and `createHybridCompute`, the strategies, the shared interfaces | `@phun-ky/typeof`    |
-| `local`  | `LocalCompute`: runs registered tasks on the calling thread                      | `core`               |
-| `worker` | `ThreadedCompute`: runs tasks in a Web Worker through `postMessage`              | `core`               |
-| `remote` | `RemoteCompute`: sends tasks to an endpoint over `fetch` or WebSocket            | `core`               |
+| Package  | Contains                                                                                           | Runtime dependencies |
+| -------- | -------------------------------------------------------------------------------------------------- | -------------------- |
+| `core`   | `HybridCompute` and `createHybridCompute`, the strategies, the shared interfaces, `NoBackendError` | None                 |
+| `local`  | `LocalCompute`: runs registered tasks on the calling thread                                        | `core`               |
+| `worker` | `ThreadedCompute`: runs tasks in a Web Worker through `postMessage`                                | `core`               |
+| `remote` | `RemoteCompute`: sends tasks to an endpoint over `fetch` or WebSocket                              | `core`               |
 
 <PackagesDiagram />
 
@@ -25,12 +25,16 @@ an application installs `core` plus only the backends it uses.
 
 `runTask(taskName, input, strategy = 'auto')` on `core` picks the backend:
 
-- **`local`, `worker` or `remote`:** the matching backend runs the task, if it
-  is configured. The backend's `canRun` is not consulted.
+- **`local`, `worker` or `remote`:** that backend runs the task, if it is
+  configured and its `canRun(taskName)` is true.
 - **`auto`:** the first backend whose `canRun(taskName)` is true, in the order
   worker, local, remote.
-- **No match:** `runTask` rejects with
-  `No backend available for task '<name>' using strategy '<strategy>'`.
+- **No match:** `runTask` rejects with a `NoBackendError`, which has the
+  `taskName` and `strategy` as properties.
+
+Invalid input fails early: `createHybridCompute` throws a `TypeError` or
+`RangeError` for a missing, misspelt or incomplete backend, and `runTask`
+rejects with one for an empty task name or an unknown strategy.
 
 A backend's `canRun` answers differently per package:
 

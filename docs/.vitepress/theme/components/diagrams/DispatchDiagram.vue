@@ -9,10 +9,10 @@
       <title id="dispatch-title">How runTask reaches a backend</title>
       <desc id="dispatch-desc">
         The application calls runTask on core. With the local, worker or remote
-        strategy, core uses that backend if it is configured, without asking
-        canRun. With auto, it uses the first backend whose canRun returns true,
-        in the order worker, local, remote. If no backend matches, runTask
-        rejects with an Error.
+        strategy, core uses that backend if it is configured and its canRun
+        returns true. With auto, it uses the first backend whose canRun returns
+        true, in the order worker, local, remote. If no backend matches, runTask
+        rejects with a NoBackendError.
       </desc>
       <defs>
         <marker
@@ -67,15 +67,15 @@
       <text class="arch-mono arch-strong" x="226" y="80">
         local · worker · remote
       </text>
-      <text class="arch-mono" x="226" y="98">that backend, if it is set,</text>
-      <text class="arch-mono" x="226" y="114">without asking canRun</text>
+      <text class="arch-mono" x="226" y="98">that backend, if it is set</text>
+      <text class="arch-mono" x="226" y="114">and canRun(name) is true</text>
       <text class="arch-mono arch-strong" x="226" y="146">auto</text>
       <text class="arch-mono" x="226" y="164">the first backend whose</text>
       <text class="arch-mono" x="226" y="180">canRun(name) is true,</text>
       <text class="arch-mono" x="226" y="196">in order: worker, local,</text>
       <text class="arch-mono" x="226" y="212">then remote</text>
       <text class="arch-mono arch-strong" x="226" y="248">no match</text>
-      <text class="arch-mono" x="226" y="266">rejects with an Error</text>
+      <text class="arch-mono" x="226" y="266">rejects with NoBackendError</text>
 
       <path
         class="arch-line"
@@ -135,14 +135,16 @@
         height="56"
         rx="6"
       />
-      <text class="arch-label" x="655" y="278" text-anchor="middle">Error</text>
+      <text class="arch-label" x="655" y="278" text-anchor="middle">
+        NoBackendError
+      </text>
       <text
         class="arch-mono arch-error-text"
         x="655"
         y="297"
         text-anchor="middle"
       >
-        No backend available
+        nothing can run the task
       </text>
     </svg>
     <figcaption>

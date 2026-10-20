@@ -176,13 +176,13 @@ them.
 ### Task Dispatch Flow (@hybrid-compute/core)
 
 `runTask(taskName, input, strategy)` accepts a **routing strategy**. If you pass
-`local`, `worker`, or `remote`, the call is dispatched directly to that backend,
-without asking it whether it can run the task. With `auto`, **Hybrid-Compute**
-checks backend **capabilities** (i.e., whether a backend can run the named task)
-and selects one accordingly. In the diagram, the **fallback order** for `auto`
-is `worker → local → remote`. No matter which backend runs the work, you always
-get a `Promise<Output>` and a consistent error surface if no backend can handle
-the task.
+`local`, `worker`, or `remote`, the call goes to that backend, as long as it can
+run the task (its `canRun` returns true). With `auto`, **Hybrid-Compute** checks
+backend **capabilities** (i.e., whether a backend can run the named task) and
+selects one accordingly. In the diagram, the **fallback order** for `auto` is
+`worker → local → remote`. No matter which backend runs the work, you always get
+a `Promise<Output>` and a consistent error surface if no backend can handle the
+task.
 
 <DispatchDiagram />
 
