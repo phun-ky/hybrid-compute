@@ -47,6 +47,10 @@ const remote = createRemoteCompute({
 });
 ```
 
+A relative `endpoint` like this one works in a browser page, where it resolves
+against the page's URL. In Node.js, use an absolute `http:` or `https:` URL;
+`'/api/compute'` throws a `TypeError` there.
+
 You can see
 [examples here](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/docs/example.md),
 and a
