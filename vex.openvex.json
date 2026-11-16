@@ -3,8 +3,8 @@
   "@id": "https://github.com/phun-ky/hybrid-compute/blob/main/vex.openvex.json",
   "author": "Alexander Vassbotn Røyne-Helgesen",
   "role": "Maintainer",
-  "timestamp": "2026-10-20T00:00:00Z",
-  "version": 1,
+  "timestamp": "2026-11-16T00:00:00Z",
+  "version": 2,
   "statements": [
     {
       "vulnerability": {
@@ -21,6 +21,22 @@
       "status": "not_affected",
       "justification": "component_not_present",
       "impact_statement": "basic-ftp is a development dependency only (release-it > proxy-agent > pac-proxy-agent > get-uri > basic-ftp) and is not a dependency of any published package. In development, its FTP directory-listing parser is only reached when a proxy auto-config file is fetched over ftp://, which the release workflow never does."
+    },
+    {
+      "vulnerability": {
+        "@id": "https://github.com/advisories/GHSA-5pm8-86m8-9m6r",
+        "name": "GHSA-5pm8-86m8-9m6r"
+      },
+      "timestamp": "2026-11-16T00:00:00Z",
+      "products": [
+        { "@id": "pkg:npm/%40hybrid-compute/core" },
+        { "@id": "pkg:npm/%40hybrid-compute/local" },
+        { "@id": "pkg:npm/%40hybrid-compute/remote" },
+        { "@id": "pkg:npm/%40hybrid-compute/worker" }
+      ],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "basic-ftp is a development dependency only (release-it > proxy-agent > pac-proxy-agent > get-uri > basic-ftp) and is not a dependency of any published package. In development, Client.list() is only reached when a proxy auto-config file is fetched over ftp://; release-it uses the proxy agent only when github.proxy is set, and no configuration here sets it."
     }
   ]
 }
