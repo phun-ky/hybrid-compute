@@ -88,6 +88,8 @@ jobs:
         run: npm run typecheck
       - name: Check API docs # TypeDoc errors and warnings (such as broken {@link}s) fail the build
         run: npm run docs:check
+      - name: Build the docs site # So a broken site fails the pull request, not the deploy after merging
+        run: npm run docs:build
       - name: Test
         run: npm run test:ci
       - name: Test the release scripts # Version decisions, without git or npm
