@@ -52,9 +52,6 @@
     "@hybrid-compute/core": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^9.27.0",
-    "eslint-config-phun-ky": "^1.0.3",
-    "prettier": "^3.8.3",
     "typescript": "^6.0.3"
   },
   "engines": {
