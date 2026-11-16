@@ -178,6 +178,11 @@ by Dependabot are exempt.
   [development guide](https://phun-ky.net/hybrid-compute/guide/development#releases),
   so pick the type that matches the change. A breaking change needs a
   `BREAKING CHANGE:` footer that says what to change.
+- No AI attribution in commit messages, such as a `Co-authored-by` trailer
+  naming an AI tool or a "Generated with" footer. `.githooks/commit-msg` rejects
+  them (the patterns are in `.githooks/ai-attribution.patterns`), and the Checks
+  workflow runs the same hook on every commit in a pull request, including
+  commits made in GitHub's web editor.
 - From 1.0 on, a breaking change also updates the migration guide in the same
   pull request, with before-and-after code, and adds to the release notes for
   the next major.

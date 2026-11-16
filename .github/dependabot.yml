@@ -16,6 +16,10 @@ updates:
           - 'version-update:semver-major'
     schedule:
       interval: 'weekly'
+    # Only propose versions published at least 14 days ago: a compromised
+    # release is usually caught within days. Security updates still open at once
+    cooldown:
+      default-days: 14
     labels:
       - 'mindless: 📦 dependencies'
     commit-message:
@@ -35,6 +39,10 @@ updates:
           - '*'
     schedule:
       interval: 'weekly'
+    # Same cooldown as npm: a compromised release is usually caught within
+    # days. Security updates still open at once
+    cooldown:
+      default-days: 14
     labels:
       - 'mindless: 📦 dependencies'
     commit-message:
