@@ -3,8 +3,11 @@
 /// <reference types="node" />
 import { Worker as Thread } from 'node:worker_threads';
 
-import { RUNTIME, type WorkerRuntimeInterface } from './runtime.js';
-import { isPlainObject } from './utils.js';
+import {
+  isPlainObject,
+  RUNTIME,
+  type WorkerRuntimeInterface
+} from './utils.js';
 
 import {
   ThreadedCompute as WebThreadedCompute,

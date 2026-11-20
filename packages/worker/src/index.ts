@@ -5,17 +5,19 @@ import {
 } from '@hybrid-compute/core';
 
 import { WorkerTaskError } from './errors.js';
-import {
-  RUNTIME,
-  WEB_RUNTIME,
-  type WorkerRuntimeInterface
-} from './runtime.js';
 import type {
   ThreadedComputeOptionsInterface,
   WorkerCancelMessageInterface,
   WorkerTaskMessageInterface
 } from './types.js';
-import { describeValue, isPlainObject, messageOf } from './utils.js';
+import {
+  describeValue,
+  isPlainObject,
+  messageOf,
+  RUNTIME,
+  WEB_RUNTIME,
+  type WorkerRuntimeInterface
+} from './utils.js';
 
 export * from './errors.js';
 
