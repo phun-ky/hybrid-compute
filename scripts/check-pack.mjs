@@ -1,8 +1,8 @@
 // Check what npm would publish: pack every package, check each tarball holds
 // the files its package.json points at, its LICENSE and README, and no tests,
 // lint it with publint and @arethetypeswrong/cli, then install the tarballs
-// in an empty project, check every source map resolves, and import them. Run
-// after `npm run build`.
+// in an empty project, check every source map resolves, and import and
+// require() them. Run after `npm run build`.
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
@@ -164,6 +164,27 @@ try {
     } catch {
       problems.push('the installed tarballs could not be imported or run');
     }
+
+    // And require() every package from CommonJS, as Node.js 22.12 and later
+    // can (require(esm))
+    const required = `
+      for (const name of ${JSON.stringify(names)}) {
+        if (Object.keys(require(name)).length === 0) {
+          throw new Error(name + ' exports nothing through require()');
+        }
+      }
+      console.log('require() works for every package on Node.js ' + process.version);
+    `;
+
+    try {
+      execFileSync(
+        'node',
+        ['--input-type=commonjs', '--no-warnings', '-e', required],
+        { cwd: app, stdio: 'inherit' }
+      );
+    } catch {
+      problems.push('the installed tarballs could not be required');
+    }
   }
 } finally {
   rmSync(work, { recursive: true, force: true });
@@ -178,4 +199,6 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-console.log(`\nAll ${names.length} packages pack, install and import.`);
+console.log(
+  `\nAll ${names.length} packages pack, install, import and require().`
+);

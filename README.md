@@ -75,6 +75,9 @@ Includes:
 npm install @hybrid-compute/core
 ```
 
+The packages need Node.js 22.12 or later, or a browser from 2022 or later. They
+are ES modules; `require()` needs Node.js 22.12 or later.
+
 ### Usage with local
 
 ```bash
