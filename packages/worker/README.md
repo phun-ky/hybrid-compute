@@ -69,6 +69,9 @@ The worker starts on the first task. Options, errors, cancelling and the message
 format are in the
 [worker guide](https://phun-ky.net/hybrid-compute/guide/usage/worker).
 
+To run a WebAssembly module in a worker, see the
+[WebAssembly guide](https://phun-ky.net/hybrid-compute/guide/usage/wasm).
+
 ---
 
 ## Contributing

@@ -42,6 +42,11 @@ npm install @hybrid-compute/local
 import { createLocalCompute } from '@hybrid-compute/local';
 ```
 
+To run a WebAssembly module's functions on the main thread, register them as
+tasks; the
+[WebAssembly guide](https://phun-ky.net/hybrid-compute/guide/usage/wasm) shows
+how.
+
 ---
 
 ## Contributing
