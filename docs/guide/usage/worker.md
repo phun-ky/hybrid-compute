@@ -192,9 +192,50 @@ are ignored.
 
 Web Workers exist in browsers, Deno and Bun. Where there is no global `Worker`,
 as in Node.js, `canRun` returns `false`, so the `auto` strategy uses another
-backend, and calling `runTask` directly rejects with a `TypeError`. Support for
-Node.js `worker_threads` is tracked in
-[#127](https://github.com/phun-ky/hybrid-compute/issues/127).
+backend, and calling `runTask` directly rejects with a `TypeError`. That keeps
+server-side rendering working: there, `auto` falls back to `local`.
+
+## In Node.js
+
+For Node.js's `worker_threads`, import from `@hybrid-compute/worker/node`. It
+has the same API, and starts a thread instead of a Web Worker:
+
+```ts
+import { createThreadedCompute } from '@hybrid-compute/worker/node';
+
+const threaded = createThreadedCompute({
+  url: new URL('./worker.js', import.meta.url),
+  canRunTasks: ['add']
+});
+
+await threaded.runTask('add', [2, 3]); // 5
+```
+
+- **The worker script is the same.** `exposeTasks` finds the thread's
+  `parentPort` itself (on Node.js 22.3 and later; on earlier versions, pass
+  `parentPort` from `node:worker_threads` as its second argument).
+- **`url`** is a `file:` URL, an absolute path, or a path starting with `./`,
+  relative to the working directory.
+- **`createWorker`** returns a `Worker` from `node:worker_threads`, for options
+  such as `resourceLimits`:
+
+  ```ts
+  import { Worker } from 'node:worker_threads';
+
+  const threaded = createThreadedCompute({
+    createWorker: () =>
+      new Worker(new URL('./worker.js', import.meta.url), {
+        resourceLimits: { maxOldGenerationSizeMb: 256 }
+      }),
+    canRunTasks: ['add']
+  });
+  ```
+
+- **The thread only keeps the process alive while a task waits for its reply**,
+  so a script can end without calling `close()`.
+- Errors, timeouts and cancelling work as in the browser. A worker script that
+  calls `process.exit()` rejects its waiting tasks with a `WorkerTaskError`, and
+  the next task starts a new thread.
 
 ## WebAssembly
 

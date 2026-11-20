@@ -10,7 +10,14 @@ import type {
   WorkerCancelMessageInterface,
   WorkerTaskMessageInterface
 } from './types.js';
-import { describeValue, isPlainObject, messageOf } from './utils.js';
+import {
+  describeValue,
+  isPlainObject,
+  messageOf,
+  RUNTIME,
+  WEB_RUNTIME,
+  type WorkerRuntimeInterface
+} from './utils.js';
 
 export * from './errors.js';
 
@@ -25,8 +32,6 @@ type PendingTaskType = {
   reject: (reason: unknown) => void;
 };
 
-/** Whether this runtime has Web Workers. */
-const hasWorkers = () => typeof Worker === 'function';
 /**
  * Check the options and return them normalised.
  *
@@ -88,11 +93,17 @@ const toSettings = (options: unknown) => {
     );
   }
 
+  // Web Workers, unless an entry point such as ./node.ts passed another
+  const runtime =
+    (options as { [RUNTIME]?: WorkerRuntimeInterface })[RUNTIME] ?? WEB_RUNTIME;
+
   return {
+    available: runtime.available,
     // One way to start a worker, whichever option was given
     createWorker:
-      (createWorker as (() => Worker) | undefined) ??
-      (() => new Worker(url as string | URL, { type: 'module' })),
+      createWorker === undefined
+        ? () => runtime.fromUrl(url as string | URL)
+        : () => runtime.wrap((createWorker as () => unknown)()),
     // For error messages
     source:
       createWorker === undefined ? `the worker ${String(url)}` : 'createWorker',
@@ -116,7 +127,8 @@ const toSettings = (options: unknown) => {
  *
  * Web Workers only exist in browsers (and Deno and Bun): where there is no
  * global `Worker`, `canRun` returns `false`, so the `auto` strategy uses
- * another backend.
+ * another backend. For Node.js's `worker_threads`, import
+ * `createThreadedCompute` from `@hybrid-compute/worker/node` instead.
  *
  * @example With a bundler
  * ```ts
@@ -171,7 +183,7 @@ export class ThreadedCompute implements ComputeBackendInterface {
    * Workers.
    */
   canRun(taskName: string): boolean {
-    return hasWorkers() && this.settings.tasks.has(taskName);
+    return this.settings.available() && this.settings.tasks.has(taskName);
   }
 
   /**
@@ -210,9 +222,9 @@ export class ThreadedCompute implements ComputeBackendInterface {
       );
     }
 
-    if (!hasWorkers()) {
+    if (!this.settings.available()) {
       throw new TypeError(
-        'Web Workers are not available in this runtime; @hybrid-compute/worker needs a global Worker'
+        "Web Workers are not available in this runtime; @hybrid-compute/worker needs a global Worker. In Node.js, use '@hybrid-compute/worker/node'"
       );
     }
 

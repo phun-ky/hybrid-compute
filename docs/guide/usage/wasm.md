@@ -240,9 +240,10 @@ const require = createRequire(import.meta.url);
 initSync({ module: readFileSync(require.resolve('primes/primes_bg.wasm')) });
 ```
 
-Then register the functions with `local`. The worker backend needs Web Workers,
-so it runs in browsers, Deno and Bun; Node.js support is tracked in
-[#127](https://github.com/phun-ky/hybrid-compute/issues/127).
+Then register the functions with `local`. To run them in a thread instead, load
+the module the same way in the worker script, and start it with
+`createThreadedCompute` from `@hybrid-compute/worker/node`; see
+[the worker guide](./worker.md#in-node-js).
 
 ## Other languages
 
