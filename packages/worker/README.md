@@ -69,6 +69,10 @@ The worker starts on the first task. Options, errors, cancelling and the message
 format are in the
 [worker guide](https://phun-ky.net/hybrid-compute/guide/usage/worker).
 
+In Node.js, import `createThreadedCompute` from `@hybrid-compute/worker/node`
+instead: it runs the same worker script in a `worker_threads` thread. See
+[In Node.js](https://phun-ky.net/hybrid-compute/guide/usage/worker#in-node-js).
+
 To run a WebAssembly module in a worker, see the
 [WebAssembly guide](https://phun-ky.net/hybrid-compute/guide/usage/wasm).
 

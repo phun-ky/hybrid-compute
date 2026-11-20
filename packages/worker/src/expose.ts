@@ -10,21 +10,41 @@ const toErrorValue = (error: unknown) => {
 
   return { message: String(error) };
 };
-/** The worker's global scope, or a TypeError outside a worker. */
+/**
+ * In a Node.js worker thread, its parentPort. getBuiltinModule rather than an
+ * import, so a bundler building for the browser doesn't see node:worker_threads.
+ */
+const nodeParentPort = () => {
+  const { process } = globalThis as {
+    process?: { getBuiltinModule?: (id: string) => unknown };
+  };
+  const threads = process?.getBuiltinModule?.('node:worker_threads') as
+    { parentPort?: WorkerScopeInterface | null } | undefined;
+
+  return threads?.parentPort ?? undefined;
+};
+/**
+ * The worker's global scope, or a Node.js thread's parentPort, or a TypeError
+ * outside a worker.
+ */
 const workerScope = (): WorkerScopeInterface => {
   const scope = globalThis as unknown as Partial<WorkerScopeInterface>;
 
   if (
-    !('WorkerGlobalScope' in globalThis) ||
-    typeof scope.addEventListener !== 'function' ||
-    typeof scope.postMessage !== 'function'
+    'WorkerGlobalScope' in globalThis &&
+    typeof scope.addEventListener === 'function' &&
+    typeof scope.postMessage === 'function'
   ) {
-    throw new TypeError(
-      'exposeTasks must be called in a worker script, or be given a scope to listen on'
-    );
+    return scope as WorkerScopeInterface;
   }
 
-  return scope as WorkerScopeInterface;
+  const port = nodeParentPort();
+
+  if (port) return port;
+
+  throw new TypeError(
+    'exposeTasks must be called in a worker script, or be given a scope to listen on'
+  );
 };
 
 /**
@@ -38,7 +58,8 @@ const workerScope = (): WorkerScopeInterface => {
  *
  * @param tasks - The tasks, by name. List the same names in `canRunTasks`.
  * @param scope - Where to listen and reply. Defaults to the worker's global
- * scope.
+ * scope, or in a Node.js worker thread to its `parentPort` (on Node.js 22.3
+ * and later; on earlier versions, pass `parentPort` yourself).
  *
  * @throws {TypeError} If `tasks` isn't an object of functions, or if it's
  * called outside a worker without a `scope`.

@@ -1,7 +1,7 @@
 {
   "name": "@hybrid-compute/worker",
   "version": "1.0.0",
-  "description": "Threaded compute backend for executing tasks in Web Workers.",
+  "description": "Threaded compute backend for executing tasks in Web Workers, or in Node.js worker_threads.",
   "keywords": [
     "web-worker",
     "worker",
@@ -29,6 +29,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
     },
     "./package.json": "./package.json"
   },

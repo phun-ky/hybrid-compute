@@ -17,5 +17,6 @@ parentPort?.on('message', ({ id, task, input }) => {
   else if (task === 'null') reply(null);
   else if (task === 'stranger') reply({ id: 9999, result: 'not yours' });
   else if (task === 'throw') throw new Error('thrown inside the worker');
+  else if (task === 'exit') process.exit(3);
   // 'hang', and anything else: never answer
 });
