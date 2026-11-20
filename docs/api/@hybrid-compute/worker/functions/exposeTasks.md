@@ -11,7 +11,7 @@ function exposeTasks(
 ```
 
 Defined in:
-[packages/worker/src/expose.ts:66](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/expose.ts#L66)
+[packages/worker/src/expose.ts:87](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/expose.ts#L87)
 
 Answers tasks from [ThreadedCompute](../classes/ThreadedCompute.md) in a worker
 script: it listens for task messages, runs the task with that name, and replies
@@ -34,7 +34,9 @@ The tasks, by name. List the same names in `canRunTasks`.
 
 [`WorkerScopeInterface`](../interfaces/WorkerScopeInterface.md)
 
-Where to listen and reply. Defaults to the worker's global scope.
+Where to listen and reply. Defaults to the worker's global scope, or in a
+Node.js worker thread to its `parentPort` (on Node.js 22.3 and later; on earlier
+versions, pass `parentPort` yourself).
 
 ## Returns
 

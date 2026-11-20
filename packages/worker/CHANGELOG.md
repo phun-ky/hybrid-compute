@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%401.0.0...%40hybrid-compute%2Fworker%401.1.0) (2026-11-20)
+
+### Tasks
+
+* 🤖 lint the Markdown itself, on ESLint 10 ([123ba45](https://github.com/phun-ky/hybrid-compute/commit/123ba4501d8c51adb285ea3464715dd1f2427281)), closes [#141](https://github.com/phun-ky/hybrid-compute/issues/141)
+* 🤖 move the worker runtime helpers into utils.ts ([740f8c9](https://github.com/phun-ky/hybrid-compute/commit/740f8c99ef1b8f013a6a21c080b91deb4cf749f7))
+
+### Documentation
+
+* ✏️ link the WebAssembly guide from the READMEs ([3547673](https://github.com/phun-ky/hybrid-compute/commit/3547673911a7c79052c122fa2f07fb35beac1824)), closes [#135](https://github.com/phun-ky/hybrid-compute/issues/135)
+* ✏️ point each package README's npm badges at its own package ([45c6641](https://github.com/phun-ky/hybrid-compute/commit/45c66417a9749f8839e8425ac54802a374fa7ac7)), closes [#159](https://github.com/phun-ky/hybrid-compute/issues/159)
+
+### Feature
+
+* 🎸 run worker tasks in Node.js worker_threads, from @hybrid-compute/worker/node ([363780e](https://github.com/phun-ky/hybrid-compute/commit/363780e6f7dace936955b5a3f513278971a757f0)), closes [#127](https://github.com/phun-ky/hybrid-compute/issues/127)
+
 ## [1.0.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%400.40.0...%40hybrid-compute%2Fworker%401.0.0) (2026-10-20)
 
 ### Tasks
