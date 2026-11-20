@@ -45,6 +45,7 @@ rest.
       - [Fetch](#fetch)
       - [WebSocket](#websocket)
     - [Usage with worker](#usage-with-worker)
+    - [Usage with WebAssembly](#usage-with-webassembly)
   - [Example](#example)
   - [Visual overviews](#visual-overviews)
     - [Packages and their dependencies](#packages-and-their-dependencies)
@@ -343,6 +344,30 @@ const main = async () => {
 
 main();
 ```
+
+### Usage with WebAssembly
+
+WebAssembly needs no backend of its own: a module's exports are functions, so
+you register them as tasks. Here `slugify` comes from a Rust library built with
+[wasm-pack](https://github.com/rustwasm/wasm-pack):
+
+```ts
+import init, { slugify } from 'primes';
+
+import { createLocalCompute } from '@hybrid-compute/local';
+
+await init();
+
+const local = createLocalCompute();
+
+local.registerTask({ name: 'slugify', run: (text: string) => slugify(text) });
+
+await local.runTask('slugify', 'Hello, WebAssembly World!'); // 'hello-webassembly-world'
+```
+
+Heavy functions belong in a worker, with `exposeTasks`. The
+[WebAssembly guide](https://phun-ky.net/hybrid-compute/guide/usage/wasm) builds
+the Rust library and runs it both ways, and in Node.js.
 
 ## Example
 
