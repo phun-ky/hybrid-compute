@@ -40,7 +40,7 @@ The tasks the worker script can run. Only these are sent to it.
 ### createWorker?
 
 ```ts
-optional createWorker?: () => Worker;
+createWorker?: () => Worker;
 ```
 
 Defined in:
@@ -61,7 +61,7 @@ crash or [ThreadedCompute.close](../classes/ThreadedCompute.md#close).
 ### timeout?
 
 ```ts
-optional timeout?: number;
+timeout?: number;
 ```
 
 Defined in:
@@ -76,7 +76,7 @@ running work.
 ### url?
 
 ```ts
-optional url?: string | URL;
+url?: string | URL;
 ```
 
 Defined in:

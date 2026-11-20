@@ -54,7 +54,7 @@ a browser page), `ws:` or `wss:` for WebSocket.
 ### headers?
 
 ```ts
-optional headers?: RemoteHeadersType;
+headers?: RemoteHeadersType;
 ```
 
 Defined in:
@@ -67,7 +67,7 @@ Extra request headers for the fetch transport.
 ### timeout?
 
 ```ts
-optional timeout?: number;
+timeout?: number;
 ```
 
 Defined in:

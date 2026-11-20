@@ -13,7 +13,7 @@ Defined in:
 The strategy used to determine which compute backend to use.
 
 - `auto`: the first backend whose `canRun` returns true, in the order worker,
-  local, remote.
+  local, remote, or the `order` given to `createHybridCompute`.
 - `local`: the local backend, which runs tasks on the calling thread.
 - `worker`: the worker backend, which runs tasks in a Web Worker.
 - `remote`: the remote backend, which sends tasks to a server or service.

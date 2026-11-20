@@ -4,7 +4,7 @@ HybridCompute
 # Class: HybridCompute
 
 Defined in:
-[packages/core/src/index.ts:120](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L120)
+[packages/core/src/index.ts:188](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L188)
 
 The HybridCompute class acts as an orchestrator to delegate compute tasks across
 different backends (local, worker, or remote) using a flexible strategy.
@@ -14,10 +14,10 @@ It supports four strategies:
 - `'local'`, `'worker'`, `'remote'`: use that backend, if it is configured and
   its `canRun(taskName)` returns true.
 - `'auto'` (the default): use the first backend whose `canRun(taskName)` returns
-  true, in the order worker, local, remote.
+  true, in the order worker, local, remote, or the `order` setting.
 
-The constructor checks the backends it's given and keeps a frozen copy.
-`createHybridCompute` is the usual way to create one.
+The constructor checks the backends and settings it's given and keeps a frozen
+copy. `createHybridCompute` is the usual way to create one.
 
 ## Example
 
@@ -47,11 +47,11 @@ console.log(result); // 42
 ### Constructor
 
 ```ts
-new HybridCompute(backends: HybridComputeOptionsInterface): HybridCompute;
+new HybridCompute(backends: HybridComputeOptionsInterface, settings?: HybridComputeSettingsInterface): HybridCompute;
 ```
 
 Defined in:
-[packages/core/src/index.ts:134](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L134)
+[packages/core/src/index.ts:207](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L207)
 
 Creates a new HybridCompute orchestrator.
 
@@ -64,6 +64,13 @@ Creates a new HybridCompute orchestrator.
 An object with at least one of the local, worker and remote backends. A backend
 given as `undefined` is skipped.
 
+##### settings?
+
+[`HybridComputeSettingsInterface`](../interfaces/HybridComputeSettingsInterface.md)
+
+Optional settings, such as the `order` the `auto` strategy tries the backends
+in.
+
 #### Returns
 
 `HybridCompute`
@@ -71,11 +78,13 @@ given as `undefined` is skipped.
 #### Throws
 
 If `backends` isn't an object, a backend lacks `canRun` or `runTask`, or no
-backend is given.
+backend is given; or if `settings` isn't an object, or `order` isn't an array.
 
 #### Throws
 
-If `backends` has a key other than local, worker or remote.
+If `backends` has a key other than local, worker or remote; or if `settings` has
+a key other than order, or `order` is empty, names an unknown backend or names
+one twice.
 
 ## Methods
 
@@ -86,18 +95,19 @@ runTask<Input, Output>(
    taskName: string,
    input: Input,
    strategy?: ExecutionStrategyType,
-options?: RunTaskOptionsInterface): Promise<Output>;
+   options?: RunTaskOptionsInterface
+): Promise<Output>;
 ```
 
 Defined in:
-[packages/core/src/index.ts:169](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L169)
+[packages/core/src/index.ts:246](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L246)
 
 Runs a task using the specified execution strategy.
 
-With `'auto'`, it tries the worker, then the local, then the remote backend, and
-runs the task on the first whose `canRun(taskName)` returns true. With an
-explicit strategy, that backend must be configured and its `canRun(taskName)`
-must return true.
+With `'auto'`, it tries the worker, then the local, then the remote backend, or
+those in the `order` setting, and runs the task on the first whose
+`canRun(taskName)` returns true. With an explicit strategy, that backend must be
+configured and its `canRun(taskName)` must return true.
 
 #### Type Parameters
 

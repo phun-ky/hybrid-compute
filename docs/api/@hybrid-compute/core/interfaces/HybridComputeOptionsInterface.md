@@ -30,7 +30,7 @@ const options: HybridComputeOptionsInterface = {
 ### local?
 
 ```ts
-optional local?: ComputeBackendInterface;
+local?: ComputeBackendInterface;
 ```
 
 Defined in:
@@ -43,7 +43,7 @@ A backend that runs tasks on the calling thread.
 ### remote?
 
 ```ts
-optional remote?: ComputeBackendInterface;
+remote?: ComputeBackendInterface;
 ```
 
 Defined in:
@@ -56,7 +56,7 @@ A backend that sends tasks to a server or service.
 ### worker?
 
 ```ts
-optional worker?: ComputeBackendInterface;
+worker?: ComputeBackendInterface;
 ```
 
 Defined in:

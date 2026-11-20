@@ -24,6 +24,8 @@ Web Workers only exist in browsers (and Deno and Bun): where there is no global
 
 ## Examples
 
+**With a bundler**
+
 ```ts
 // Vite and webpack build the worker script when they see this literal
 // new Worker(new URL(...)), so keep it written out in full
@@ -37,6 +39,8 @@ const threaded = createThreadedCompute({
 
 const result = await threaded.runTask<number, number>('add', 5);
 ```
+
+**Without a bundler**
 
 ```ts
 const threaded = createThreadedCompute({
@@ -145,7 +149,8 @@ with a [WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
 runTask<Input, Output>(
    taskName: string,
    input: Input,
-options?: RunTaskOptionsInterface): Promise<Output>;
+   options?: RunTaskOptionsInterface
+): Promise<Output>;
 ```
 
 Defined in:

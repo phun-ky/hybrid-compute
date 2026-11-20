@@ -13,7 +13,7 @@ What a task's `run` gets besides its input.
 ### signal?
 
 ```ts
-optional signal?: AbortSignal;
+signal?: AbortSignal;
 ```
 
 Defined in:

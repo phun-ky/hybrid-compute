@@ -1,10 +1,10 @@
 [Documentation](../../../index.md) / [@hybrid-compute/worker](../index.md) /
 WorkerTaskType
 
-# Type Alias: WorkerTaskType\<Input, Output>
+# Type Alias: WorkerTaskType\<Input = `never`, Output = `unknown`>
 
 ```ts
-type WorkerTaskType<Input, Output> = (
+type WorkerTaskType<Input = never, Output = unknown> = (
   input: Input,
   context: Required<TaskContextInterface>
 ) => Output | Promise<Output>;

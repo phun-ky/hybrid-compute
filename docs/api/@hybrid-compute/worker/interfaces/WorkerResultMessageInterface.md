@@ -1,7 +1,7 @@
 [Documentation](../../../index.md) / [@hybrid-compute/worker](../index.md) /
 WorkerResultMessageInterface
 
-# Interface: WorkerResultMessageInterface\<Output>
+# Interface: WorkerResultMessageInterface\<Output = `unknown`>
 
 Defined in:
 [packages/worker/src/types.ts:82](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L82)
@@ -27,7 +27,7 @@ self.postMessage({ id: 1, result: 42 } satisfies WorkerResultMessageInterface);
 ### error?
 
 ```ts
-optional error?: unknown;
+error?: unknown;
 ```
 
 Defined in:
@@ -49,7 +49,7 @@ Defined in:
 ### result?
 
 ```ts
-optional result?: Output;
+result?: Output;
 ```
 
 Defined in:

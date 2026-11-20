@@ -1,7 +1,7 @@
 [Documentation](../../../index.md) / [@hybrid-compute/remote](../index.md) /
 RemoteTaskResponseInterface
 
-# Interface: RemoteTaskResponseInterface\<Output>
+# Interface: RemoteTaskResponseInterface\<Output = `unknown`>
 
 Defined in:
 [packages/remote/src/types.ts:80](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L80)
@@ -28,7 +28,7 @@ message string, or an object with a `message`) rejects the task with a
 ### error?
 
 ```ts
-optional error?: unknown;
+error?: unknown;
 ```
 
 Defined in:
@@ -39,7 +39,7 @@ Defined in:
 ### id?
 
 ```ts
-optional id?: number;
+id?: number;
 ```
 
 Defined in:
@@ -50,7 +50,7 @@ Defined in:
 ### result?
 
 ```ts
-optional result?: Output;
+result?: Output;
 ```
 
 Defined in:

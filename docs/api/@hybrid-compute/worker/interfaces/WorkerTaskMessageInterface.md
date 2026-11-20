@@ -1,7 +1,7 @@
 [Documentation](../../../index.md) / [@hybrid-compute/worker](../index.md) /
 WorkerTaskMessageInterface
 
-# Interface: WorkerTaskMessageInterface\<Input>
+# Interface: WorkerTaskMessageInterface\<Input = `unknown`>
 
 Defined in:
 [packages/worker/src/types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L51)

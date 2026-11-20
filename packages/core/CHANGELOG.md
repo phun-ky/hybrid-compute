@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%401.0.0...%40hybrid-compute%2Fcore%401.1.0) (2026-11-20)
+
+### Tasks
+
+* 🤖 lint the Markdown itself, on ESLint 10 ([123ba45](https://github.com/phun-ky/hybrid-compute/commit/123ba4501d8c51adb285ea3464715dd1f2427281)), closes [#141](https://github.com/phun-ky/hybrid-compute/issues/141)
+
+### Documentation
+
+* ✏️ link the core README to the guides instead of repeating them ([0bbfd38](https://github.com/phun-ky/hybrid-compute/commit/0bbfd38288480e5d24c6511387ff28822428b759)), closes [#151](https://github.com/phun-ky/hybrid-compute/issues/151)
+
+### Feature
+
+* 🎸 let the auto strategy's backend order be configured ([fd005c5](https://github.com/phun-ky/hybrid-compute/commit/fd005c5e6ff1701d322f4fcfd7fa110417800e0c)), closes [#123](https://github.com/phun-ky/hybrid-compute/issues/123)
+
 ## [1.0.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%400.40.0...%40hybrid-compute%2Fcore%401.0.0) (2026-10-20)
 
 ### Documentation
