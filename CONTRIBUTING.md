@@ -194,6 +194,10 @@ by Dependabot are exempt.
   of release banners in `docs/public/images`: banner, og, square and portrait,
   each at 1x and 2x. Write the content in `scripts/banners/<release>.mjs` (copy
   the previous one) and run `npm run banners -- <release>`.
+- The README shows the docs site's diagrams as images in `docs/public/diagrams`.
+  After changing a diagram in `docs/.vitepress/theme/components/diagrams`, its
+  `arch-*` styles or the tokens, run `npm run render:diagrams` and commit the
+  images with the change.
 - Don't commit regenerated API docs (`docs/api`); each release regenerates them.
   Run `npm run docs:check` instead.
 - Open a pull request against `main`. The Checks workflow builds, lints,
