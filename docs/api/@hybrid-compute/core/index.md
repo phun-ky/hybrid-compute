@@ -13,11 +13,13 @@
 - [ComputeBackendInterface](interfaces/ComputeBackendInterface.md)
 - [ComputeTaskInterface](interfaces/ComputeTaskInterface.md)
 - [HybridComputeOptionsInterface](interfaces/HybridComputeOptionsInterface.md)
+- [HybridComputeSettingsInterface](interfaces/HybridComputeSettingsInterface.md)
 - [RunTaskOptionsInterface](interfaces/RunTaskOptionsInterface.md)
 - [TaskContextInterface](interfaces/TaskContextInterface.md)
 
 ## Type Aliases
 
+- [BackendNameType](type-aliases/BackendNameType.md)
 - [ExecutionStrategyType](type-aliases/ExecutionStrategyType.md)
 
 ## Functions

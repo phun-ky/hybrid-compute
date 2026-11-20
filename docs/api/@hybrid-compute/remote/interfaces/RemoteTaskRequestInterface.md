@@ -1,7 +1,7 @@
 [Documentation](../../../index.md) / [@hybrid-compute/remote](../index.md) /
 RemoteTaskRequestInterface
 
-# Interface: RemoteTaskRequestInterface\<Input>
+# Interface: RemoteTaskRequestInterface\<Input = `unknown`>
 
 Defined in:
 [packages/remote/src/types.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L63)
@@ -27,7 +27,7 @@ repeat.
 ### id?
 
 ```ts
-optional id?: number;
+id?: number;
 ```
 
 Defined in:

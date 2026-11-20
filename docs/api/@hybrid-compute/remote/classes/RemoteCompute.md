@@ -22,6 +22,8 @@ reuses the connection, and connects again on the next task after it closes. Call
 
 ## Examples
 
+**Fetch transport**
+
 ```ts
 const remote = createRemoteCompute({
   transport: 'fetch',
@@ -31,6 +33,8 @@ const remote = createRemoteCompute({
 
 const result = await remote.runTask('translateText', { text: 'hello' });
 ```
+
+**WebSocket transport**
 
 ```ts
 const remote = createRemoteCompute({
@@ -147,7 +151,8 @@ connection. Does nothing for the fetch transport.
 runTask<Input, Output>(
    taskName: string,
    input: Input,
-options?: RunTaskOptionsInterface): Promise<Output>;
+   options?: RunTaskOptionsInterface
+): Promise<Output>;
 ```
 
 Defined in:

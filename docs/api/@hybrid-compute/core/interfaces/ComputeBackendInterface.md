@@ -16,9 +16,13 @@ Each backend must be able to:
 
 ## Template
 
+**Input**
+
 The input type for task execution.
 
 ## Template
+
+**Output**
 
 The output type for task execution.
 
@@ -63,7 +67,8 @@ Defined in:
 runTask<Input, Output>(
    taskName: string,
    input: Input,
-options?: RunTaskOptionsInterface): Promise<Output>;
+   options?: RunTaskOptionsInterface
+): Promise<Output>;
 ```
 
 Defined in:

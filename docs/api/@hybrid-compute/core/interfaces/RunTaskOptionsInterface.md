@@ -24,7 +24,7 @@ controller.abort(); // pending rejects with an AbortError
 ### signal?
 
 ```ts
-optional signal?: AbortSignal;
+signal?: AbortSignal;
 ```
 
 Defined in:

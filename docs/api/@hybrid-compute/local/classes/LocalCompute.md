@@ -134,7 +134,8 @@ If a task with the same name is already registered. Call
 runTask<Input, Output>(
    taskName: string,
    input: Input,
-options?: RunTaskOptionsInterface): Promise<Output>;
+   options?: RunTaskOptionsInterface
+): Promise<Output>;
 ```
 
 Defined in:
