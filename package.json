@@ -123,5 +123,10 @@
     "commitizen": {
       "path": "./node_modules/git-cz"
     }
+  },
+  "overrides": {
+    "vitepress": {
+      "vite": "^6.4.5"
+    }
   }
 }
