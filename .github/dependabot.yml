@@ -33,10 +33,15 @@ updates:
   # comments up to date
   - package-ecosystem: 'github-actions'
     directory: '/'
+    # Majors are not grouped, as for npm: one blocked major must not hold back
+    # the others
     groups:
       actions:
         patterns:
           - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
     schedule:
       interval: 'weekly'
     # Same cooldown as npm: a compromised release is usually caught within
