@@ -1,7 +1,7 @@
 // Properties of task dispatch, checked against a small model of the rules:
 // an explicit strategy uses that backend if it's set and can run the task,
-// auto takes the first of worker, local, remote that can, and anything else
-// rejects with NoBackendError.
+// auto takes the first in its order (worker, local, remote by default) that
+// can, and anything else rejects with NoBackendError.
 import assert from 'node:assert/strict';
 import test, { describe } from 'node:test';
 
@@ -34,9 +34,10 @@ const backend = (
 const expected = (
   configured: Partial<Record<BackendNameType, ReadonlySet<string>>>,
   taskName: string,
-  strategy: ExecutionStrategyType
+  strategy: ExecutionStrategyType,
+  order: readonly BackendNameType[] = AUTO_ORDER
 ) => {
-  const candidates = strategy === 'auto' ? AUTO_ORDER : [strategy];
+  const candidates = strategy === 'auto' ? order : [strategy];
 
   return candidates.find((name) => configured[name]?.has(taskName));
 };
@@ -61,7 +62,11 @@ describe('dispatch properties', () => {
         taskNames,
         fc.constantFrom(...STRATEGIES),
         fc.jsonValue(),
-        async (lists, taskName, strategy, input) => {
+        // No order (the default), or any order of one to three backends
+        fc.option(fc.shuffledSubarray(BACKENDS, { minLength: 1 }), {
+          nil: undefined
+        }),
+        async (lists, taskName, strategy, input, order) => {
           const configured = Object.fromEntries(
             Object.entries(lists).map(([name, tasks]) => [name, new Set(tasks)])
           ) as Partial<Record<BackendNameType, ReadonlySet<string>>>;
@@ -71,9 +76,10 @@ describe('dispatch properties', () => {
                 name,
                 backend(name as BackendNameType, tasks)
               ])
-            )
+            ),
+            { order }
           );
-          const pick = expected(configured, taskName, strategy);
+          const pick = expected(configured, taskName, strategy, order);
 
           if (pick === undefined) {
             await assert.rejects(

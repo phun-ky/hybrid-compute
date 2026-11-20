@@ -4,8 +4,10 @@ export * from './types.js';
 
 import { NoBackendError } from './errors.js';
 import {
+  BackendNameType,
   ExecutionStrategyType,
   HybridComputeOptionsInterface,
+  HybridComputeSettingsInterface,
   RunTaskOptionsInterface
 } from './types.js';
 
@@ -13,8 +15,12 @@ import {
 const BACKEND_NAMES = Object.freeze(['local', 'worker', 'remote'] as const);
 /** Every valid strategy. */
 const STRATEGIES: readonly string[] = Object.freeze(['auto', ...BACKEND_NAMES]);
-/** The order in which the auto strategy tries the backends. */
-const AUTO_ORDER = Object.freeze(['worker', 'local', 'remote'] as const);
+/** The order in which the auto strategy tries the backends, by default. */
+const AUTO_ORDER: readonly BackendNameType[] = Object.freeze([
+  'worker',
+  'local',
+  'remote'
+]);
 /** What a value is, for error messages: null, an array, or its typeof. */
 const describeValue = (value: unknown) => {
   if (value === null) return 'null';
@@ -81,6 +87,67 @@ const toBackends = (
 
   return Object.freeze(chosen);
 };
+/**
+ * Check the settings given to the constructor, and return a frozen copy of
+ * the order the auto strategy tries the backends in.
+ *
+ * @throws {TypeError} If `settings` isn't an object, or `order` isn't an
+ * array.
+ * @throws {RangeError} If `settings` has a key other than order, or `order`
+ * is empty, names something other than local, worker or remote, or names a
+ * backend twice.
+ */
+const toOrder = (settings: unknown): readonly BackendNameType[] => {
+  if (settings === undefined) return AUTO_ORDER;
+
+  if (
+    typeof settings !== 'object' ||
+    settings === null ||
+    Array.isArray(settings)
+  ) {
+    throw new TypeError(
+      `HybridCompute settings must be an object, got ${describeValue(settings)}`
+    );
+  }
+
+  for (const key of Object.keys(settings)) {
+    if (key !== 'order') {
+      throw new RangeError(`Unknown setting '${key}'; use order`);
+    }
+  }
+
+  const { order } = settings as HybridComputeSettingsInterface;
+
+  if (order === undefined) return AUTO_ORDER;
+
+  if (!Array.isArray(order)) {
+    throw new TypeError(
+      `order must be an array of backend names, got ${describeValue(order)}`
+    );
+  }
+
+  // An empty order would make auto reject every task, which is most likely a
+  // mistake
+  if (order.length === 0) {
+    throw new RangeError(
+      `order must name at least one backend: ${BACKEND_NAMES.join(', ')}`
+    );
+  }
+
+  order.forEach((name: unknown, index) => {
+    if (!(BACKEND_NAMES as readonly unknown[]).includes(name)) {
+      throw new RangeError(
+        `Unknown backend '${String(name)}' in order; use ${BACKEND_NAMES.join(', ')}`
+      );
+    }
+
+    if (order.indexOf(name as BackendNameType) !== index) {
+      throw new RangeError(`order names '${String(name)}' more than once`);
+    }
+  });
+
+  return Object.freeze([...order]);
+};
 
 /**
  * The HybridCompute class acts as an orchestrator to delegate compute tasks
@@ -90,9 +157,10 @@ const toBackends = (
  * - `'local'`, `'worker'`, `'remote'`: use that backend, if it is configured
  *   and its `canRun(taskName)` returns true.
  * - `'auto'` (the default): use the first backend whose `canRun(taskName)`
- *   returns true, in the order worker, local, remote.
+ *   returns true, in the order worker, local, remote, or the `order` setting.
  *
- * The constructor checks the backends it's given and keeps a frozen copy.
+ * The constructor checks the backends and settings it's given and keeps a
+ * frozen copy.
  * `createHybridCompute` is the usual way to create one.
  *
  * @example
@@ -119,28 +187,37 @@ const toBackends = (
  */
 export class HybridCompute {
   private readonly backends: Readonly<HybridComputeOptionsInterface>;
+  private readonly order: readonly BackendNameType[];
 
   /**
    * Creates a new HybridCompute orchestrator.
    *
    * @param backends - An object with at least one of the local, worker and
    * remote backends. A backend given as `undefined` is skipped.
+   * @param settings - Optional settings, such as the `order` the `auto`
+   * strategy tries the backends in.
    *
    * @throws {TypeError} If `backends` isn't an object, a backend lacks
-   * `canRun` or `runTask`, or no backend is given.
+   * `canRun` or `runTask`, or no backend is given; or if `settings` isn't an
+   * object, or `order` isn't an array.
    * @throws {RangeError} If `backends` has a key other than local, worker or
-   * remote.
+   * remote; or if `settings` has a key other than order, or `order` is empty,
+   * names an unknown backend or names one twice.
    */
-  constructor(backends: HybridComputeOptionsInterface) {
+  constructor(
+    backends: HybridComputeOptionsInterface,
+    settings?: HybridComputeSettingsInterface
+  ) {
     this.backends = toBackends(backends);
+    this.order = toOrder(settings);
   }
 
   /**
    * Runs a task using the specified execution strategy.
    *
    * With `'auto'`, it tries the worker, then the local, then the remote
-   * backend, and runs the task on the first whose `canRun(taskName)` returns
-   * true. With an explicit strategy, that backend must be configured and its
+   * backend, or those in the `order` setting, and runs the task on the first
+   * whose `canRun(taskName)` returns true. With an explicit strategy, that backend must be configured and its
    * `canRun(taskName)` must return true.
    *
    * @typeParam Input - The type of the input expected by the task.
@@ -216,7 +293,7 @@ export class HybridCompute {
     }
 
     if (strategy === 'auto') {
-      for (const name of AUTO_ORDER) {
+      for (const name of this.order) {
         const backend = this.backends[name];
 
         if (backend?.canRun(taskName)) {
@@ -259,18 +336,31 @@ export class HybridCompute {
  *
  * @param backends - An object with at least one of the local, worker and
  * remote backends.
+ * @param settings - Optional settings, such as the `order` the `auto`
+ * strategy tries the backends in.
  * @returns A new HybridCompute orchestrator.
  *
  * @throws {TypeError} If `backends` isn't an object, a backend lacks
- * `canRun` or `runTask`, or no backend is given.
+ * `canRun` or `runTask`, or no backend is given; or if `settings` isn't an
+ * object, or `order` isn't an array.
  * @throws {RangeError} If `backends` has a key other than local, worker or
- * remote.
+ * remote; or if `settings` has a key other than order, or `order` is empty,
+ * names an unknown backend or names one twice.
  *
  * @example
  * ```ts
  * const hybrid = createHybridCompute({ local: createLocalCompute() });
+ *
+ * // auto tries local first, then worker, and never remote
+ * const localFirst = createHybridCompute(
+ *   { local, worker, remote },
+ *   { order: ['local', 'worker'] }
+ * );
  * ```
  */
-export function createHybridCompute(backends: HybridComputeOptionsInterface) {
-  return new HybridCompute(backends);
+export function createHybridCompute(
+  backends: HybridComputeOptionsInterface,
+  settings?: HybridComputeSettingsInterface
+) {
+  return new HybridCompute(backends, settings);
 }
