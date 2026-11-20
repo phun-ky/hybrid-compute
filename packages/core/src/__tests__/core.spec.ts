@@ -432,6 +432,104 @@ describe('NoBackendError', () => {
   });
 });
 
+describe('the auto order', () => {
+  /** A backend that runs every task and answers with its own name. */
+  const named = (name: string): ComputeBackendInterface => ({
+    canRun: () => true,
+    runTask: async <Input, Output>() => name as unknown as Output
+  });
+  const all = () => ({
+    worker: named('worker'),
+    local: named('local'),
+    remote: named('remote')
+  });
+
+  test('auto follows the given order', async () => {
+    const compute = createHybridCompute(all(), {
+      order: ['local', 'remote', 'worker']
+    });
+
+    assert.strictEqual(await compute.runTask('a', 1), 'local');
+  });
+
+  test('a backend left out of the order is not used by auto, but still by its own strategy', async () => {
+    const compute = createHybridCompute(
+      { worker: named('worker'), remote: named('remote') },
+      { order: ['local', 'remote'] }
+    );
+
+    assert.strictEqual(await compute.runTask('a', 1, 'auto'), 'remote');
+    assert.strictEqual(await compute.runTask('a', 1, 'worker'), 'worker');
+    await assert.rejects(
+      createHybridCompute(
+        { worker: named('worker') },
+        { order: ['local'] }
+      ).runTask('a', 1),
+      NoBackendError
+    );
+  });
+
+  test('without settings or order, auto keeps worker, local, remote', async () => {
+    for (const settings of [undefined, {}, { order: undefined }]) {
+      assert.strictEqual(
+        await createHybridCompute(all(), settings).runTask('a', 1),
+        'worker'
+      );
+    }
+  });
+
+  test('changing the order array afterwards has no effect', async () => {
+    const order: ('local' | 'worker' | 'remote')[] = ['remote', 'local'];
+    const compute = createHybridCompute(all(), { order });
+
+    order.reverse();
+    assert.strictEqual(await compute.runTask('a', 1), 'remote');
+  });
+
+  test('invalid settings throw with a clear message', () => {
+    const cases: [unknown, string, string][] = [
+      [null, 'TypeError', 'HybridCompute settings must be an object, got null'],
+      [
+        [],
+        'TypeError',
+        'HybridCompute settings must be an object, got an array'
+      ],
+      [{ ordre: [] }, 'RangeError', "Unknown setting 'ordre'; use order"],
+      [
+        { order: 'local' },
+        'TypeError',
+        'order must be an array of backend names, got string'
+      ],
+      [
+        { order: [] },
+        'RangeError',
+        'order must name at least one backend: local, worker, remote'
+      ],
+      [
+        { order: ['local', 'auto'] },
+        'RangeError',
+        "Unknown backend 'auto' in order; use local, worker, remote"
+      ],
+      [
+        { order: ['local', 'worker', 'local'] },
+        'RangeError',
+        "order names 'local' more than once"
+      ]
+    ];
+
+    for (const [settings, name, message] of cases) {
+      assert.throws(
+        () =>
+          createHybridCompute(
+            all(),
+            settings as Parameters<typeof createHybridCompute>[1]
+          ),
+        { name, message }
+      );
+    }
+  });
+});
+
 describe('createHybridCompute', () => {
   test('returns HybridCompute instance', () => {
     const instance = createHybridCompute({ local: createMockBackend() });

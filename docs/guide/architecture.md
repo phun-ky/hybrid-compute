@@ -28,7 +28,10 @@ an application installs `core` plus only the backends it uses.
 - **`local`, `worker` or `remote`:** that backend runs the task, if it is
   configured and its `canRun(taskName)` is true.
 - **`auto`:** the first backend whose `canRun(taskName)` is true, in the order
-  worker, local, remote.
+  worker, local, remote. To change it, pass an `order` as the second argument:
+  `createHybridCompute({ local, worker, remote }, { order: ['local', 'worker'] })`
+  tries local first, then worker, and never remote. A backend left out of
+  `order` can still run tasks with its own strategy.
 - **No match:** `runTask` rejects with a `NoBackendError`, which has the
   `taskName` and `strategy` as properties.
 

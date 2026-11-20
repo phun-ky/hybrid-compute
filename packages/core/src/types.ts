@@ -2,7 +2,7 @@
  * The strategy used to determine which compute backend to use.
  *
  * - `auto`: the first backend whose `canRun` returns true, in the order
- *   worker, local, remote.
+ *   worker, local, remote, or the `order` given to `createHybridCompute`.
  * - `local`: the local backend, which runs tasks on the calling thread.
  * - `worker`: the worker backend, which runs tasks in a Web Worker.
  * - `remote`: the remote backend, which sends tasks to a server or service.
@@ -131,4 +131,31 @@ export interface HybridComputeOptionsInterface {
   local?: ComputeBackendInterface;
   worker?: ComputeBackendInterface;
   remote?: ComputeBackendInterface;
+}
+
+/**
+ * The name of a backend: its key in the backends object, and its strategy.
+ */
+export type BackendNameType = Exclude<ExecutionStrategyType, 'auto'>;
+
+/**
+ * Settings for the HybridCompute orchestrator, the second argument to
+ * `createHybridCompute`.
+ *
+ * @property order - The backends the `auto` strategy tries, in order.
+ * Defaults to `['worker', 'local', 'remote']`. Each name may appear once. A
+ * backend left out is never used by `auto`, but can still be used with its
+ * own strategy.
+ *
+ * @example
+ * ```ts
+ * // Cheap local work first, and the network only if nothing else can
+ * const compute = createHybridCompute(
+ *   { local, worker, remote },
+ *   { order: ['local', 'worker', 'remote'] }
+ * );
+ * ```
+ */
+export interface HybridComputeSettingsInterface {
+  order?: readonly BackendNameType[];
 }

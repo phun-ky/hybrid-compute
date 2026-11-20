@@ -424,8 +424,18 @@ imports no backend.
 
 With `local`, `worker` or `remote`, core uses that backend if it is set and its
 `canRun(name)` is true. With `auto`, it uses the first backend whose
-`canRun(name)` is true, in the order worker, local, remote. If nothing matches,
-`runTask` rejects with an `Error`.
+`canRun(name)` is true, in the order worker, local, remote, or the `order` you
+give `createHybridCompute`:
+
+```ts
+// auto tries local first, then worker, and never remote
+const compute = createHybridCompute(
+  { local, worker, remote },
+  { order: ['local', 'worker'] }
+);
+```
+
+If nothing matches, `runTask` rejects with a `NoBackendError`.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./docs/public/diagrams/dispatch-dark.png">
