@@ -133,6 +133,7 @@
   "overrides": {
     "vitepress": {
       "vite": "^6.4.5"
-    }
+    },
+    "proxy-agent": "^8.0.3"
   }
 }
