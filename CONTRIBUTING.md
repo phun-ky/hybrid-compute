@@ -123,8 +123,11 @@ behaviour you'd like instead, and explains why it would be useful to most users.
 
 Set up the project as described in the
 [development guide](https://phun-ky.net/hybrid-compute/guide/development):
-`npm install`, `npm run build`, then `npm test`. Larger changes are best
-discussed in an issue first, so the work fits the [roadmap](ROADMAP.md).
+`npm install`, `npm run build`, then `npm test`. The
+[architecture guide](https://phun-ky.net/hybrid-compute/guide/architecture)
+explains how the packages fit together and how a task is dispatched. Larger
+changes are best discussed in an issue first, so the work fits the
+[roadmap](ROADMAP.md).
 
 #### Coding Style
 
@@ -194,10 +197,10 @@ by Dependabot are exempt.
   of release banners in `docs/public/images`: banner, og, square and portrait,
   each at 1x and 2x. Write the content in `scripts/banners/<release>.mjs` (copy
   the previous one) and run `npm run banners -- <release>`.
-- The README shows the docs site's diagrams as images in `docs/public/diagrams`.
-  After changing a diagram in `docs/.vitepress/theme/components/diagrams`, its
-  `arch-*` styles or the tokens, run `npm run render:diagrams` and commit the
-  images with the change.
+- The docs site's diagrams are also rendered as images in
+  `docs/public/diagrams`. After changing a diagram in
+  `docs/.vitepress/theme/components/diagrams`, its `arch-*` styles or the
+  tokens, run `npm run render:diagrams` and commit the images with the change.
 - Don't commit regenerated API docs (`docs/api`); each release regenerates them.
   Run `npm run docs:check` instead.
 - Open a pull request against `main`. The Checks workflow builds, lints,
