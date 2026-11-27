@@ -4,7 +4,7 @@ WorkerTaskMessageInterface
 # Interface: WorkerTaskMessageInterface\<Input = `unknown`>
 
 Defined in:
-[packages/worker/src/types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L51)
+[packages/worker/src/types.ts:57](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L57)
 
 What the worker script receives for each task: the task name, its input and an
 `id`, which the reply must repeat. The input is copied with the structured clone
@@ -39,7 +39,7 @@ id: number;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L52)
+[packages/worker/src/types.ts:58](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L58)
 
 ---
 
@@ -50,7 +50,7 @@ input: Input;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:54](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L54)
+[packages/worker/src/types.ts:60](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L60)
 
 ---
 
@@ -61,4 +61,4 @@ task: string;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:53](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L53)
+[packages/worker/src/types.ts:59](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L59)

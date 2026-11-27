@@ -4,7 +4,7 @@ ThreadedComputeOptionsInterface
 # Interface: ThreadedComputeOptionsInterface
 
 Defined in:
-[packages/worker/src/types.ts:32](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L32)
+[packages/worker/src/types.ts:37](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L37)
 
 Options for [createThreadedCompute](../functions/createThreadedCompute.md). Give
 exactly one of `url` and `createWorker`.
@@ -31,7 +31,7 @@ canRunTasks: readonly string[];
 ```
 
 Defined in:
-[packages/worker/src/types.ts:35](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L35)
+[packages/worker/src/types.ts:40](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L40)
 
 The tasks the worker script can run. Only these are sent to it.
 
@@ -44,7 +44,7 @@ createWorker?: () => Worker;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:33](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L33)
+[packages/worker/src/types.ts:38](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L38)
 
 A function that returns a new module `Worker`. Use it with a bundler: Vite and
 webpack build the worker script only when they see
@@ -65,7 +65,7 @@ timeout?: number;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:36](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L36)
+[packages/worker/src/types.ts:41](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L41)
 
 How long to wait for a reply, in milliseconds, before rejecting with a
 `WorkerTaskError`. Defaults to `0`: no timeout, since workers are for long
@@ -80,7 +80,23 @@ url?: string | URL;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:34](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L34)
+[packages/worker/src/types.ts:39](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L39)
 
 The worker script, for a script served as it is, without a bundler. It's started
 as a module worker.
+
+---
+
+### workers?
+
+```ts
+workers?: number;
+```
+
+Defined in:
+[packages/worker/src/types.ts:42](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L42)
+
+How many workers may run at once. Defaults to `1`. More workers run tasks in
+parallel on more cores, but each loads its own copy of the worker script;
+`navigator.hardwareConcurrency` (or `os.availableParallelism()` in Node.js) is a
+common upper bound. Workers start only when the running ones are all busy.
