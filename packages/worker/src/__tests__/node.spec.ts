@@ -187,12 +187,22 @@ describe('@hybrid-compute/worker/node', () => {
           threaded.runTask('waitForAbort', 1),
           isWorkerError(/timed out after 50 ms/)
         );
-        assert.equal(
-          await threaded.runTask('abortedCount', undefined, {
-            signal: AbortSignal.timeout(5000)
-          }),
-          1
-        );
+
+        // The 50 ms timeout covers every call, and starting the worker can
+        // take longer under load, so retry the count while it times out
+        const deadline = Date.now() + 5000;
+
+        let count: unknown;
+
+        while (count === undefined && Date.now() < deadline) {
+          count = await threaded
+            .runTask('abortedCount', undefined)
+            .catch((error: unknown) => {
+              if (!isWorkerError(/timed out/)(error)) throw error;
+            });
+        }
+
+        assert.equal(count, 1);
       }
     );
   });
