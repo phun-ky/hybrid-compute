@@ -4,12 +4,13 @@ RemoteTaskResponseInterface
 # Interface: RemoteTaskResponseInterface\<Output = `unknown`>
 
 Defined in:
-[packages/remote/src/types.ts:80](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L80)
+[packages/remote/src/types.ts:121](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L121)
 
 What the remote service sends back: a JSON object with either a `result` or an
-`error`, plus the request's `id` for the WebSocket transport. An `error` (a
-message string, or an object with a `message`) rejects the task with a
-`RemoteTaskError`; a fetch reply must also have a 2xx status.
+`error`, plus the request's `id` for the WebSocket transport and in batches,
+where the reply is a JSON array of these. An `error` (a message string, or an
+object with a `message`) rejects the task with a `RemoteTaskError`; a fetch
+reply must also have a 2xx status.
 
 ## Example
 
@@ -32,7 +33,7 @@ error?: unknown;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:83](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L83)
+[packages/remote/src/types.ts:124](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L124)
 
 ---
 
@@ -43,7 +44,7 @@ id?: number;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:81](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L81)
+[packages/remote/src/types.ts:122](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L122)
 
 ---
 
@@ -54,4 +55,4 @@ result?: Output;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:82](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L82)
+[packages/remote/src/types.ts:123](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L123)

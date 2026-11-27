@@ -4,11 +4,11 @@ RemoteTaskRequestInterface
 # Interface: RemoteTaskRequestInterface\<Input = `unknown`>
 
 Defined in:
-[packages/remote/src/types.ts:63](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L63)
+[packages/remote/src/types.ts:103](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L103)
 
 What the remote service receives for each task: a JSON object with the task name
-and its input. The WebSocket transport adds an `id`, which the reply must
-repeat.
+and its input. The WebSocket transport and batches add an `id`, which the reply
+must repeat. A batch is a JSON array of these.
 
 ## Example
 
@@ -31,7 +31,7 @@ id?: number;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:66](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L66)
+[packages/remote/src/types.ts:106](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L106)
 
 ---
 
@@ -42,7 +42,7 @@ input: Input;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:65](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L65)
+[packages/remote/src/types.ts:105](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L105)
 
 ---
 
@@ -53,4 +53,4 @@ task: string;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:64](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L64)
+[packages/remote/src/types.ts:104](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L104)

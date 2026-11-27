@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%401.1.0...%40hybrid-compute%2Fremote%401.2.0) (2026-11-27)
+
+### Feature
+
+* 🎸 send remote fetch tasks in batches, for servers that accept them ([5c9c618](https://github.com/phun-ky/hybrid-compute/commit/5c9c618cd3092b46fa6e164d3f47802257c36903))
+
 ## [1.1.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%401.0.0...%40hybrid-compute%2Fremote%401.1.0) (2026-11-27)
 
 ### Tasks

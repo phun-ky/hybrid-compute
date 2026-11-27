@@ -4,7 +4,7 @@ RemoteCompute
 # Class: RemoteCompute
 
 Defined in:
-[packages/remote/src/index.ts:206](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L206)
+[packages/remote/src/index.ts:282](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L282)
 
 RemoteCompute is a backend that sends tasks to a remote service, over HTTP with
 fetch or over a WebSocket.
@@ -12,8 +12,10 @@ fetch or over a WebSocket.
 Each task is one JSON request and one JSON reply; see
 [RemoteTaskRequestInterface](../interfaces/RemoteTaskRequestInterface.md) and
 [RemoteTaskResponseInterface](../interfaces/RemoteTaskResponseInterface.md) for
-the message format. Every failure (an `error` in the reply, an unusable
-response, a timeout, an unreachable server) rejects with a
+the message format. With the `batch` option, the fetch transport sends the tasks
+started close together as one request holding an array of them, and expects an
+array of replies. Every failure (an `error` in the reply, an unusable response,
+a timeout, an unreachable server) rejects with a
 [RemoteTaskError](RemoteTaskError.md).
 
 The WebSocket transport connects on the first task, not when it's created,
@@ -66,7 +68,7 @@ new RemoteCompute(options: RemoteComputeOptionsInterface): RemoteCompute;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:225](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L225)
+[packages/remote/src/index.ts:303](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L303)
 
 Creates the backend. It checks the options, and does no network I/O until the
 first task.
@@ -77,8 +79,8 @@ first task.
 
 [`RemoteComputeOptionsInterface`](../interfaces/RemoteComputeOptionsInterface.md)
 
-The transport, endpoint, allowed tasks and, optionally, a timeout and fetch
-headers.
+The transport, endpoint, allowed tasks and, optionally, a timeout, and fetch
+headers and batching.
 
 #### Returns
 
@@ -90,8 +92,8 @@ For a missing or wrongly typed option.
 
 #### Throws
 
-For an unknown transport, an endpoint with the wrong URL scheme, or a negative
-timeout.
+For an unknown transport, an endpoint with the wrong URL scheme, a negative
+timeout or wait, or a batch size below 1.
 
 ## Methods
 
@@ -102,7 +104,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:236](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L236)
+[packages/remote/src/index.ts:314](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L314)
 
 Determines if this backend may run the given task.
 
@@ -133,7 +135,7 @@ close(): void;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:281](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L281)
+[packages/remote/src/index.ts:363](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L363)
 
 Closes the WebSocket, if one is open or opening. Tasks still waiting for a reply
 reject with a [RemoteTaskError](RemoteTaskError.md). The next task opens a new
@@ -156,7 +158,7 @@ runTask<Input, Output>(
 ```
 
 Defined in:
-[packages/remote/src/index.ts:260](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L260)
+[packages/remote/src/index.ts:338](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L338)
 
 Sends a task to the remote service and waits for its reply.
 

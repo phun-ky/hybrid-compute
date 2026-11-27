@@ -10,6 +10,7 @@
 
 ## Interfaces
 
+- [RemoteBatchOptionsInterface](interfaces/RemoteBatchOptionsInterface.md)
 - [RemoteComputeOptionsInterface](interfaces/RemoteComputeOptionsInterface.md)
 - [RemoteProgressMessageInterface](interfaces/RemoteProgressMessageInterface.md)
 - [RemoteTaskRequestInterface](interfaces/RemoteTaskRequestInterface.md)

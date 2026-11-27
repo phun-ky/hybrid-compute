@@ -4,7 +4,7 @@ RemoteComputeOptionsInterface
 # Interface: RemoteComputeOptionsInterface
 
 Defined in:
-[packages/remote/src/types.ts:45](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L45)
+[packages/remote/src/types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L48)
 
 Options for [createRemoteCompute](../functions/createRemoteCompute.md).
 
@@ -22,6 +22,20 @@ const options: RemoteComputeOptionsInterface = {
 
 ## Properties
 
+### batch?
+
+```ts
+batch?: RemoteBatchOptionsInterface;
+```
+
+Defined in:
+[packages/remote/src/types.ts:54](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L54)
+
+Sends tasks in batches, for the fetch transport only, to a server that accepts
+them: see [RemoteBatchOptionsInterface](RemoteBatchOptionsInterface.md).
+
+---
+
 ### canRunTasks
 
 ```ts
@@ -29,7 +43,7 @@ canRunTasks: readonly string[] | "*";
 ```
 
 Defined in:
-[packages/remote/src/types.ts:48](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L48)
+[packages/remote/src/types.ts:51](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L51)
 
 The tasks this backend may run, or `'*'` for every task. Every task it accepts
 is sent over the network, so with the `auto` strategy, `'*'` means any task no
@@ -44,7 +58,7 @@ endpoint: string;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:47](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L47)
+[packages/remote/src/types.ts:50](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L50)
 
 The URL to send tasks to: `http:` or `https:` for fetch (a relative URL works in
 a browser page), `ws:` or `wss:` for WebSocket.
@@ -58,7 +72,7 @@ headers?: RemoteHeadersType;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:50](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L50)
+[packages/remote/src/types.ts:53](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L53)
 
 Extra request headers for the fetch transport.
 
@@ -71,7 +85,7 @@ timeout?: number;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L49)
+[packages/remote/src/types.ts:52](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L52)
 
 How long to wait for a reply, in milliseconds, before rejecting with a
 `RemoteTaskError`. Defaults to 30000; `0` waits forever.
@@ -85,6 +99,6 @@ transport: RemoteTransportType;
 ```
 
 Defined in:
-[packages/remote/src/types.ts:46](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L46)
+[packages/remote/src/types.ts:49](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/types.ts#L49)
 
 `'fetch'` or `'websocket'`.
