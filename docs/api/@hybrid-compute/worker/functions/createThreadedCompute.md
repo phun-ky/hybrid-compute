@@ -10,7 +10,7 @@ function createThreadedCompute(
 ```
 
 Defined in:
-[packages/worker/src/index.ts:446](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L446)
+[packages/worker/src/index.ts:463](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L463)
 
 Creates a ThreadedCompute backend.
 

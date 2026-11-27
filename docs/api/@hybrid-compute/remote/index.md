@@ -11,6 +11,7 @@
 ## Interfaces
 
 - [RemoteComputeOptionsInterface](interfaces/RemoteComputeOptionsInterface.md)
+- [RemoteProgressMessageInterface](interfaces/RemoteProgressMessageInterface.md)
 - [RemoteTaskRequestInterface](interfaces/RemoteTaskRequestInterface.md)
 - [RemoteTaskResponseInterface](interfaces/RemoteTaskResponseInterface.md)
 

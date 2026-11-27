@@ -11,7 +11,7 @@ function createHybridCompute(
 ```
 
 Defined in:
-[packages/core/src/index.ts:361](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L361)
+[packages/core/src/index.ts:376](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/index.ts#L376)
 
 Create a HybridCompute orchestrator: the usual way to start.
 

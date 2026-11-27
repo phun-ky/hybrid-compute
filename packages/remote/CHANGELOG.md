@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%401.0.0...%40hybrid-compute%2Fremote%401.1.0) (2026-11-27)
+
+### Tasks
+
+* 🤖 lint the Markdown itself, on ESLint 10 ([123ba45](https://github.com/phun-ky/hybrid-compute/commit/123ba4501d8c51adb285ea3464715dd1f2427281)), closes [#141](https://github.com/phun-ky/hybrid-compute/issues/141)
+
+### Documentation
+
+* ✏️ point each package README's npm badges at its own package ([45c6641](https://github.com/phun-ky/hybrid-compute/commit/45c66417a9749f8839e8425ac54802a374fa7ac7)), closes [#159](https://github.com/phun-ky/hybrid-compute/issues/159)
+* ✏️ README: drop the Ukraine note ([35c926f](https://github.com/phun-ky/hybrid-compute/commit/35c926f97eb84cb120a3149bad913b4926aa3f22))
+* ✏️ say the remote README's relative endpoint needs a browser page ([0a60cad](https://github.com/phun-ky/hybrid-compute/commit/0a60cad5058edf5954be8b73467eb44a6a329f28)), closes [#148](https://github.com/phun-ky/hybrid-compute/issues/148)
+
+### Feature
+
+* 🎸 transfer buffers to and from workers, and report task progress ([7db3ded](https://github.com/phun-ky/hybrid-compute/commit/7db3ded6c9a952526a13f3ec9cbc9d054992d768))
+
 ## [1.0.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fremote%400.39.0...%40hybrid-compute%2Fremote%401.0.0) (2026-10-20)
 
 ### Tasks

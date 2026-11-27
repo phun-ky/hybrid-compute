@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%401.1.0...%40hybrid-compute%2Fcore%401.2.0) (2026-11-27)
+
+### Documentation
+
+* ✏️ README: drop the Ukraine note ([35c926f](https://github.com/phun-ky/hybrid-compute/commit/35c926f97eb84cb120a3149bad913b4926aa3f22))
+
+### Feature
+
+* 🎸 transfer buffers to and from workers, and report task progress ([7db3ded](https://github.com/phun-ky/hybrid-compute/commit/7db3ded6c9a952526a13f3ec9cbc9d054992d768))
+
 ## [1.1.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fcore%401.0.0...%40hybrid-compute%2Fcore%401.1.0) (2026-11-20)
 
 ### Tasks

@@ -11,7 +11,7 @@ function exposeTasks(
 ```
 
 Defined in:
-[packages/worker/src/expose.ts:87](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/expose.ts#L87)
+[packages/worker/src/expose.ts:136](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/expose.ts#L136)
 
 Answers tasks from [ThreadedCompute](../classes/ThreadedCompute.md) in a worker
 script: it listens for task messages, runs the task with that name, and replies
@@ -19,7 +19,9 @@ with its result, or with an error if the task throws, rejects or doesn't exist.
 
 Each task gets the input and a context with a `signal`, which aborts when the
 caller cancels the task or its timeout passes. A task that checks the signal can
-stop early; its reply is then not sent.
+stop early; its reply is then not sent. The context's `progress` sends a value
+to the caller's `onProgress`; it throws a `DataCloneError` if the value can't be
+copied, and does nothing once the task is cancelled.
 
 ## Parameters
 

@@ -4,7 +4,7 @@ ComputeTaskInterface
 # Interface: ComputeTaskInterface\<Input = `unknown`, Output = `unknown`>
 
 Defined in:
-[packages/core/src/types.ts:73](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L73)
+[packages/core/src/types.ts:99](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L99)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ name: string;
 ```
 
 Defined in:
-[packages/core/src/types.ts:74](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L74)
+[packages/core/src/types.ts:100](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L100)
 
 ## Methods
 
@@ -38,7 +38,7 @@ run(input: Input, context?: TaskContextInterface):
 ```
 
 Defined in:
-[packages/core/src/types.ts:75](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L75)
+[packages/core/src/types.ts:101](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L101)
 
 #### Parameters
 

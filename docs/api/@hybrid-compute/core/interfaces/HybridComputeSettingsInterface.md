@@ -4,7 +4,7 @@ HybridComputeSettingsInterface
 # Interface: HybridComputeSettingsInterface
 
 Defined in:
-[packages/core/src/types.ts:159](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L159)
+[packages/core/src/types.ts:185](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L185)
 
 Settings for the HybridCompute orchestrator, the second argument to
 `createHybridCompute`.
@@ -28,7 +28,7 @@ order?: readonly BackendNameType[];
 ```
 
 Defined in:
-[packages/core/src/types.ts:160](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L160)
+[packages/core/src/types.ts:186](https://github.com/phun-ky/hybrid-compute/blob/main/packages/core/src/types.ts#L186)
 
 The backends the `auto` strategy tries, in order. Defaults to
 `['worker', 'local', 'remote']`. Each name may appear once. A backend left out
