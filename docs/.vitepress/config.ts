@@ -209,6 +209,7 @@ export default defineConfig({
           items: [
             { text: 'Local', link: '/guide/usage/local' },
             { text: 'Remote', link: '/guide/usage/remote' },
+            { text: 'Remote protocol', link: '/guide/protocol' },
             { text: 'Worker', link: '/guide/usage/worker' },
             { text: 'WebAssembly', link: '/guide/usage/wasm' }
           ]
