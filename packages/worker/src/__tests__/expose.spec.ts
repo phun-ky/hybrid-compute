@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import test, { describe } from 'node:test';
 
-import { exposeTasks, WorkerScopeInterface, WorkerTaskType } from '..';
+import {
+  exposeTasks,
+  transfer,
+  WorkerScopeInterface,
+  WorkerTaskType
+} from '..';
 
 /** A scope that records replies, and sends messages to the listener. */
 const createScope = (postMessage?: (message: unknown) => void) => {
@@ -23,6 +28,46 @@ const createScope = (postMessage?: (message: unknown) => void) => {
 };
 const tasks = (value: unknown) =>
   value as unknown as Record<string, WorkerTaskType>;
+
+describe('transfer', () => {
+  test('returns the value, and throws a TypeError for a non-object or a non-array list', () => {
+    const value = { buffer: new ArrayBuffer(1) };
+
+    assert.equal(transfer(value, [value.buffer]), value);
+    assert.throws(() => transfer(1 as unknown as object, []), {
+      name: 'TypeError',
+      message: /got number/
+    });
+    assert.throws(() => transfer({}, 'buffer' as unknown as Transferable[]), {
+      name: 'TypeError',
+      message: /got string/
+    });
+  });
+
+  test('sends the marked result with its transfer list, and other results without one', async () => {
+    const calls: unknown[][] = [];
+    const { scope, send, settled } = createScope();
+
+    scope.postMessage = (...args: unknown[]) => calls.push(args);
+
+    const buffer = new ArrayBuffer(2);
+
+    exposeTasks(
+      {
+        marked: () => transfer({ buffer }, [buffer]),
+        plain: () => 1
+      },
+      scope
+    );
+    send({ id: 1, task: 'marked' });
+    send({ id: 2, task: 'plain' });
+    await settled();
+    assert.deepEqual(calls, [
+      [{ id: 1, result: { buffer } }, [buffer]],
+      [{ id: 2, result: 1 }, undefined]
+    ]);
+  });
+});
 
 describe('exposeTasks', () => {
   test('throws a TypeError for something that is not an object of functions', () => {

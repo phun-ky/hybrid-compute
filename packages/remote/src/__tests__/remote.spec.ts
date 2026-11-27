@@ -427,6 +427,39 @@ describe('websocket transport', () => {
     assert.equal(await remote.runTask('echo', 'still works'), 'still works');
     remote.close();
   });
+
+  test('passes progress messages to onProgress before the result', async () => {
+    const remote = socketTo();
+    const seen: unknown[] = [];
+
+    assert.equal(
+      await remote.runTask('progress', [25, 50], {
+        onProgress: (value) => seen.push(value)
+      }),
+      'done'
+    );
+    assert.deepEqual(seen, [25, 50]);
+    // Without onProgress, progress messages are still not the reply
+    assert.equal(await remote.runTask('progress', [1]), 'done');
+    remote.close();
+  });
+
+  test('rejects with the error onProgress throws, and ignores the rest', async () => {
+    const remote = socketTo();
+    const failure = new Error('bad progress');
+
+    await assert.rejects(
+      () =>
+        remote.runTask('progress', [1, 2], {
+          onProgress: () => {
+            throw failure;
+          }
+        }),
+      (error) => error === failure
+    );
+    assert.equal(await remote.runTask('echo', 'still works'), 'still works');
+    remote.close();
+  });
 });
 
 describe('createRemoteCompute', () => {

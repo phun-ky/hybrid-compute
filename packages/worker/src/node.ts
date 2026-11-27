@@ -63,7 +63,12 @@ class ThreadWorker extends EventTarget {
     super();
     thread.unref();
     thread.on('message', (data: unknown) => {
-      if (isPlainObject(data) && typeof data.id === 'number') {
+      // A progress message isn't the reply: keep the thread alive for it
+      if (
+        isPlainObject(data) &&
+        typeof data.id === 'number' &&
+        !('progress' in data)
+      ) {
         this.settle(data.id);
       }
 
@@ -92,8 +97,11 @@ class ThreadWorker extends EventTarget {
     );
   }
 
-  postMessage(message: unknown) {
-    this.thread.postMessage(message);
+  postMessage(message: unknown, transfer?: Transferable[]) {
+    this.thread.postMessage(
+      message,
+      transfer as Parameters<Thread['postMessage']>[1]
+    );
 
     if (!isPlainObject(message) || typeof message.id !== 'number') return;
 

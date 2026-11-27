@@ -169,6 +169,77 @@ describe('cancelling with an AbortSignal', () => {
   });
 });
 
+describe('progress', () => {
+  test('passes progress to onProgress until the task settles', async () => {
+    const compute = new LocalCompute();
+    const seen: unknown[] = [];
+    let report: (value: unknown) => void = () => {};
+
+    compute.registerTask({
+      name: 'steps',
+      run: async (_input: unknown, context) => {
+        report = context!.progress!;
+        report(1);
+        await Promise.resolve();
+        report(2);
+
+        return 'done';
+      }
+    });
+
+    assert.strictEqual(
+      await compute.runTask('steps', undefined, {
+        onProgress: (value) => seen.push(value)
+      }),
+      'done'
+    );
+    report(3);
+    assert.deepStrictEqual(seen, [1, 2]);
+  });
+
+  test('drops progress once the signal aborts', async () => {
+    const compute = new LocalCompute();
+    const controller = new AbortController();
+    const seen: unknown[] = [];
+    let report: (value: unknown) => void = () => {};
+
+    compute.registerTask({
+      name: 'wait',
+      run: (_input: unknown, context) => {
+        report = context!.progress!;
+
+        return new Promise(() => {});
+      }
+    });
+
+    const pending = compute.runTask('wait', undefined, {
+      signal: controller.signal,
+      onProgress: (value) => seen.push(value)
+    });
+
+    report('before');
+    controller.abort();
+    report('after');
+    await assert.rejects(pending, { name: 'AbortError' });
+    assert.deepStrictEqual(seen, ['before']);
+  });
+
+  test('gives every task a progress function, even without onProgress', async () => {
+    const compute = new LocalCompute();
+
+    compute.registerTask({
+      name: 'report',
+      run: (_input: unknown, context) => {
+        context!.progress!(1);
+
+        return typeof context!.progress;
+      }
+    });
+
+    assert.strictEqual(await compute.runTask('report', undefined), 'function');
+  });
+});
+
 describe('registerTask validation', () => {
   test('throws a TypeError for something that is not a task object', () => {
     const compute = new LocalCompute();

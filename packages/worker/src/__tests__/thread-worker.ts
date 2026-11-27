@@ -37,8 +37,11 @@ export class ThreadWorker extends EventTarget {
     });
   }
 
-  postMessage(message: unknown) {
-    this.thread.postMessage(message);
+  postMessage(message: unknown, transfer?: Transferable[]) {
+    this.thread.postMessage(
+      message,
+      transfer as Parameters<Thread['postMessage']>[1]
+    );
   }
 
   terminate() {

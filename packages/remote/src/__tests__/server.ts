@@ -144,7 +144,11 @@ export const startTestServer = async (): Promise<TestServerType> => {
           socket.write(frame(JSON.stringify(value)));
 
         if (task === 'echo') reply({ id, result: input });
-        else if (task === 'fail') reply({ id, error: 'task failed' });
+        else if (task === 'progress') {
+          for (const step of input) reply({ id, progress: step });
+
+          reply({ id, result: 'done' });
+        } else if (task === 'fail') reply({ id, error: 'task failed' });
         else if (task === 'malformed') socket.write(frame('this is not json'));
         else if (task === 'null') socket.write(frame('null'));
         else if (task === 'stranger') reply({ id: 9999, result: 'not yours' });

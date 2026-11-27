@@ -82,3 +82,19 @@ export interface RemoteTaskResponseInterface<Output = unknown> {
   result?: Output;
   error?: unknown;
 }
+
+/**
+ * What a WebSocket server may send while a task runs, before its reply: the
+ * request's `id` and a `progress` value, passed to the caller's `onProgress`.
+ * Any message with a `progress` key is one of these. It doesn't reset the
+ * timeout. The fetch transport has no progress messages.
+ *
+ * @example
+ * ```json
+ * { "id": 1, "progress": 50 }
+ * ```
+ */
+export interface RemoteProgressMessageInterface {
+  id: number;
+  progress: unknown;
+}

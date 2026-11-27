@@ -223,6 +223,45 @@ describe('@hybrid-compute/worker/node', () => {
     );
   });
 
+  test('transfers buffers both ways, and shares a SharedArrayBuffer', async () => {
+    await using(
+      { url: fixture('plain'), canRunTasks: ['invert', 'increment'] },
+      async (threaded) => {
+        const bytes = new Uint8Array([0, 10, 255]);
+        const inverted = await threaded.runTask<Uint8Array, Uint8Array>(
+          'invert',
+          bytes,
+          { transfer: [bytes.buffer] }
+        );
+
+        assert.equal(bytes.byteLength, 0);
+        assert.deepEqual([...inverted], [255, 245, 0]);
+
+        const counter = new Int32Array(new SharedArrayBuffer(4));
+
+        assert.equal(await threaded.runTask('increment', counter), 1);
+        assert.equal(counter[0], 1);
+      }
+    );
+  });
+
+  test('passes progress to onProgress before the result', async () => {
+    await using(
+      { url: fixture('plain'), canRunTasks: ['steps'] },
+      async (threaded) => {
+        const seen: unknown[] = [];
+
+        assert.equal(
+          await threaded.runTask('steps', 3, {
+            onProgress: (step) => seen.push(step)
+          }),
+          'done'
+        );
+        assert.deepEqual(seen, [1, 2, 3]);
+      }
+    );
+  });
+
   test('lets the process exit when no task is waiting, without close()', () => {
     // Inherit tsx's loader, so the child can run the TypeScript fixture
     const output = execFileSync(
@@ -231,6 +270,6 @@ describe('@hybrid-compute/worker/node', () => {
       { encoding: 'utf8', timeout: 10_000 }
     );
 
-    assert.equal(output.trim(), '42');
+    assert.equal(output.trim(), '42\nstep 1\nstep 2\ndone');
   });
 });

@@ -289,6 +289,21 @@ export class HybridCompute {
       }
 
       // Already cancelled: don't start anything
+      if (
+        options.onProgress !== undefined &&
+        typeof options.onProgress !== 'function'
+      ) {
+        throw new TypeError(
+          `options.onProgress must be a function, got ${describeValue(options.onProgress)}`
+        );
+      }
+
+      if (options.transfer !== undefined && !Array.isArray(options.transfer)) {
+        throw new TypeError(
+          `options.transfer must be an array, got ${describeValue(options.transfer)}`
+        );
+      }
+
       if (signal?.aborted) throw signal.reason;
     }
 

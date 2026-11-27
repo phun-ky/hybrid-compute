@@ -156,19 +156,32 @@ export class LocalCompute implements ComputeBackendInterface {
     // Already cancelled: don't start the task
     if (signal?.aborted) throw signal.reason;
 
-    const result = task.run(input, { signal });
+    const onProgress = options?.onProgress;
 
-    if (!signal) return (await result) as Output;
+    let settled = false;
 
-    // Settle with the task, or with the signal's reason if it aborts first
-    return new Promise<Output>((resolve, reject) => {
-      const onAbort = () => reject(signal.reason);
+    // Progress after the caller has its answer would be a surprise: drop it
+    const progress = (value: unknown) => {
+      if (!settled && !signal?.aborted) onProgress?.(value);
+    };
 
-      signal.addEventListener('abort', onAbort, { once: true });
-      Promise.resolve(result)
-        .then((value) => resolve(value as Output), reject)
-        .finally(() => signal.removeEventListener('abort', onAbort));
-    });
+    try {
+      const result = task.run(input, { signal, progress });
+
+      if (!signal) return (await result) as Output;
+
+      // Settle with the task, or with the signal's reason if it aborts first
+      return await new Promise<Output>((resolve, reject) => {
+        const onAbort = () => reject(signal.reason);
+
+        signal.addEventListener('abort', onAbort, { once: true });
+        Promise.resolve(result)
+          .then((value) => resolve(value as Output), reject)
+          .finally(() => signal.removeEventListener('abort', onAbort));
+      });
+    } finally {
+      settled = true;
+    }
   }
 }
 

@@ -45,6 +45,15 @@ export type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
  * @property signal - Cancels the task: when it aborts, `runTask` rejects with
  * the signal's reason. A backend stops waiting for the result; whether the
  * work itself stops depends on the backend and the task.
+ * @property onProgress - Called with each value the task reports through
+ * `context.progress`, until the task settles. Backends that can't carry
+ * progress (the remote `fetch` transport) never call it. If it throws, the
+ * task rejects with that error.
+ * @property transfer - Objects in the input to transfer to a worker instead
+ * of copying, such as `ArrayBuffer`s. After sending they are detached: empty
+ * on the calling side. Only the worker backend uses it; the local and remote
+ * backends ignore it, so with `auto` the caller's buffers may or may not be
+ * emptied, depending on the backend that runs the task.
  *
  * @example
  * ```ts
@@ -55,9 +64,22 @@ export type ExecutionStrategyType = 'auto' | 'local' | 'worker' | 'remote';
  *
  * controller.abort(); // pending rejects with an AbortError
  * ```
+ *
+ * @example
+ * ```ts
+ * const pixels = new Uint8Array(4096);
+ * await compute.runTask('blur', pixels, 'worker', {
+ *   transfer: [pixels.buffer],
+ *   onProgress: (done) => console.log(`${done}% done`)
+ * });
+ * ```
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects
  */
 export interface RunTaskOptionsInterface {
   signal?: AbortSignal;
+  onProgress?: (value: unknown) => void;
+  transfer?: readonly Transferable[];
 }
 
 /**
@@ -65,9 +87,13 @@ export interface RunTaskOptionsInterface {
  *
  * @property signal - The signal passed to `runTask`, if any. A long task can
  * check `signal.aborted` or listen for `abort` to stop early.
+ * @property progress - Reports progress to the caller's `onProgress`. Calls
+ * after the task settles or is cancelled are dropped. A worker or WebSocket
+ * backend sends each value as a message, so keep them small and clonable.
  */
 export interface TaskContextInterface {
   signal?: AbortSignal;
+  progress?: (value: unknown) => void;
 }
 
 export interface ComputeTaskInterface<Input = unknown, Output = unknown> {
