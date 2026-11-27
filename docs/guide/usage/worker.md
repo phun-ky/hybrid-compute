@@ -96,6 +96,7 @@ const worker = createThreadedCompute({
 | `url`          | This or `createWorker` | The worker script, as a `URL` or a string, for a script served without a bundler. It's started as a module worker                   |
 | `canRunTasks`  | Yes                    | The task names the worker script can run. A task that isn't listed rejects with `NoBackendError`                                    |
 | `timeout`      | No                     | Milliseconds to wait for a reply. No timeout by default, since workers are for long running work                                    |
+| `workers`      | No                     | How many workers may run at once, to run tasks in parallel. `1` by default                                                          |
 
 Invalid options throw a `TypeError` or `RangeError` when the backend is created.
 Creating it starts no worker: the worker starts on the first task.
@@ -215,9 +216,31 @@ exists only on cross-origin isolated pages, served with the
 `Cross-Origin-Opener-Policy: same-origin` and
 `Cross-Origin-Embedder-Policy: require-corp` headers.
 
+## Several workers
+
+One worker runs its tasks on one thread, so heavy tasks wait for each other. Set
+`workers` to run up to that many at once:
+
+```ts
+const worker = createThreadedCompute({
+  url: '/workers/resize.worker.js',
+  canRunTasks: ['resizeImage'],
+  workers: navigator.hardwareConcurrency
+});
+
+// Up to that many images are resized in parallel
+await Promise.all(images.map((image) => worker.runTask('resizeImage', image)));
+```
+
+Another worker starts only when the running ones are all busy, and each task
+goes to an idle worker, or else the one with the fewest tasks. Each worker loads
+its own copy of the worker script, so state in it isn't shared between tasks on
+different workers. If a worker crashes, only its tasks reject. In Node.js,
+`os.availableParallelism()` gives the number of cores.
+
 ## Closing the worker
 
-Call `worker.close()` when you're done with it: it terminates the worker, and
+Call `worker.close()` when you're done with it: it terminates the workers, and
 tasks still waiting reject. The next task starts a new worker.
 
 ## Writing the worker script by hand

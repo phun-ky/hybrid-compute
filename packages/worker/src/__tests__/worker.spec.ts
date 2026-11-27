@@ -118,6 +118,18 @@ describe('options', () => {
     assert.throws(() => exposed(options({ timeout: '100' })), TypeError);
   });
 
+  test('checks workers: a whole number, 1 or more', () => {
+    assert.throws(() => exposed({ workers: 0 }), {
+      name: 'RangeError',
+      message: 'workers must be 1 or more, got 0'
+    });
+    assert.throws(() => exposed({ workers: 1.5 }), TypeError);
+    assert.throws(() => exposed(options({ workers: '2' })), {
+      name: 'TypeError',
+      message: 'workers must be a whole number, got string'
+    });
+  });
+
   test('starts no worker when it is created', async () => {
     await withWorker(() => {
       const before = ThreadWorker.started;
@@ -593,6 +605,85 @@ describe('transfer and progress', () => {
       await wait(20);
       assert.equal(await threaded.runTask('abortedCount', null), before + 1);
       threaded.close();
+    });
+  });
+});
+
+describe('several workers', () => {
+  /** A raw backend whose workers count the tasks sent to them. */
+  const counting = (workers: number) => {
+    const sent: number[] = [];
+    const threaded = createThreadedCompute({
+      createWorker: () => {
+        const worker = new ThreadWorker(fixture('raw'));
+        const index = sent.push(0) - 1;
+        const post = worker.postMessage.bind(worker);
+
+        worker.postMessage = (message, transfer) => {
+          if (!(message as { cancel?: true }).cancel) sent[index]++;
+
+          post(message, transfer);
+        };
+
+        return worker as unknown as Worker;
+      },
+      canRunTasks: ['echo', 'hang', 'throw'],
+      workers
+    });
+
+    return { threaded, sent };
+  };
+
+  test('starts another worker only when the running ones are busy, up to workers', async () => {
+    await withWorker(async () => {
+      const { threaded, sent } = counting(2);
+
+      assert.equal(await threaded.runTask('echo', 1), 1);
+      assert.equal(await threaded.runTask('echo', 2), 2);
+      assert.deepEqual(sent, [2]);
+
+      assert.deepEqual(
+        await Promise.all([1, 2, 3].map((n) => threaded.runTask('echo', n))),
+        [1, 2, 3]
+      );
+      assert.equal(sent.length, 2);
+      threaded.close();
+    });
+  });
+
+  test('sends each task to the least busy worker', async () => {
+    await withWorker(async () => {
+      const { threaded, sent } = counting(2);
+      const waiting = [1, 2, 3, 4].map((n) => threaded.runTask('hang', n));
+
+      assert.deepEqual(sent, [2, 2]);
+      threaded.close();
+
+      for (const task of waiting) {
+        await assert.rejects(task, isWorkerError(/the worker was closed/));
+      }
+    });
+  });
+
+  test('rejects only the tasks of a worker that throws', async () => {
+    await withWorker(async () => {
+      const { threaded } = counting(2);
+      const waiting = threaded.runTask('hang', 1);
+      let settled = false;
+
+      waiting.then(
+        () => (settled = true),
+        () => (settled = true)
+      );
+      await assert.rejects(
+        threaded.runTask('throw', 1),
+        isWorkerError(/the worker threw/)
+      );
+      await wait(20);
+      assert.equal(settled, false);
+      assert.equal(await threaded.runTask('echo', 'still here'), 'still here');
+      threaded.close();
+      await assert.rejects(waiting, isWorkerError(/the worker was closed/));
     });
   });
 });

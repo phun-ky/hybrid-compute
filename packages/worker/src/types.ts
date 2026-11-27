@@ -16,6 +16,11 @@ import type { TaskContextInterface } from '@hybrid-compute/core';
  * @property timeout - How long to wait for a reply, in milliseconds, before
  * rejecting with a `WorkerTaskError`. Defaults to `0`: no timeout, since
  * workers are for long running work.
+ * @property workers - How many workers may run at once. Defaults to `1`. More
+ * workers run tasks in parallel on more cores, but each loads its own copy of
+ * the worker script; `navigator.hardwareConcurrency` (or `os.availableParallelism()`
+ * in Node.js) is a common upper bound. Workers start only when the running
+ * ones are all busy.
  *
  * @example
  * ```ts
@@ -34,6 +39,7 @@ export interface ThreadedComputeOptionsInterface {
   url?: string | URL;
   canRunTasks: readonly string[];
   timeout?: number;
+  workers?: number;
 }
 
 /**
