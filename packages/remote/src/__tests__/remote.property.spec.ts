@@ -2,10 +2,10 @@
 // any JSON input reaches the server and comes back as JSON would carry it,
 // over fetch and over WebSocket, and concurrent WebSocket tasks always get
 // their own reply.
+import fc from 'fast-check';
+
 import assert from 'node:assert/strict';
 import test, { after, before, describe } from 'node:test';
-
-import fc from 'fast-check';
 
 import { createRemoteCompute } from '..';
 

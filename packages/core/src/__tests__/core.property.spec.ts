@@ -2,10 +2,10 @@
 // an explicit strategy uses that backend if it's set and can run the task,
 // auto takes the first in its order (worker, local, remote by default) that
 // can, and anything else rejects with NoBackendError.
+import fc from 'fast-check';
+
 import assert from 'node:assert/strict';
 import test, { describe } from 'node:test';
-
-import fc from 'fast-check';
 
 import {
   ComputeBackendInterface,
@@ -19,7 +19,6 @@ type BackendNameType = 'local' | 'worker' | 'remote';
 const BACKENDS: BackendNameType[] = ['local', 'worker', 'remote'];
 const STRATEGIES: ExecutionStrategyType[] = ['auto', ...BACKENDS];
 const AUTO_ORDER: BackendNameType[] = ['worker', 'local', 'remote'];
-
 /** A backend that can run the given tasks, and answers with its own name. */
 const backend = (
   name: BackendNameType,
@@ -29,7 +28,6 @@ const backend = (
   runTask: async <Input, Output>(taskName: string, input: Input) =>
     ({ by: name, taskName, input }) as Output
 });
-
 /** Which backend the rules pick, or undefined for NoBackendError. */
 const expected = (
   configured: Partial<Record<BackendNameType, ReadonlySet<string>>>,
@@ -41,7 +39,6 @@ const expected = (
 
   return candidates.find((name) => configured[name]?.has(taskName));
 };
-
 const taskNames = fc.constantFrom('a', 'b', 'c', 'toString', '__proto__');
 const configurations = fc
   .record(
@@ -116,6 +113,7 @@ describe('dispatch properties', () => {
         ),
         async (taskName) => {
           let asked = false;
+
           const compute = createHybridCompute({
             local: {
               canRun: () => (asked = true),

@@ -1,7 +1,7 @@
+import { NoBackendError } from '@hybrid-compute/core';
+
 import assert from 'node:assert/strict';
 import test, { describe } from 'node:test';
-
-import { NoBackendError } from '@hybrid-compute/core';
 
 import {
   createThreadedCompute,
@@ -51,12 +51,17 @@ const raw = (extra: Partial<ThreadedComputeOptionsInterface> = {}) =>
     ],
     ...extra
   });
-const isWorkerError =
-  (message: RegExp, check: (error: WorkerTaskError) => boolean = () => true) =>
-  (error: unknown) =>
+
+function isWorkerError(
+  message: RegExp,
+  check: (error: WorkerTaskError) => boolean = () => true
+) {
+  return (error: unknown) =>
     error instanceof WorkerTaskError &&
     message.test(error.message) &&
     check(error);
+}
+
 const options = (value: unknown) =>
   value as unknown as ThreadedComputeOptionsInterface;
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -404,6 +409,7 @@ describe('createWorker', () => {
   test('starts the worker with the factory, on the first task and again after close()', async () => {
     await withWorker(async () => {
       let calls = 0;
+
       const threaded = createThreadedCompute({
         createWorker: () => {
           calls++;
@@ -669,6 +675,7 @@ describe('several workers', () => {
     await withWorker(async () => {
       const { threaded } = counting(2);
       const waiting = threaded.runTask('hang', 1);
+
       let settled = false;
 
       waiting.then(
