@@ -15,6 +15,8 @@ export type TestServerType = {
   closedByClient: () => number;
   /** Headers of the last HTTP request. */
   lastHeaders: () => IncomingMessage['headers'] | undefined;
+  /** How many tasks each request to /batch held, in order. */
+  batches: () => number[];
   close: () => Promise<void>;
 };
 
@@ -66,6 +68,7 @@ export const startTestServer = async (): Promise<TestServerType> => {
   let connections = 0;
   let closedByClient = 0;
   let lastHeaders: IncomingMessage['headers'] | undefined;
+  const batches: number[] = [];
 
   const server = createServer((request, response) => {
     let body = '';
@@ -103,6 +106,26 @@ export const startTestServer = async (): Promise<TestServerType> => {
           return json(404, { result: 'must not count' });
         case '/http-400-error':
           return json(400, { error: 'input must be a string' });
+        case '/batch': {
+          const tasks: { id: number; task: string; input: unknown }[] =
+            JSON.parse(body);
+
+          batches.push(tasks.length);
+
+          // Reversed, so the client must match replies by id
+          return json(
+            200,
+            tasks
+              .filter(({ task }) => task !== 'skip')
+              .map(({ id, task, input }) =>
+                task === 'fail'
+                  ? { id, error: 'task failed' }
+                  : { id, result: input }
+              )
+              .reverse()
+              .concat([{ id: 9999, result: 'not yours' }])
+          );
+        }
         case '/hang':
           return; // never answers
         default:
@@ -170,6 +193,7 @@ export const startTestServer = async (): Promise<TestServerType> => {
     connections: () => connections,
     closedByClient: () => closedByClient,
     lastHeaders: () => lastHeaders,
+    batches: () => batches,
     close: () =>
       new Promise((resolve) => {
         for (const socket of sockets) socket.destroy();

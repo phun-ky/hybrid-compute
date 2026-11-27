@@ -1,7 +1,8 @@
 /**
  * The transport used to reach the remote service.
  *
- * - `fetch`: one HTTP `POST` per task.
+ * - `fetch`: one HTTP `POST` per task, or per batch of tasks with the
+ *   `batch` option.
  * - `websocket`: one connection, opened on the first task and reused, with
  *   tasks matched to replies by `id`.
  */
@@ -30,6 +31,8 @@ export type RemoteHeadersType =
  * @property timeout - How long to wait for a reply, in milliseconds, before
  * rejecting with a `RemoteTaskError`. Defaults to 30000; `0` waits forever.
  * @property headers - Extra request headers for the fetch transport.
+ * @property batch - Sends tasks in batches, for the fetch transport only, to
+ * a server that accepts them: see {@link RemoteBatchOptionsInterface}.
  *
  * @example
  * ```ts
@@ -48,12 +51,49 @@ export interface RemoteComputeOptionsInterface {
   canRunTasks: readonly string[] | '*';
   timeout?: number;
   headers?: RemoteHeadersType;
+  batch?: RemoteBatchOptionsInterface;
+}
+
+/**
+ * Batching for the fetch transport. Off unless given; `{}` turns it on with
+ * the defaults. The server must accept the batch format: a JSON array of
+ * tasks, each with an `id`, answered by a JSON array of replies with those
+ * `id`s, in any order.
+ *
+ * A batch is sent `wait` milliseconds after its first task, or at once when it
+ * holds `size` tasks. Each task keeps its own timeout and signal: one that
+ * settles first is left out of a batch not sent yet, and once every task in a
+ * sent batch has settled, its request is aborted. A failed request (an
+ * unreachable server, a non-2xx status, a reply that isn't a JSON array)
+ * rejects every task in it.
+ *
+ * @property size - The most tasks in one batch. Defaults to 20.
+ * @property wait - How long to wait for more tasks after the first, in
+ * milliseconds. Defaults to `0`: the tasks started together, such as in a
+ * loop or with `Promise.all`.
+ *
+ * @example
+ * ```ts
+ * const remote = createRemoteCompute({
+ *   transport: 'fetch',
+ *   endpoint: 'https://api.example.com/compute',
+ *   canRunTasks: ['translate'],
+ *   batch: { size: 50, wait: 10 }
+ * });
+ *
+ * // One request: [{ "id": 1, "task": "translate", "input": "hi" }, ...]
+ * await Promise.all(texts.map((text) => remote.runTask('translate', text)));
+ * ```
+ */
+export interface RemoteBatchOptionsInterface {
+  size?: number;
+  wait?: number;
 }
 
 /**
  * What the remote service receives for each task: a JSON object with the
- * task name and its input. The WebSocket transport adds an `id`, which the
- * reply must repeat.
+ * task name and its input. The WebSocket transport and batches add an `id`,
+ * which the reply must repeat. A batch is a JSON array of these.
  *
  * @example
  * ```json
@@ -68,7 +108,8 @@ export interface RemoteTaskRequestInterface<Input = unknown> {
 
 /**
  * What the remote service sends back: a JSON object with either a `result`
- * or an `error`, plus the request's `id` for the WebSocket transport. An
+ * or an `error`, plus the request's `id` for the WebSocket transport and in
+ * batches, where the reply is a JSON array of these. An
  * `error` (a message string, or an object with a `message`) rejects the task
  * with a `RemoteTaskError`; a fetch reply must also have a 2xx status.
  *

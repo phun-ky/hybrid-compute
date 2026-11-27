@@ -17,6 +17,8 @@ export * from './types.js';
 
 /** How long to wait for a reply when no timeout is given, in milliseconds. */
 const DEFAULT_TIMEOUT = 30_000;
+/** The most tasks in one batch when no size is given. */
+const DEFAULT_BATCH_SIZE = 20;
 /** The URL schemes each transport accepts. */
 const SCHEMES: Readonly<Record<RemoteTransportType, readonly string[]>> =
   Object.freeze({
@@ -31,6 +33,37 @@ type PendingTaskType = {
   reject: (reason: unknown) => void;
   progress: (value: unknown) => void;
 };
+
+/** A task waiting in, or sent with, a batch. */
+type BatchedTaskType = {
+  id: number;
+  taskName: string;
+  /** The task as JSON, ready to join into the batch. */
+  item: string;
+  done: boolean;
+  /** Called when the task settles, to end its batch's request once all have. */
+  release: () => void;
+  resolve: (value: unknown) => void;
+  reject: (reason: unknown) => void;
+};
+
+/**
+ * Why a request failed, before it's turned into one RemoteTaskError per task.
+ */
+class RequestFailure {
+  constructor(
+    readonly why: string,
+    readonly details: ConstructorParameters<typeof RemoteTaskError>[2]
+  ) {}
+
+  toError(taskName: string) {
+    return new RemoteTaskError(
+      taskName,
+      `Remote task '${taskName}' ${this.why}`,
+      this.details
+    );
+  }
+}
 
 /** What a value is, for error messages: null, an array, or its typeof. */
 const describeValue = (value: unknown) => {
@@ -52,7 +85,7 @@ const baseUrl = () =>
  *
  * @throws {TypeError} For a missing or wrongly typed option.
  * @throws {RangeError} For an unknown transport, an endpoint with the wrong
- * URL scheme, or a negative timeout.
+ * URL scheme, a negative timeout or wait, or a batch size below 1.
  */
 const toSettings = (options: unknown) => {
   if (!isPlainObject(options)) {
@@ -61,7 +94,7 @@ const toSettings = (options: unknown) => {
     );
   }
 
-  const { transport, endpoint, canRunTasks, timeout, headers } = options;
+  const { transport, endpoint, canRunTasks, timeout, headers, batch } = options;
 
   if (transport !== 'fetch' && transport !== 'websocket') {
     throw new RangeError(
@@ -140,6 +173,43 @@ const toSettings = (options: unknown) => {
     );
   }
 
+  if (batch !== undefined && !isPlainObject(batch)) {
+    throw new TypeError(
+      `batch must be an object, such as { size: 20, wait: 10 }, got ${describeValue(batch)}`
+    );
+  }
+
+  if (batch !== undefined && transport === 'websocket') {
+    throw new TypeError(
+      'batch only works with the fetch transport; WebSocket tasks already share one connection'
+    );
+  }
+
+  const { size, wait } = batch ?? {};
+
+  if (size !== undefined && !Number.isInteger(size)) {
+    throw new TypeError(
+      `batch.size must be a whole number, got ${describeValue(size)}`
+    );
+  }
+
+  if (typeof size === 'number' && size < 1) {
+    throw new RangeError(`batch.size must be 1 or more, got ${size}`);
+  }
+
+  if (
+    wait !== undefined &&
+    (typeof wait !== 'number' || !Number.isFinite(wait))
+  ) {
+    throw new TypeError(
+      `batch.wait must be a number of milliseconds, got ${describeValue(wait)}`
+    );
+  }
+
+  if (typeof wait === 'number' && wait < 0) {
+    throw new RangeError(`batch.wait must be 0 or more, got ${wait}`);
+  }
+
   return {
     transport,
     // Resolved once, so a relative endpoint means the same in every runtime,
@@ -147,7 +217,11 @@ const toSettings = (options: unknown) => {
     endpoint: url.href,
     allowed,
     timeout: (timeout as number | undefined) ?? DEFAULT_TIMEOUT,
-    headers: headers as RemoteHeadersType | undefined
+    headers: headers as RemoteHeadersType | undefined,
+    batch: batch && {
+      size: (size as number | undefined) ?? DEFAULT_BATCH_SIZE,
+      wait: (wait as number | undefined) ?? 0
+    }
   };
 };
 /** The message for a server's `error`: a string, or an object's message. */
@@ -168,7 +242,9 @@ const messageOf = (error: unknown) => {
  *
  * Each task is one JSON request and one JSON reply; see
  * {@link RemoteTaskRequestInterface} and {@link RemoteTaskResponseInterface}
- * for the message format. Every failure (an `error` in the reply, an unusable
+ * for the message format. With the `batch` option, the fetch transport sends
+ * the tasks started close together as one request holding an array of them,
+ * and expects an array of replies. Every failure (an `error` in the reply, an unusable
  * response, a timeout, an unreachable server) rejects with a
  * {@link RemoteTaskError}.
  *
@@ -209,6 +285,8 @@ export class RemoteCompute implements ComputeBackendInterface {
   private opening?: Promise<WebSocket>;
   private connecting?: WebSocket;
   private readonly pending = new Map<number, PendingTaskType>();
+  private queue: BatchedTaskType[] = [];
+  private flushTimer?: ReturnType<typeof setTimeout>;
   private nextId = 1;
 
   /**
@@ -216,11 +294,11 @@ export class RemoteCompute implements ComputeBackendInterface {
    * until the first task.
    *
    * @param options - The transport, endpoint, allowed tasks and, optionally,
-   * a timeout and fetch headers.
+   * a timeout, and fetch headers and batching.
    *
    * @throws {TypeError} For a missing or wrongly typed option.
    * @throws {RangeError} For an unknown transport, an endpoint with the wrong
-   * URL scheme, or a negative timeout.
+   * URL scheme, a negative timeout or wait, or a batch size below 1.
    */
   constructor(options: RemoteComputeOptionsInterface) {
     this.settings = toSettings(options);
@@ -266,10 +344,14 @@ export class RemoteCompute implements ComputeBackendInterface {
 
     if (signal?.aborted) throw signal.reason;
 
+    const { transport, batch } = this.settings;
+
     return (
-      this.settings.transport === 'fetch'
-        ? this.viaFetch(taskName, input, signal)
-        : this.viaSocket(taskName, input, signal, options?.onProgress)
+      transport === 'websocket'
+        ? this.viaSocket(taskName, input, signal, options?.onProgress)
+        : batch
+          ? this.viaBatch(taskName, input, batch, signal)
+          : this.viaFetch(taskName, input, signal)
     ) as Promise<Output>;
   }
 
@@ -320,13 +402,62 @@ export class RemoteCompute implements ComputeBackendInterface {
     return reply.result;
   }
 
+  /**
+   * POST a JSON body and parse the JSON reply. Throws the signal's reason once
+   * it aborts, and a RequestFailure for anything else that goes wrong.
+   */
+  private async post(body: string, signal: AbortSignal) {
+    const { endpoint, headers } = this.settings;
+    const extra = typeof headers === 'function' ? await headers() : headers;
+
+    let response: Response;
+
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...extra },
+        body,
+        signal
+      });
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+
+      throw new RequestFailure(`couldn't reach ${endpoint}`, { cause: error });
+    }
+
+    const { status } = response;
+
+    if (!response.ok) {
+      // Servers often send { error } with a 4xx or 5xx status: keep it
+      const failed = await response.json().catch(() => undefined);
+      const error = isPlainObject(failed) ? failed.error : undefined;
+      const hasError = error !== undefined && error !== null;
+
+      throw new RequestFailure(
+        `failed with HTTP ${status}${hasError ? `: ${messageOf(error)}` : ''}`,
+        hasError ? { status, detail: error } : { status }
+      );
+    }
+
+    try {
+      return { reply: (await response.json()) as unknown, status };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+
+      throw new RequestFailure("got a reply that isn't JSON", {
+        status,
+        cause: error
+      });
+    }
+  }
+
   /** One HTTP POST per task. */
   private async viaFetch(
     taskName: string,
     input: unknown,
     signal?: AbortSignal
   ) {
-    const { endpoint, timeout, headers } = this.settings;
+    const { timeout } = this.settings;
     const body = JSON.stringify({ task: taskName, input });
     const controller = new AbortController();
     const onAbort = () => controller.abort(signal?.reason);
@@ -347,60 +478,150 @@ export class RemoteCompute implements ComputeBackendInterface {
     signal?.addEventListener('abort', onAbort, { once: true });
 
     try {
-      const extra = typeof headers === 'function' ? await headers() : headers;
+      const { reply, status } = await this.post(body, controller.signal);
 
-      let response: Response;
-
-      try {
-        response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...extra },
-          body,
-          signal: controller.signal
-        });
-      } catch (error) {
-        if (controller.signal.aborted) throw controller.signal.reason;
-
-        throw new RemoteTaskError(
-          taskName,
-          `Remote task '${taskName}' couldn't reach ${endpoint}`,
-          { cause: error }
-        );
-      }
-
-      if (!response.ok) {
-        // Servers often send { error } with a 4xx or 5xx status: keep it
-        const failed = await response.json().catch(() => undefined);
-        const error = isPlainObject(failed) ? failed.error : undefined;
-        const hasError = error !== undefined && error !== null;
-
-        throw new RemoteTaskError(
-          taskName,
-          `Remote task '${taskName}' failed with HTTP ${response.status}${hasError ? `: ${messageOf(error)}` : ''}`,
-          hasError
-            ? { status: response.status, detail: error }
-            : { status: response.status }
-        );
-      }
-
-      let reply: unknown;
-
-      try {
-        reply = await response.json();
-      } catch (error) {
-        if (controller.signal.aborted) throw controller.signal.reason;
-
-        throw new RemoteTaskError(
-          taskName,
-          `Remote task '${taskName}' got a reply that isn't JSON`,
-          { status: response.status, cause: error }
-        );
-      }
-
-      return this.settle(taskName, reply, response.status);
+      return this.settle(taskName, reply, status);
+    } catch (error) {
+      throw error instanceof RequestFailure ? error.toError(taskName) : error;
     } finally {
       clearTimeout(timer);
       signal?.removeEventListener('abort', onAbort);
+    }
+  }
+
+  /** Queue a task for the next batch, sent as one HTTP POST. */
+  private viaBatch(
+    taskName: string,
+    input: unknown,
+    batch: { size: number; wait: number },
+    signal?: AbortSignal
+  ) {
+    const { timeout } = this.settings;
+    const id = this.nextId++;
+    // Serialise now, so input that isn't JSON fails on its own, not the batch
+    const item = JSON.stringify({ id, task: taskName, input });
+
+    return new Promise((resolve, reject) => {
+      let timer: ReturnType<typeof setTimeout> | undefined;
+
+      const finish = () => {
+        clearTimeout(timer);
+        signal?.removeEventListener('abort', onAbort);
+        task.done = true;
+        task.release();
+      };
+      const task: BatchedTaskType = {
+        id,
+        taskName,
+        item,
+        done: false,
+        release: () => {},
+        resolve: (value) => {
+          finish();
+          resolve(value);
+        },
+        reject: (reason) => {
+          finish();
+          reject(reason);
+        }
+      };
+      const onAbort = () => task.reject(signal?.reason);
+
+      // The timeout covers waiting in the queue as well as the request
+      if (timeout > 0) {
+        timer = setTimeout(
+          () =>
+            task.reject(
+              new RemoteTaskError(
+                taskName,
+                `Remote task '${taskName}' timed out after ${timeout} ms`
+              )
+            ),
+          timeout
+        );
+      }
+
+      signal?.addEventListener('abort', onAbort, { once: true });
+      this.queue.push(task);
+
+      if (this.queue.length >= batch.size) {
+        this.flush();
+      } else if (this.queue.length === 1) {
+        this.flushTimer = setTimeout(() => this.flush(), batch.wait);
+      }
+    });
+  }
+
+  /** Send the queued tasks that are still waiting, as one batch. */
+  private flush() {
+    clearTimeout(this.flushTimer);
+
+    const tasks = this.queue.filter((task) => !task.done);
+
+    this.queue = [];
+
+    if (tasks.length > 0) void this.sendBatch(tasks);
+  }
+
+  /** POST a batch, and settle each task with its item of the reply. */
+  private async sendBatch(tasks: BatchedTaskType[]) {
+    const controller = new AbortController();
+
+    // Nobody waits for the reply once every task has settled: stop the request
+    for (const task of tasks) {
+      task.release = () => {
+        if (tasks.every(({ done }) => done)) controller.abort();
+      };
+    }
+
+    try {
+      const { reply, status } = await this.post(
+        `[${tasks.map(({ item }) => item).join(',')}]`,
+        controller.signal
+      );
+
+      if (!Array.isArray(reply)) {
+        throw new RequestFailure("got a batch reply that isn't a JSON array", {
+          status
+        });
+      }
+
+      for (const item of reply) {
+        const task = isPlainObject(item)
+          ? tasks.find(({ id, done }) => id === item.id && !done)
+          : undefined;
+
+        if (!task) continue;
+
+        try {
+          task.resolve(this.settle(task.taskName, item, status));
+        } catch (error) {
+          task.reject(error);
+        }
+      }
+
+      for (const task of tasks) {
+        if (!task.done) {
+          task.reject(
+            new RemoteTaskError(
+              task.taskName,
+              `Remote task '${task.taskName}' got no reply in the batch`,
+              { status }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      // After an abort every task has settled already, so this skips them all
+      for (const task of tasks) {
+        if (!task.done) {
+          task.reject(
+            error instanceof RequestFailure
+              ? error.toError(task.taskName)
+              : error
+          );
+        }
+      }
     }
   }
 

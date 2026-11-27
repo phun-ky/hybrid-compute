@@ -208,6 +208,7 @@ server.listen(3001, () => {
 | `canRunTasks` | Yes      | The task names this backend may run, or `'*'` for every task. With the `auto` strategy, any task no worker or local backend can run is sent to the endpoint, so list them when you can |
 | `timeout`     | No       | Milliseconds to wait for a reply (connecting included), default `30000`; `0` waits forever                                                                                             |
 | `headers`     | No       | Extra fetch headers: an object, or a function returning one (or a Promise of one), called before every request                                                                         |
+| `batch`       | No       | Fetch only: send tasks started together as one request, `{ size, wait }`, for a server that accepts batches. See [Batching](#batching)                                                 |
 
 Invalid options throw a `TypeError` or `RangeError` when the backend is created.
 Creating it does no network I/O: the WebSocket connects on the first task.
@@ -267,6 +268,73 @@ with that error. The fetch transport has one reply per request, so it never
 calls `onProgress`. Both transports send JSON, so the `transfer` option is
 ignored.
 
+## Batching
+
+With the fetch transport, each task is its own HTTP request. When many tasks
+start at once, the `batch` option sends them as one request instead:
+
+```ts
+const remote = createRemoteCompute({
+  transport: 'fetch',
+  endpoint: 'https://api.example.com/compute',
+  canRunTasks: ['translate'],
+  batch: { size: 50, wait: 10 }
+});
+
+// One request instead of one per text
+await Promise.all(texts.map((text) => remote.runTask('translate', text)));
+```
+
+A batch is sent `wait` milliseconds after its first task (default `0`: the tasks
+started together, such as in a loop or with `Promise.all`), or at once when it
+holds `size` tasks (default `20`). `batch: {}` turns it on with the defaults.
+
+The server must accept batches, so batching is off unless you turn it on. The
+request body is a JSON array of tasks, each with an `id`, and the reply must be
+a JSON array of replies with those `id`s, in any order:
+
+```json
+[
+  { "id": 1, "task": "translate", "input": "hello" },
+  { "id": 2, "task": "translate", "input": "goodbye" }
+]
+```
+
+```json
+[
+  { "id": 2, "result": "ha det" },
+  { "id": 1, "result": "hei" }
+]
+```
+
+With the Express server above, a batch route can run the tasks in parallel and
+answer each one:
+
+```js
+app.post('/compute/batch', async (req, res) => {
+  const replies = await Promise.all(
+    req.body.map(async ({ id, task, input }) => {
+      try {
+        if (!tasks[task]) throw new Error(`Unknown task '${task}'`);
+
+        return { id, result: await tasks[task](input) };
+      } catch (error) {
+        return { id, error: error.message };
+      }
+    })
+  );
+
+  res.json(replies);
+});
+```
+
+Each task still settles on its own: an `error` rejects only that task, and a
+task with no reply in the batch rejects with a `RemoteTaskError`. A request that
+fails (an unreachable server, a non-2xx status, a reply that isn't a JSON array)
+rejects every task in it. Each task keeps its own timeout and signal; a task
+cancelled before its batch is sent is left out, and once every task in a sent
+batch has settled, the request is aborted.
+
 ## Closing the connection
 
 The WebSocket transport keeps its connection open between tasks, and connects
@@ -287,8 +355,9 @@ A task is one JSON request and one JSON reply, described by
 { "id": 1, "result": "Echo: hello" }
 ```
 
-The `id` is only used over WebSocket, where the reply must repeat it, and where
-`{ "id": 1, "progress": … }` messages may come first
+With [batching](#batching), the request and the reply are JSON arrays of these.
+The `id` is only used over WebSocket and in batches, where the reply must repeat
+it. Over WebSocket, `{ "id": 1, "progress": … }` messages may come first
 (`RemoteProgressMessageInterface`). A reply has either a `result` or an `error`
 (a message string, or an object with a `message`). For fetch, the status must be
 2xx for a `result` to count.
