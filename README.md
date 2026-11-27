@@ -34,6 +34,10 @@ dispatches computational tasks to the most appropriate backend, whether that's:
 All you do is define tasks and call `runTask()`. HybridCompute takes care of the
 rest.
 
+How the packages fit together and how a task reaches a backend, with diagrams,
+is in the
+[architecture guide](https://phun-ky.net/hybrid-compute/guide/architecture).
+
 ## Table of Contents<!-- omit from toc -->
 
 - [@hybrid-compute](#hybrid-compute)
@@ -47,11 +51,6 @@ rest.
     - [Usage with worker](#usage-with-worker)
     - [Usage with WebAssembly](#usage-with-webassembly)
   - [Example](#example)
-  - [Visual overviews](#visual-overviews)
-    - [Packages and their dependencies](#packages-and-their-dependencies)
-    - [Task dispatch](#task-dispatch)
-    - [Worker backend](#worker-backend)
-    - [Remote backend](#remote-backend)
   - [Development](#development)
   - [Contributing](#contributing)
   - [License](#license)
@@ -404,65 +403,6 @@ const result = await compute.runTask<number, number>('double', 21, 'auto');
 console.log(result); // 42
 ```
 
-## Visual overviews
-
-These are the documentation site's diagrams. The
-[architecture page](https://phun-ky.net/hybrid-compute/guide/architecture) has
-more detail.
-
-### Packages and their dependencies
-
-Each backend depends on core and implements its `ComputeBackendInterface`; core
-imports no backend.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/diagrams/packages-dark.png">
-  <img alt="The packages and their dependencies: the local, worker and remote packages each depend on core and implement its ComputeBackendInterface. Core has no runtime dependencies." src="./docs/public/diagrams/packages-light.png" width="814">
-</picture>
-
-### Task dispatch
-
-With `local`, `worker` or `remote`, core uses that backend if it is set and its
-`canRun(name)` is true. With `auto`, it uses the first backend whose
-`canRun(name)` is true, in the order worker, local, remote, or the `order` you
-give `createHybridCompute`:
-
-```ts
-// auto tries local first, then worker, and never remote
-const compute = createHybridCompute(
-  { local, worker, remote },
-  { order: ['local', 'worker'] }
-);
-```
-
-If nothing matches, `runTask` rejects with a `NoBackendError`.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/diagrams/dispatch-dark.png">
-  <img alt="Task dispatch: the application calls runTask on core. With the local, worker or remote strategy, core uses that backend if it is configured and its canRun returns true. With auto, it uses the first backend whose canRun returns true, in the order worker, local, remote. If no backend matches, runTask rejects with a NoBackendError." src="./docs/public/diagrams/dispatch-light.png" width="814">
-</picture>
-
-### Worker backend
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/diagrams/worker-dark.png">
-  <img alt="The worker backend: your code calls runTask on ThreadedCompute, which posts a message with the task, input and an id to your worker script. The worker script posts back the id with a result or an error, and ThreadedCompute resolves or rejects the Promise." src="./docs/public/diagrams/worker-light.png" width="814">
-</picture>
-
-The worker script answers with `exposeTasks`, or by hand. A crash, a script that
-doesn't load, or the optional timeout rejects the task with a `WorkerTaskError`.
-Cancelling with an `AbortSignal` sends `{ id, cancel: true }` to the worker.
-
-### Remote backend
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/diagrams/remote-dark.png">
-  <img alt="The remote backend: with fetch, RemoteCompute posts the task and input as JSON to the endpoint you configured, and reads a result or an error from the response. With WebSocket, it sends the task, input and an id on a socket it opens for the first task and reuses, and matches replies with the same id, carrying a result or an error. Both reject with a RemoteTaskError on failure, and time out after 30 seconds by default." src="./docs/public/diagrams/remote-light.png" width="814">
-</picture>
-
-An error in the reply, a failed request or the timeout (30 seconds by default)
-rejects the task with a `RemoteTaskError`.
-
 ## Development
 
 ```sh
@@ -500,12 +440,3 @@ maintain my projects, create new ones and contribute to the large community
 we're all part of :)
 
 [Support me on GitHub Sponsors](https://github.com/sponsors/phun-ky).
-
-p.s. **Ukraine is still under brutal Russian invasion. A lot of Ukrainian people
-are hurt, without shelter and need help**. You can help in various ways, for
-instance, directly helping refugees, spreading awareness, putting pressure on
-your local government or companies. You can also support Ukraine by donating
-e.g. to [Red Cross](https://www.icrc.org/en/donate/ukraine),
-[Ukraine humanitarian organisation](https://savelife.in.ua/en/donate-en/#donate-army-card-weekly)
-or
-[donate Ambulances for Ukraine](https://www.gofundme.com/f/help-to-save-the-lives-of-civilians-in-a-war-zone).
