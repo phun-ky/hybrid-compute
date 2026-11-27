@@ -35,17 +35,12 @@ const socketTo = (extra: Partial<RemoteComputeOptionsInterface> = {}) =>
     canRunTasks: '*',
     ...extra
   });
-
-function isRemoteError(
-  message: RegExp,
-  check: (error: RemoteTaskError) => boolean = () => true
-) {
-  return (error: unknown) =>
+const isRemoteError =
+  (message: RegExp, check: (error: RemoteTaskError) => boolean = () => true) =>
+  (error: unknown) =>
     error instanceof RemoteTaskError &&
     message.test(error.message) &&
     check(error);
-}
-
 const options = (value: unknown) =>
   value as unknown as RemoteComputeOptionsInterface;
 
