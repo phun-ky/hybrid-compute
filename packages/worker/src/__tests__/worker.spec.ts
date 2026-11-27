@@ -24,7 +24,12 @@ const exposed = (extra: Partial<ThreadedComputeOptionsInterface> = {}) =>
       'unclonable',
       'waitForAbort',
       'abortedCount',
-      'missing'
+      'missing',
+      'byteLength',
+      'invert',
+      'steps',
+      'progressAfterReturn',
+      'progressUntilAbort'
     ],
     ...extra
   });
@@ -500,6 +505,94 @@ describe('timeout and cancelling', () => {
         /too late/
       );
       assert.equal(ThreadWorker.started, before);
+    });
+  });
+});
+
+describe('transfer and progress', () => {
+  test('transfers the input, and the result marked with transfer()', async () => {
+    await withWorker(async () => {
+      const threaded = exposed();
+      const bytes = new Uint8Array([1, 2, 3]);
+
+      assert.equal(
+        await threaded.runTask('byteLength', bytes, {
+          transfer: [bytes.buffer]
+        }),
+        3
+      );
+      assert.equal(bytes.byteLength, 0);
+
+      const pixels = new Uint8Array([0, 200]);
+      const inverted = await threaded.runTask<Uint8Array, Uint8Array>(
+        'invert',
+        pixels
+      );
+
+      // Copied in, so the caller keeps its own
+      assert.deepEqual([...pixels], [0, 200]);
+      assert.deepEqual([...inverted], [255, 55]);
+      threaded.close();
+    });
+  });
+
+  test('rejects with WorkerTaskError when the input cannot be transferred', async () => {
+    await withWorker(async () => {
+      const threaded = exposed();
+      const bytes = new Uint8Array(4);
+
+      await assert.rejects(
+        () =>
+          threaded.runTask('byteLength', bytes, {
+            transfer: [bytes.buffer, bytes.buffer]
+          }),
+        isWorkerError(/couldn't send its input/)
+      );
+      threaded.close();
+    });
+  });
+
+  test('passes progress to onProgress, and drops it after the result', async () => {
+    await withWorker(async () => {
+      const threaded = exposed();
+      const seen: unknown[] = [];
+      const onProgress = (value: unknown) => seen.push(value);
+
+      assert.equal(await threaded.runTask('steps', 3, { onProgress }), 'done');
+      assert.deepEqual(seen, [1, 2, 3]);
+
+      // Without onProgress, progress messages are still not a reply
+      assert.equal(await threaded.runTask('steps', 2), 'done');
+
+      seen.length = 0;
+      assert.equal(
+        await threaded.runTask('progressAfterReturn', null, { onProgress }),
+        'done'
+      );
+      await wait(20);
+      assert.deepEqual(seen, []);
+      threaded.close();
+    });
+  });
+
+  test('rejects with the error onProgress throws, and tells the worker to cancel', async () => {
+    await withWorker(async () => {
+      const threaded = exposed();
+      const before = await threaded.runTask<null, number>('abortedCount', null);
+      const failure = new Error('bad progress');
+
+      await assert.rejects(
+        () =>
+          threaded.runTask('progressUntilAbort', null, {
+            onProgress: () => {
+              throw failure;
+            }
+          }),
+        (error) => error === failure
+      );
+      await wait(20);
+      assert.equal(await threaded.runTask('abortedCount', null), before + 1);
+      threaded.close();
     });
   });
 });

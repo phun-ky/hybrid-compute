@@ -398,6 +398,31 @@ describe('runTask options', () => {
       }
     );
   });
+
+  test('rejects with a TypeError for an onProgress that is not a function, or a transfer that is not an array', async () => {
+    const compute = createHybridCompute({ local: createMockBackend() });
+
+    await assert.rejects(
+      () =>
+        compute.runTask(mockTaskName, mockInput, 'auto', {
+          onProgress: 'log' as unknown as () => void
+        }),
+      {
+        name: 'TypeError',
+        message: 'options.onProgress must be a function, got string'
+      }
+    );
+    await assert.rejects(
+      () =>
+        compute.runTask(mockTaskName, mockInput, 'auto', {
+          transfer: {} as unknown as Transferable[]
+        }),
+      {
+        name: 'TypeError',
+        message: 'options.transfer must be an array, got object'
+      }
+    );
+  });
 });
 
 describe('NoBackendError', () => {

@@ -29,6 +29,7 @@ type PendingTaskType = {
   taskName: string;
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
+  progress: (value: unknown) => void;
 };
 
 /** What a value is, for error messages: null, an array, or its typeof. */
@@ -246,7 +247,11 @@ export class RemoteCompute implements ComputeBackendInterface {
    *
    * @param taskName - Name of the remote task.
    * @param input - Input data to send. It must be serialisable as JSON.
-   * @param options - Options for this call, such as an `AbortSignal`.
+   * @param options - Options for this call, such as an `AbortSignal`. With
+   * the WebSocket transport, `onProgress` gets the `progress` of each
+   * `{ id, progress }` message the server sends before its reply; if it
+   * throws, the task rejects with that error. The fetch transport never calls
+   * it. `transfer` is ignored: the input is sent as JSON.
    * @returns A Promise resolving to the reply's `result`. It rejects with a
    * {@link RemoteTaskError} if the task fails, the reply is unusable, the
    * timeout passes or the server can't be reached, and with the signal's
@@ -264,7 +269,7 @@ export class RemoteCompute implements ComputeBackendInterface {
     return (
       this.settings.transport === 'fetch'
         ? this.viaFetch(taskName, input, signal)
-        : this.viaSocket(taskName, input, signal)
+        : this.viaSocket(taskName, input, signal, options?.onProgress)
     ) as Promise<Output>;
   }
 
@@ -400,7 +405,12 @@ export class RemoteCompute implements ComputeBackendInterface {
   }
 
   /** One message per task on a shared WebSocket, matched by id. */
-  private viaSocket(taskName: string, input: unknown, signal?: AbortSignal) {
+  private viaSocket(
+    taskName: string,
+    input: unknown,
+    signal?: AbortSignal,
+    onProgress?: (value: unknown) => void
+  ) {
     const { timeout } = this.settings;
     const id = this.nextId++;
     // Serialise now, so input that isn't JSON fails before connecting
@@ -442,6 +452,14 @@ export class RemoteCompute implements ComputeBackendInterface {
         reject: (reason) => {
           finish();
           reject(reason);
+        },
+        progress: (value) => {
+          try {
+            onProgress?.(value);
+          } catch (error) {
+            finish();
+            reject(error);
+          }
         }
       });
 
@@ -528,6 +546,12 @@ export class RemoteCompute implements ComputeBackendInterface {
     const task = this.pending.get(reply.id);
 
     if (!task) return;
+
+    if ('progress' in reply) {
+      task.progress(reply.progress);
+
+      return;
+    }
 
     try {
       task.resolve(this.settle(task.taskName, reply));

@@ -250,6 +250,23 @@ const pending = compute.runTask('echo', 'hello', 'remote', {
 controller.abort();
 ```
 
+## Progress
+
+Over WebSocket, the server may send `{ "id": 1, "progress": 50 }` messages
+before its reply. Each `progress` value reaches the `onProgress` option of
+`runTask`:
+
+```ts
+await compute.runTask('translate', text, 'remote', {
+  onProgress: (value) => console.log(value)
+});
+```
+
+Progress doesn't reset the timeout. If `onProgress` throws, the task rejects
+with that error. The fetch transport has one reply per request, so it never
+calls `onProgress`. Both transports send JSON, so the `transfer` option is
+ignored.
+
 ## Closing the connection
 
 The WebSocket transport keeps its connection open between tasks, and connects
@@ -270,6 +287,8 @@ A task is one JSON request and one JSON reply, described by
 { "id": 1, "result": "Echo: hello" }
 ```
 
-The `id` is only used over WebSocket, where the reply must repeat it. A reply
-has either a `result` or an `error` (a message string, or an object with a
-`message`). For fetch, the status must be 2xx for a `result` to count.
+The `id` is only used over WebSocket, where the reply must repeat it, and where
+`{ "id": 1, "progress": … }` messages may come first
+(`RemoteProgressMessageInterface`). A reply has either a `result` or an `error`
+(a message string, or an object with a `message`). For fetch, the status must be
+2xx for a `result` to count.

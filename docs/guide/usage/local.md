@@ -79,6 +79,9 @@ local.registerTask({
 - **Running a missing task** rejects with a `NoBackendError` from
   `@hybrid-compute/core`. Through `createHybridCompute` this can't happen,
   because core asks `canRun` first.
+- **Progress:** `run` gets a context with a `progress` function as its second
+  argument. Each value reaches the `onProgress` option of `runTask`, until the
+  task settles or is cancelled. `transfer` is ignored, since nothing is copied.
 - **Tasks run on the calling thread.** A task's synchronous work runs before
   `runTask` returns, so a heavy task blocks the page; move it to the
   [worker backend](/guide/usage/worker).

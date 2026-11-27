@@ -30,6 +30,7 @@ type PendingTaskType = {
   taskName: string;
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
+  progress: (value: unknown) => void;
 };
 
 /**
@@ -194,10 +195,15 @@ export class ThreadedCompute implements ComputeBackendInterface {
    *
    * @param taskName - The name of the task to run.
    * @param input - The input for the task. It's copied with the structured
-   * clone algorithm, so it can't hold functions or DOM nodes.
+   * clone algorithm, so it can't hold functions or DOM nodes. A
+   * `SharedArrayBuffer` in it is shared, not copied, where the page is
+   * cross-origin isolated.
    * @param options - Options for this call. With a `signal`, `runTask`
    * rejects with the signal's reason as soon as it aborts, and the worker is
-   * told to cancel the task.
+   * told to cancel the task. The objects in `transfer` are transferred to the
+   * worker instead of copied. `onProgress` gets each progress value the task
+   * sends; if it throws, the task rejects with that error and the worker is
+   * told to cancel it.
    * @returns A Promise resolving to the reply's `result`. It rejects with a
    * `NoBackendError` (from `@hybrid-compute/core`) if the task isn't in
    * `canRunTasks`, a `TypeError` if this runtime has no Web Workers, a
@@ -279,6 +285,15 @@ export class ThreadedCompute implements ComputeBackendInterface {
         reject: (reason) => {
           finish();
           reject(reason);
+        },
+        progress: (value) => {
+          try {
+            options?.onProgress?.(value);
+          } catch (error) {
+            finish();
+            cancel();
+            reject(error);
+          }
         }
       });
 
@@ -289,7 +304,7 @@ export class ThreadedCompute implements ComputeBackendInterface {
       };
 
       try {
-        worker.postMessage(message);
+        worker.postMessage(message, [...(options?.transfer ?? [])]);
       } catch (error) {
         this.pending
           .get(id)
@@ -386,7 +401,9 @@ export class ThreadedCompute implements ComputeBackendInterface {
     const { taskName } = task;
     const { error } = reply;
 
-    if (error !== undefined && error !== null) {
+    if ('progress' in reply) {
+      task.progress(reply.progress);
+    } else if (error !== undefined && error !== null) {
       const text = messageOf(error);
 
       task.reject(

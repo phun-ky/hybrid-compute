@@ -86,9 +86,27 @@ export interface WorkerResultMessageInterface<Output = unknown> {
 }
 
 /**
+ * What the worker script sends while a task runs: the task's `id` and a
+ * `progress` value, passed to the caller's `onProgress`. Any number may come
+ * before the result; any message with a `progress` key is one of these. It
+ * doesn't reset the timeout.
+ *
+ * @example
+ * ```ts
+ * self.postMessage({ id: 1, progress: 50 } satisfies WorkerProgressMessageInterface);
+ * ```
+ */
+export interface WorkerProgressMessageInterface {
+  id: number;
+  progress: unknown;
+}
+
+/**
  * A task in the worker script, for {@link exposeTasks}. It gets the input and
  * a context with a `signal`, which aborts when the caller cancels the task or
- * its timeout passes.
+ * its timeout passes, and `progress`, which sends a value to the caller's
+ * `onProgress`. Wrap the result in {@link transfer} to transfer buffers back
+ * instead of copying them.
  *
  * @typeParam Input - The input type of the task.
  * @typeParam Output - The output type of the task.
@@ -108,5 +126,5 @@ export interface WorkerScopeInterface {
     type: 'message',
     listener: (event: { data: unknown }) => void
   ): void;
-  postMessage(message: unknown): void;
+  postMessage(message: unknown, transfer?: Transferable[]): void;
 }

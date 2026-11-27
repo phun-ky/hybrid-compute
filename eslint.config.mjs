@@ -16,6 +16,11 @@ export default defineConfig([
     extends: [customConfig]
   },
   {
+    files: ['**/*.ts'],
+    // A DOM type with no runtime value, so the globals lists leave it out
+    languageOptions: { globals: { Transferable: 'readonly' } }
+  },
+  {
     files: ['scripts/**/*.mjs'],
     languageOptions: {
       globals: {

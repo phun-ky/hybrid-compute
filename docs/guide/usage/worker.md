@@ -156,6 +156,65 @@ exposeTasks({
 });
 ```
 
+## Progress
+
+A task reports progress with the `progress` function in its context. Each value
+reaches the `onProgress` option of `runTask`, until the task settles:
+
+```ts
+exposeTasks({
+  resize: async (images: Blob[], { progress }) => {
+    for (const [index, image] of images.entries()) {
+      await resizeOne(image);
+      progress((index + 1) / images.length);
+    }
+
+    return 'done';
+  }
+});
+```
+
+```ts
+await compute.runTask('resize', images, 'worker', {
+  onProgress: (share) => console.log(`${Math.round(share * 100)}%`)
+});
+```
+
+Progress doesn't reset the timeout. If `onProgress` throws, the task rejects
+with that error and the worker is told to cancel it.
+
+## Transferring buffers
+
+The input and the result are copied by default. To move an `ArrayBuffer` (or
+another transferable object) instead, list it in `transfer`. It's detached on
+the sending side, so don't use it there afterwards:
+
+```ts
+const pixels = new Uint8Array(width * height * 4);
+
+await compute.runTask('blur', pixels, 'worker', { transfer: [pixels.buffer] });
+```
+
+In the worker script, wrap the result in `transfer` to move it back:
+
+```ts
+import { exposeTasks, transfer } from '@hybrid-compute/worker';
+
+exposeTasks({
+  blur: (pixels: Uint8Array) => transfer(blurInPlace(pixels), [pixels.buffer])
+});
+```
+
+Only the worker backend transfers. The local and remote backends ignore
+`transfer`, so with the `auto` strategy the caller's buffer is emptied or not
+depending on the backend that runs the task.
+
+A `SharedArrayBuffer` needs neither: it's shared with the worker, not copied, so
+both sides see each other's writes. Don't list it in `transfer`. In browsers it
+exists only on cross-origin isolated pages, served with the
+`Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp` headers.
+
 ## Closing the worker
 
 Call `worker.close()` when you're done with it: it terminates the worker, and
@@ -185,8 +244,9 @@ self.onmessage = async (event) => {
 ```
 
 A reply has the task's `id` and either a `result` or an `error` (a message
-string, or an object with a `message`). Replies with an `id` no task waits for
-are ignored.
+string, or an object with a `message`). Before it, the script may send any
+number of `{ id, progress }` messages (`WorkerProgressMessageInterface`).
+Replies with an `id` no task waits for are ignored.
 
 ## Where it runs
 
