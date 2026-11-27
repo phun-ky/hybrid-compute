@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%401.2.0...%40hybrid-compute%2Fworker%401.3.0) (2026-11-27)
+
+### Feature
+
+* 🎸 run worker tasks on several workers at once ([bbf8c02](https://github.com/phun-ky/hybrid-compute/commit/bbf8c025a44fae1cf85f4110ff97070155cbd3a6))
+
 ## [1.2.0](https://github.com/phun-ky/hybrid-compute/compare/%40hybrid-compute%2Fworker%401.1.0...%40hybrid-compute%2Fworker%401.2.0) (2026-11-27)
 
 ### Documentation

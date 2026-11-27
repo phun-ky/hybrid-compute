@@ -4,7 +4,7 @@ WorkerResultMessageInterface
 # Interface: WorkerResultMessageInterface\<Output = `unknown`>
 
 Defined in:
-[packages/worker/src/types.ts:82](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L82)
+[packages/worker/src/types.ts:88](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L88)
 
 What the worker script sends back: the task's `id` with either a `result` or an
 `error`. An `error` (a message string, or an object with a `message`) rejects
@@ -31,7 +31,7 @@ error?: unknown;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:85](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L85)
+[packages/worker/src/types.ts:91](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L91)
 
 ---
 
@@ -42,7 +42,7 @@ id: number;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:83](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L83)
+[packages/worker/src/types.ts:89](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L89)
 
 ---
 
@@ -53,4 +53,4 @@ result?: Output;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:84](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L84)
+[packages/worker/src/types.ts:90](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L90)

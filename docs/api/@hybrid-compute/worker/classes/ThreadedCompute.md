@@ -4,20 +4,23 @@ ThreadedCompute
 # Class: ThreadedCompute
 
 Defined in:
-[packages/worker/src/index.ts:159](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L159)
+[packages/worker/src/index.ts:173](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L173)
 
 ThreadedCompute is a backend that runs tasks in a dedicated module Web Worker,
 so heavy work doesn't block the main thread.
 
 It starts the worker on the first task, not when it's created, sends each task
-with an id and matches the replies by id. Write the worker script with
-[exposeTasks](../functions/exposeTasks.md), or by hand following
+with an id and matches the replies by id. With `workers` above 1, it starts
+another worker only when every running one is busy, up to that many, and sends
+each task to an idle worker, or else the least busy one. Write the worker script
+with [exposeTasks](../functions/exposeTasks.md), or by hand following
 [WorkerTaskMessageInterface](../interfaces/WorkerTaskMessageInterface.md) and
 [WorkerResultMessageInterface](../interfaces/WorkerResultMessageInterface.md).
 
 Every failure (an `error` in the reply, a crash, the timeout) rejects with a
-[WorkerTaskError](WorkerTaskError.md). If the worker crashes, a new one starts
-on the next task. Call [ThreadedCompute.close](#close) when you're done with it.
+[WorkerTaskError](WorkerTaskError.md). If a worker crashes, only its tasks
+reject, and a new one starts when needed. Call [ThreadedCompute.close](#close)
+when you're done with it.
 
 Web Workers only exist in browsers (and Deno and Bun): where there is no global
 `Worker`, `canRun` returns `false`, so the `auto` strategy uses another backend.
@@ -68,7 +71,7 @@ new ThreadedCompute(options: ThreadedComputeOptionsInterface): ThreadedCompute;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:175](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L175)
+[packages/worker/src/index.ts:189](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L189)
 
 Creates the backend. It checks the options, and starts no worker until the first
 task.
@@ -103,7 +106,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:186](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L186)
+[packages/worker/src/index.ts:200](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L200)
 
 Determines if this backend can run the given task.
 
@@ -134,10 +137,10 @@ close(): void;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:327](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L327)
+[packages/worker/src/index.ts:341](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L341)
 
-Terminates the worker, if one is running. Tasks still waiting for a reply reject
-with a [WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
+Terminates the running workers. Tasks still waiting for a reply reject with a
+[WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
 
 #### Returns
 
@@ -156,7 +159,7 @@ runTask<Input, Output>(
 ```
 
 Defined in:
-[packages/worker/src/index.ts:218](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L218)
+[packages/worker/src/index.ts:232](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L232)
 
 Runs a task in the worker and waits for its reply.
 

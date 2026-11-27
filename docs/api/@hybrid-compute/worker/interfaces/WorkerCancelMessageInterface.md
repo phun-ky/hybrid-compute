@@ -4,7 +4,7 @@ WorkerCancelMessageInterface
 # Interface: WorkerCancelMessageInterface
 
 Defined in:
-[packages/worker/src/types.ts:67](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L67)
+[packages/worker/src/types.ts:73](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L73)
 
 What the worker script receives when a task is cancelled or times out: the
 task's `id` and `cancel: true`. [exposeTasks](../functions/exposeTasks.md)
@@ -25,7 +25,7 @@ cancel: true;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:69](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L69)
+[packages/worker/src/types.ts:75](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L75)
 
 ---
 
@@ -36,4 +36,4 @@ id: number;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:68](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L68)
+[packages/worker/src/types.ts:74](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L74)
