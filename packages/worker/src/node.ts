@@ -34,6 +34,8 @@ export * from './types.js';
  * sent to it.
  * @property timeout - How long to wait for a reply, in milliseconds, before
  * rejecting with a `WorkerTaskError`. Defaults to `0`: no timeout.
+ * @property workers - How many worker threads may run at once. Defaults to
+ * `1`. They start only when the running ones are all busy.
  *
  * @example
  * ```ts

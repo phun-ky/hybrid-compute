@@ -28,6 +28,7 @@ export * from './types.js';
 /** A task waiting for its reply from the worker. */
 type PendingTaskType = {
   taskName: string;
+  worker: Worker;
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
   progress: (value: unknown) => void;
@@ -37,7 +38,7 @@ type PendingTaskType = {
  * Check the options and return them normalised.
  *
  * @throws {TypeError} For a missing or wrongly typed option.
- * @throws {RangeError} For a negative timeout.
+ * @throws {RangeError} For a negative timeout, or fewer than one worker.
  */
 const toSettings = (options: unknown) => {
   if (!isPlainObject(options)) {
@@ -46,7 +47,7 @@ const toSettings = (options: unknown) => {
     );
   }
 
-  const { url, createWorker, canRunTasks, timeout } = options;
+  const { url, createWorker, canRunTasks, timeout, workers } = options;
 
   if ((url === undefined) === (createWorker === undefined)) {
     throw new TypeError(
@@ -94,6 +95,16 @@ const toSettings = (options: unknown) => {
     );
   }
 
+  if (workers !== undefined && !Number.isInteger(workers)) {
+    throw new TypeError(
+      `workers must be a whole number, got ${describeValue(workers)}`
+    );
+  }
+
+  if (typeof workers === 'number' && workers < 1) {
+    throw new RangeError(`workers must be 1 or more, got ${workers}`);
+  }
+
   // Web Workers, unless an entry point such as ./node.ts passed another
   const runtime =
     (options as { [RUNTIME]?: WorkerRuntimeInterface })[RUNTIME] ?? WEB_RUNTIME;
@@ -109,7 +120,8 @@ const toSettings = (options: unknown) => {
     source:
       createWorker === undefined ? `the worker ${String(url)}` : 'createWorker',
     tasks: new Set(canRunTasks as string[]) as ReadonlySet<string>,
-    timeout: (timeout as number | undefined) ?? 0
+    timeout: (timeout as number | undefined) ?? 0,
+    workers: (workers as number | undefined) ?? 1
   };
 };
 
@@ -118,13 +130,15 @@ const toSettings = (options: unknown) => {
  * Worker, so heavy work doesn't block the main thread.
  *
  * It starts the worker on the first task, not when it's created, sends each
- * task with an id and matches the replies by id. Write the worker script with
+ * task with an id and matches the replies by id. With `workers` above 1, it
+ * starts another worker only when every running one is busy, up to that
+ * many, and sends each task to an idle worker, or else the least busy one. Write the worker script with
  * {@link exposeTasks}, or by hand following {@link WorkerTaskMessageInterface}
  * and {@link WorkerResultMessageInterface}.
  *
  * Every failure (an `error` in the reply, a crash, the timeout) rejects with a
- * {@link WorkerTaskError}. If the worker crashes, a new one starts on the next
- * task. Call {@link ThreadedCompute.close} when you're done with it.
+ * {@link WorkerTaskError}. If a worker crashes, only its tasks reject, and a
+ * new one starts when needed. Call {@link ThreadedCompute.close} when you're done with it.
  *
  * Web Workers only exist in browsers (and Deno and Bun): where there is no
  * global `Worker`, `canRun` returns `false`, so the `auto` strategy uses
@@ -158,7 +172,7 @@ const toSettings = (options: unknown) => {
  */
 export class ThreadedCompute implements ComputeBackendInterface {
   private readonly settings: ReturnType<typeof toSettings>;
-  private worker?: Worker;
+  private workers: Worker[] = [];
   private readonly pending = new Map<number, PendingTaskType>();
   private nextId = 1;
 
@@ -238,7 +252,7 @@ export class ThreadedCompute implements ComputeBackendInterface {
 
     if (signal?.aborted) throw signal.reason;
 
-    const worker = this.start(taskName);
+    const worker = this.pick(taskName);
     const { timeout } = this.settings;
     const id = this.nextId++;
 
@@ -278,6 +292,7 @@ export class ThreadedCompute implements ComputeBackendInterface {
       signal?.addEventListener('abort', onAbort, { once: true });
       this.pending.set(id, {
         taskName,
+        worker,
         resolve: (value) => {
           finish();
           resolve(value as Output);
@@ -320,22 +335,42 @@ export class ThreadedCompute implements ComputeBackendInterface {
   }
 
   /**
-   * Terminates the worker, if one is running. Tasks still waiting for a
-   * reply reject with a {@link WorkerTaskError}. The next task starts a new
-   * worker.
+   * Terminates the running workers. Tasks still waiting for a reply reject
+   * with a {@link WorkerTaskError}. The next task starts a new worker.
    */
   close(): void {
-    const { worker } = this;
+    const { workers } = this;
 
-    this.worker = undefined;
-    worker?.terminate();
+    this.workers = [];
+
+    for (const worker of workers) worker.terminate();
+
     this.rejectPending('the worker was closed');
   }
 
-  /** The running worker, starting one first if needed. */
-  private start(taskName: string): Worker {
-    if (this.worker) return this.worker;
+  /**
+   * An idle worker, else a new one while there's room, else the least busy.
+   * A task the caller stopped waiting for no longer counts, even if the
+   * worker script ignores the cancel and goes on running it.
+   */
+  private pick(taskName: string): Worker {
+    const tasks = [...this.pending.values()];
+    const load = this.workers.map(
+      (worker) => tasks.filter((task) => task.worker === worker).length
+    );
+    const idle = load.indexOf(0);
 
+    if (idle !== -1) return this.workers[idle];
+
+    if (this.workers.length < this.settings.workers) {
+      return this.start(taskName);
+    }
+
+    return this.workers[load.indexOf(Math.min(...load))];
+  }
+
+  /** Start a new worker and add it to the running ones. */
+  private start(taskName: string): Worker {
     let worker: Worker;
 
     try {
@@ -363,27 +398,32 @@ export class ThreadedCompute implements ComputeBackendInterface {
     // An uncaught error, or a script that fails to load: the worker is in an
     // unknown state, so reject what it was doing and start over next time
     worker.addEventListener('error', (event) => {
-      if (this.worker !== worker) return;
+      if (!this.workers.includes(worker)) return;
 
       const detail = (event as Partial<ErrorEvent>).message;
 
-      this.worker = undefined;
+      this.workers = this.workers.filter((running) => running !== worker);
       worker.terminate();
       this.rejectPending(
         detail
           ? `the worker threw: ${detail}`
           : 'the worker failed: its script did not load, or threw while starting',
-        event
+        event,
+        worker
       );
     });
     // A reply that couldn't be deserialised: nothing tells which task it
-    // was for, so reject them all instead of letting one wait forever
+    // was for, so reject all of this worker's instead of letting one wait
     worker.addEventListener('messageerror', (event) => {
-      if (this.worker !== worker) return;
+      if (!this.workers.includes(worker)) return;
 
-      this.rejectPending('a reply from the worker could not be read', event);
+      this.rejectPending(
+        'a reply from the worker could not be read',
+        event,
+        worker
+      );
     });
-    this.worker = worker;
+    this.workers.push(worker);
 
     return worker;
   }
@@ -425,9 +465,11 @@ export class ThreadedCompute implements ComputeBackendInterface {
     }
   }
 
-  /** Reject every task still waiting for a reply. */
-  private rejectPending(why: string, cause?: unknown) {
+  /** Reject the tasks still waiting for a reply, all or one worker's. */
+  private rejectPending(why: string, cause?: unknown, worker?: Worker) {
     for (const task of [...this.pending.values()]) {
+      if (worker && task.worker !== worker) continue;
+
       task.reject(
         new WorkerTaskError(
           task.taskName,

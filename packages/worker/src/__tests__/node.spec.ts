@@ -262,6 +262,42 @@ describe('@hybrid-compute/worker/node', () => {
     );
   });
 
+  test('runs tasks on several threads at once', async () => {
+    let started = 0;
+
+    await using(
+      {
+        createWorker: () => {
+          started++;
+
+          return new Thread(fixture('plain'));
+        },
+        canRunTasks: ['slow'],
+        workers: 2
+      },
+      async (threaded) => {
+        // Start both threads first, so only the tasks are timed
+        await Promise.all([
+          threaded.runTask('slow', 1),
+          threaded.runTask('slow', 1)
+        ]);
+
+        const begun = performance.now();
+
+        assert.deepEqual(
+          await Promise.all([
+            threaded.runTask('slow', 200),
+            threaded.runTask('slow', 200)
+          ]),
+          [200, 200]
+        );
+        assert.equal(started, 2);
+        // One thread would take 400 ms; generous for a slow CI machine
+        assert.ok(performance.now() - begun < 380);
+      }
+    );
+  });
+
   test('lets the process exit when no task is waiting, without close()', () => {
     // Inherit tsx's loader, so the child can run the TypeScript fixture
     const output = execFileSync(
