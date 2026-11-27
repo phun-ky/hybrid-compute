@@ -1,12 +1,13 @@
-import test, { describe } from 'node:test';
-import assert from 'node:assert';
-import { createLocalCompute, LocalCompute } from '..';
 import { ComputeTaskInterface, NoBackendError } from '@hybrid-compute/core';
+
+import assert from 'node:assert';
+import test, { describe } from 'node:test';
+
+import { createLocalCompute, LocalCompute } from '..';
 
 describe('LocalCompute', () => {
   test('can register and run a simple task', async () => {
     const compute = new LocalCompute();
-
     const task: ComputeTaskInterface<number, number> = {
       name: 'square',
       run: async (n) => n * n
@@ -15,6 +16,7 @@ describe('LocalCompute', () => {
     compute.registerTask(task);
 
     const result = await compute.runTask('square', 5);
+
     assert.strictEqual(result, 25);
   });
 
@@ -31,6 +33,7 @@ describe('LocalCompute', () => {
 
   test('canRun returns false for unregistered task', () => {
     const compute = new LocalCompute();
+
     assert.strictEqual(compute.canRun('nonexistent'), false);
   });
 
@@ -101,7 +104,9 @@ describe('LocalCompute', () => {
 describe('cancelling with an AbortSignal', () => {
   test('does not start the task when the signal is already aborted', async () => {
     const compute = new LocalCompute();
+
     let ran = false;
+
     const controller = new AbortController();
 
     compute.registerTask({ name: 'work', run: () => (ran = true) });
@@ -135,6 +140,7 @@ describe('cancelling with an AbortSignal', () => {
   test('gives the task the signal, so it can stop itself', async () => {
     const compute = new LocalCompute();
     const controller = new AbortController();
+
     let seen: AbortSignal | undefined;
 
     compute.registerTask({
@@ -173,6 +179,7 @@ describe('progress', () => {
   test('passes progress to onProgress until the task settles', async () => {
     const compute = new LocalCompute();
     const seen: unknown[] = [];
+
     let report: (value: unknown) => void = () => {};
 
     compute.registerTask({
@@ -201,6 +208,7 @@ describe('progress', () => {
     const compute = new LocalCompute();
     const controller = new AbortController();
     const seen: unknown[] = [];
+
     let report: (value: unknown) => void = () => {};
 
     compute.registerTask({
@@ -330,6 +338,7 @@ describe('unregisterTask', () => {
     });
 
     const result = await compute.runTask<string, string>('greet', 'Alice');
+
     assert.strictEqual(result, 'Hello, Alice!');
   });
 });
@@ -337,6 +346,7 @@ describe('unregisterTask', () => {
 describe('createLocalCompute', () => {
   test('returns an instance of LocalCompute', () => {
     const instance = createLocalCompute();
+
     assert.ok(instance instanceof LocalCompute);
   });
 });

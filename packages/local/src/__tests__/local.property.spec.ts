@@ -1,11 +1,11 @@
 // Properties of the task registry, checked against a Set of names: any
 // sequence of registerTask and unregisterTask calls leaves LocalCompute
 // agreeing with the Set, for any name, prototype names included.
-import assert from 'node:assert/strict';
-import test, { describe } from 'node:test';
-
 import { NoBackendError } from '@hybrid-compute/core';
 import fc from 'fast-check';
+
+import assert from 'node:assert/strict';
+import test, { describe } from 'node:test';
 
 import { createLocalCompute } from '..';
 

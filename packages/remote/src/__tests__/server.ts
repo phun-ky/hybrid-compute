@@ -21,7 +21,6 @@ export type TestServerType = {
 };
 
 const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-
 /** A server-to-client text frame (unmasked). */
 const frame = (text: string) => {
   const payload = Buffer.from(text);
@@ -32,14 +31,15 @@ const frame = (text: string) => {
 
   return Buffer.concat([header, payload]);
 };
-
 /** Client-to-server frames (masked), as { opcode, text }. */
 const readFrames = (buffer: Buffer) => {
   const frames: { opcode: number; text: string }[] = [];
+
   let offset = 0;
 
   while (offset + 2 <= buffer.length) {
     const opcode = buffer[offset] & 0x0f;
+
     let length = buffer[offset + 1] & 0x7f;
     let position = offset + 2;
 
@@ -65,11 +65,12 @@ const readFrames = (buffer: Buffer) => {
 
 export const startTestServer = async (): Promise<TestServerType> => {
   const sockets = new Set<Socket>();
+
   let connections = 0;
   let closedByClient = 0;
   let lastHeaders: IncomingMessage['headers'] | undefined;
-  const batches: number[] = [];
 
+  const batches: number[] = [];
   const server = createServer((request, response) => {
     let body = '';
 

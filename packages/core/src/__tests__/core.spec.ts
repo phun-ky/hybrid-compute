@@ -1,5 +1,6 @@
-import test, { describe } from 'node:test';
 import assert from 'node:assert';
+import test, { describe } from 'node:test';
+
 import {
   ComputeBackendInterface,
   createHybridCompute,
@@ -16,10 +17,7 @@ const mockOutput = 42;
 function createMockBackend(): ComputeBackendInterface {
   return {
     canRun: (taskName) => taskName === 'double',
-    runTask: async <Input, Output>(
-      taskName: string,
-      input: Input
-    ): Promise<Output> => {
+    runTask: async <Output>(): Promise<Output> => {
       // mock response, force-cast for test purposes
       return 42 as unknown as Output;
     }
@@ -29,7 +27,7 @@ function createMockBackend(): ComputeBackendInterface {
 function createNonRunnableMockBackend(): ComputeBackendInterface {
   return {
     canRun: () => false,
-    runTask: async <Input, Output>() => {
+    runTask: async () => {
       throw new Error('Should not be called');
     }
   };
@@ -38,60 +36,50 @@ function createNonRunnableMockBackend(): ComputeBackendInterface {
 describe('HybridCompute', () => {
   test('runs task using local strategy', async () => {
     const compute = new HybridCompute({ local: createMockBackend() });
-
     const result = await compute.runTask(mockTaskName, mockInput, 'local');
+
     assert.strictEqual(result, mockOutput);
   });
 
   test('runs task using worker strategy', async () => {
     const compute = new HybridCompute({ worker: createMockBackend() });
-
     const result = await compute.runTask(mockTaskName, mockInput, 'worker');
+
     assert.strictEqual(result, mockOutput);
   });
 
   test('runs task using remote strategy', async () => {
     const compute = new HybridCompute({ remote: createMockBackend() });
-
     const result = await compute.runTask(mockTaskName, mockInput, 'remote');
+
     assert.strictEqual(result, mockOutput);
   });
   test('uses auto strategy with priority: worker > local > remote', async () => {
     const callOrder: string[] = [];
-
     const worker: ComputeBackendInterface = {
       canRun: () => (callOrder.push('worker'), true),
-      runTask: async <Input, Output>(
-        taskName: string,
-        input: Input
-      ): Promise<Output> => {
+      runTask: async <Output>(): Promise<Output> => {
         callOrder.push('runWorker');
+
         return mockOutput as unknown as Output;
       }
     };
-
     const local: ComputeBackendInterface = {
       canRun: () => (callOrder.push('local'), true),
-      runTask: async <Input, Output>(
-        taskName: string,
-        input: Input
-      ): Promise<Output> => {
+      runTask: async <Output>(): Promise<Output> => {
         callOrder.push('runLocal');
+
         return mockOutput as unknown as Output;
       }
     };
-
     const remote: ComputeBackendInterface = {
       canRun: () => (callOrder.push('remote'), true),
-      runTask: async <Input, Output>(
-        taskName: string,
-        input: Input
-      ): Promise<Output> => {
+      runTask: async <Output>(): Promise<Output> => {
         callOrder.push('runRemote');
+
         return mockOutput as unknown as Output;
       }
     };
-
     const compute = new HybridCompute({ worker, local, remote });
     const result = await compute.runTask(mockTaskName, mockInput, 'auto');
 
@@ -105,8 +93,8 @@ describe('HybridCompute', () => {
       local: createNonRunnableMockBackend(),
       remote: createMockBackend()
     });
-
     const result = await compute.runTask(mockTaskName, mockInput, 'auto');
+
     assert.strictEqual(result, mockOutput);
   });
 
@@ -140,7 +128,7 @@ describe('HybridCompute', () => {
     const compute = new HybridCompute({
       remote: {
         canRun: (taskName) => (asked.push(taskName), true),
-        runTask: async <Input, Output>() => mockOutput as unknown as Output
+        runTask: async <Output>() => mockOutput as unknown as Output
       }
     });
 
@@ -228,7 +216,7 @@ describe('validating the backends', () => {
         return true;
       }
 
-      async runTask<Input, Output>() {
+      async runTask<Output>() {
         return mockOutput as unknown as Output;
       }
     }
@@ -320,6 +308,7 @@ describe('validating runTask', () => {
 describe('runTask options', () => {
   test('passes the options on to the backend', async () => {
     let received: unknown;
+
     const compute = createHybridCompute({
       local: {
         canRun: () => true,
@@ -344,10 +333,11 @@ describe('runTask options', () => {
 
   test('rejects with the reason of an already aborted signal, without running the task', async () => {
     let ran = false;
+
     const compute = createHybridCompute({
       local: {
         canRun: () => true,
-        runTask: async <Input, Output>() => {
+        runTask: async <Output>() => {
           ran = true;
 
           return mockOutput as unknown as Output;
@@ -461,7 +451,7 @@ describe('the auto order', () => {
   /** A backend that runs every task and answers with its own name. */
   const named = (name: string): ComputeBackendInterface => ({
     canRun: () => true,
-    runTask: async <Input, Output>() => name as unknown as Output
+    runTask: async <Output>() => name as unknown as Output
   });
   const all = () => ({
     worker: named('worker'),
@@ -558,6 +548,7 @@ describe('the auto order', () => {
 describe('createHybridCompute', () => {
   test('returns HybridCompute instance', () => {
     const instance = createHybridCompute({ local: createMockBackend() });
+
     assert.ok(instance instanceof HybridCompute);
   });
 });

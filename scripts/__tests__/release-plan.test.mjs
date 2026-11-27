@@ -148,7 +148,6 @@ describe('plan', () => {
       entry('core', '0.37.0', { level: 'minor' }),
       entry('remote', '1.0.0', { level: 'major' })
     ];
-
     const next = plan(entries);
 
     assert.equal(next.get('@hybrid-compute/core'), '0.38.0');

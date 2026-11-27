@@ -11,7 +11,9 @@ import {
 /** A scope that records replies, and sends messages to the listener. */
 const createScope = (postMessage?: (message: unknown) => void) => {
   const replies: unknown[] = [];
+
   let listener: (event: { data: unknown }) => void = () => {};
+
   const scope: WorkerScopeInterface = {
     addEventListener: (_type, fn) => {
       listener = fn;

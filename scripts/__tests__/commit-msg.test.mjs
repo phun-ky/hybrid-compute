@@ -23,7 +23,8 @@ describe('.githooks/commit-msg', () => {
   const rejected = {
     'Copilot trailer from the web editor (7e3bfa7 on main)':
       'Update docs/.vitepress/theme/custom.css\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n',
-    'Claude trailer': `feat: 🎸 add a thing\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n`,
+    'Claude trailer':
+      'feat: 🎸 add a thing\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n',
     'Anthropic address alone':
       'fix: 🐛 a thing\n\nReviewed-by: x <noreply@anthropic.com>\n',
     'Generated with footer':

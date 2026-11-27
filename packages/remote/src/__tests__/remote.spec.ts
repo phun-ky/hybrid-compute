@@ -35,12 +35,17 @@ const socketTo = (extra: Partial<RemoteComputeOptionsInterface> = {}) =>
     canRunTasks: '*',
     ...extra
   });
-const isRemoteError =
-  (message: RegExp, check: (error: RemoteTaskError) => boolean = () => true) =>
-  (error: unknown) =>
+
+function isRemoteError(
+  message: RegExp,
+  check: (error: RemoteTaskError) => boolean = () => true
+) {
+  return (error: unknown) =>
     error instanceof RemoteTaskError &&
     message.test(error.message) &&
     check(error);
+}
+
 const options = (value: unknown) =>
   value as unknown as RemoteComputeOptionsInterface;
 
@@ -63,7 +68,7 @@ describe('options', () => {
         ),
       {
         name: 'RangeError',
-        message: `Unknown transport "http"; use 'fetch' or 'websocket'`
+        message: "Unknown transport \"http\"; use 'fetch' or 'websocket'"
       }
     );
   });

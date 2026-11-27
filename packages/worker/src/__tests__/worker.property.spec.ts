@@ -2,10 +2,10 @@
 // structured clone algorithm can copy comes back as that algorithm copies
 // it, concurrent tasks each get their own reply, and whatever a task throws
 // comes back as a WorkerTaskError with its message.
+import fc from 'fast-check';
+
 import assert from 'node:assert/strict';
 import test, { describe } from 'node:test';
-
-import fc from 'fast-check';
 
 import { createThreadedCompute, exposeTasks, WorkerTaskError } from '..';
 
@@ -85,6 +85,7 @@ describe('message properties', () => {
         ),
         async (thrown) => {
           const replies: unknown[] = [];
+
           let listener: (event: { data: unknown }) => void = () => {};
 
           exposeTasks(
