@@ -12,6 +12,7 @@
 
 - [ThreadedComputeOptionsInterface](interfaces/ThreadedComputeOptionsInterface.md)
 - [WorkerCancelMessageInterface](interfaces/WorkerCancelMessageInterface.md)
+- [WorkerProgressMessageInterface](interfaces/WorkerProgressMessageInterface.md)
 - [WorkerResultMessageInterface](interfaces/WorkerResultMessageInterface.md)
 - [WorkerScopeInterface](interfaces/WorkerScopeInterface.md)
 - [WorkerTaskMessageInterface](interfaces/WorkerTaskMessageInterface.md)
@@ -24,3 +25,4 @@
 
 - [createThreadedCompute](functions/createThreadedCompute.md)
 - [exposeTasks](functions/exposeTasks.md)
+- [transfer](functions/transfer.md)

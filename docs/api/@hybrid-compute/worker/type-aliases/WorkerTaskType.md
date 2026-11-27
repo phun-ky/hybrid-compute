@@ -11,11 +11,14 @@ type WorkerTaskType<Input = never, Output = unknown> = (
 ```
 
 Defined in:
-[packages/worker/src/types.ts:96](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L96)
+[packages/worker/src/types.ts:114](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L114)
 
 A task in the worker script, for [exposeTasks](../functions/exposeTasks.md). It
 gets the input and a context with a `signal`, which aborts when the caller
-cancels the task or its timeout passes.
+cancels the task or its timeout passes, and `progress`, which sends a value to
+the caller's `onProgress`. Wrap the result in
+[transfer](../functions/transfer.md) to transfer buffers back instead of copying
+them.
 
 ## Type Parameters
 

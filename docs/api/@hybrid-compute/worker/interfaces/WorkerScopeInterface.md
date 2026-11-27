@@ -4,7 +4,7 @@ WorkerScopeInterface
 # Interface: WorkerScopeInterface
 
 Defined in:
-[packages/worker/src/types.ts:106](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L106)
+[packages/worker/src/types.ts:124](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L124)
 
 Where [exposeTasks](../functions/exposeTasks.md) listens and replies. Defaults
 to the worker's global scope (`self`); pass another one to adapt it, for example
@@ -21,7 +21,7 @@ addEventListener(type: "message", listener: (event: {
 ```
 
 Defined in:
-[packages/worker/src/types.ts:107](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L107)
+[packages/worker/src/types.ts:125](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L125)
 
 #### Parameters
 
@@ -42,17 +42,21 @@ Defined in:
 ### postMessage()
 
 ```ts
-postMessage(message: unknown): void;
+postMessage(message: unknown, transfer?: Transferable[]): void;
 ```
 
 Defined in:
-[packages/worker/src/types.ts:111](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L111)
+[packages/worker/src/types.ts:129](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/types.ts#L129)
 
 #### Parameters
 
 ##### message
 
 `unknown`
+
+##### transfer?
+
+`Transferable`\[]
 
 #### Returns
 

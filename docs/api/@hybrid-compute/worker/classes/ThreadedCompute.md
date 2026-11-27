@@ -4,7 +4,7 @@ ThreadedCompute
 # Class: ThreadedCompute
 
 Defined in:
-[packages/worker/src/index.ts:158](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L158)
+[packages/worker/src/index.ts:159](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L159)
 
 ThreadedCompute is a backend that runs tasks in a dedicated module Web Worker,
 so heavy work doesn't block the main thread.
@@ -68,7 +68,7 @@ new ThreadedCompute(options: ThreadedComputeOptionsInterface): ThreadedCompute;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:174](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L174)
+[packages/worker/src/index.ts:175](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L175)
 
 Creates the backend. It checks the options, and starts no worker until the first
 task.
@@ -103,7 +103,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:185](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L185)
+[packages/worker/src/index.ts:186](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L186)
 
 Determines if this backend can run the given task.
 
@@ -134,7 +134,7 @@ close(): void;
 ```
 
 Defined in:
-[packages/worker/src/index.ts:312](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L312)
+[packages/worker/src/index.ts:327](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L327)
 
 Terminates the worker, if one is running. Tasks still waiting for a reply reject
 with a [WorkerTaskError](WorkerTaskError.md). The next task starts a new worker.
@@ -156,7 +156,7 @@ runTask<Input, Output>(
 ```
 
 Defined in:
-[packages/worker/src/index.ts:212](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L212)
+[packages/worker/src/index.ts:218](https://github.com/phun-ky/hybrid-compute/blob/main/packages/worker/src/index.ts#L218)
 
 Runs a task in the worker and waits for its reply.
 
@@ -187,14 +187,18 @@ The name of the task to run.
 `Input`
 
 The input for the task. It's copied with the structured clone algorithm, so it
-can't hold functions or DOM nodes.
+can't hold functions or DOM nodes. A `SharedArrayBuffer` in it is shared, not
+copied, where the page is cross-origin isolated.
 
 ##### options?
 
 [`RunTaskOptionsInterface`](../../core/interfaces/RunTaskOptionsInterface.md)
 
 Options for this call. With a `signal`, `runTask` rejects with the signal's
-reason as soon as it aborts, and the worker is told to cancel the task.
+reason as soon as it aborts, and the worker is told to cancel the task. The
+objects in `transfer` are transferred to the worker instead of copied.
+`onProgress` gets each progress value the task sends; if it throws, the task
+rejects with that error and the worker is told to cancel it.
 
 #### Returns
 

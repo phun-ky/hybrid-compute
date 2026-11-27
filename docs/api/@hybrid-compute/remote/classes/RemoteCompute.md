@@ -4,7 +4,7 @@ RemoteCompute
 # Class: RemoteCompute
 
 Defined in:
-[packages/remote/src/index.ts:205](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L205)
+[packages/remote/src/index.ts:206](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L206)
 
 RemoteCompute is a backend that sends tasks to a remote service, over HTTP with
 fetch or over a WebSocket.
@@ -66,7 +66,7 @@ new RemoteCompute(options: RemoteComputeOptionsInterface): RemoteCompute;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:224](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L224)
+[packages/remote/src/index.ts:225](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L225)
 
 Creates the backend. It checks the options, and does no network I/O until the
 first task.
@@ -102,7 +102,7 @@ canRun(taskName: string): boolean;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:235](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L235)
+[packages/remote/src/index.ts:236](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L236)
 
 Determines if this backend may run the given task.
 
@@ -133,7 +133,7 @@ close(): void;
 ```
 
 Defined in:
-[packages/remote/src/index.ts:276](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L276)
+[packages/remote/src/index.ts:281](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L281)
 
 Closes the WebSocket, if one is open or opening. Tasks still waiting for a reply
 reject with a [RemoteTaskError](RemoteTaskError.md). The next task opens a new
@@ -156,7 +156,7 @@ runTask<Input, Output>(
 ```
 
 Defined in:
-[packages/remote/src/index.ts:255](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L255)
+[packages/remote/src/index.ts:260](https://github.com/phun-ky/hybrid-compute/blob/main/packages/remote/src/index.ts#L260)
 
 Sends a task to the remote service and waits for its reply.
 
@@ -192,7 +192,11 @@ Input data to send. It must be serialisable as JSON.
 
 [`RunTaskOptionsInterface`](../../core/interfaces/RunTaskOptionsInterface.md)
 
-Options for this call, such as an `AbortSignal`.
+Options for this call, such as an `AbortSignal`. With the WebSocket transport,
+`onProgress` gets the `progress` of each `{ id, progress }` message the server
+sends before its reply; if it throws, the task rejects with that error. The
+fetch transport never calls it. `transfer` is ignored: the input is sent as
+JSON.
 
 #### Returns
 
