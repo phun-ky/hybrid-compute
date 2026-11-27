@@ -361,3 +361,6 @@ it. Over WebSocket, `{ "id": 1, "progress": … }` messages may come first
 (`RemoteProgressMessageInterface`). A reply has either a `result` or an `error`
 (a message string, or an object with a `message`). For fetch, the status must be
 2xx for a `result` to count.
+
+The [remote protocol](/guide/protocol) describes it in full, for writing a
+server in any language.
