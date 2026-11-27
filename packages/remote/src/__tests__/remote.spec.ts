@@ -302,6 +302,228 @@ describe('fetch transport', () => {
   });
 });
 
+describe('fetch transport with batch', () => {
+  const batchTo = (
+    path: string,
+    batch: RemoteComputeOptionsInterface['batch'] = {},
+    extra: Partial<RemoteComputeOptionsInterface> = {}
+  ) => fetchTo(path, { batch, ...extra });
+  /** The batch sizes sent since the last call. */
+  const sentBatches = (() => {
+    let seen = 0;
+
+    return () => {
+      const all = server.batches();
+      const since = all.slice(seen);
+
+      seen = all.length;
+
+      return since;
+    };
+  })();
+
+  test('checks batch: an object, for fetch only, with a whole size and a wait of 0 or more', () => {
+    const create = (batch: unknown, transport = 'fetch') =>
+      createRemoteCompute({
+        transport,
+        endpoint: transport === 'fetch' ? server.http : server.ws,
+        canRunTasks: '*',
+        batch
+      } as RemoteComputeOptionsInterface);
+
+    assert.throws(() => create(true), {
+      name: 'TypeError',
+      message: /batch must be an object/
+    });
+    assert.throws(() => create({}, 'websocket'), {
+      name: 'TypeError',
+      message: /only works with the fetch transport/
+    });
+    assert.throws(() => create({ size: 0 }), RangeError);
+    assert.throws(() => create({ size: 1.5 }), TypeError);
+    assert.throws(() => create({ wait: -1 }), RangeError);
+    assert.throws(() => create({ wait: '10' }), TypeError);
+    assert.ok(create({ size: 1, wait: 0 }) instanceof RemoteCompute);
+  });
+
+  test('sends the tasks started together as one request, matching replies by id', async () => {
+    sentBatches();
+
+    const remote = batchTo('batch');
+
+    assert.deepEqual(
+      await Promise.all(['a', 'b', 'c'].map((n) => remote.runTask('echo', n))),
+      ['a', 'b', 'c']
+    );
+    assert.deepEqual(sentBatches(), [3]);
+  });
+
+  test('sends a batch as soon as it holds size tasks', async () => {
+    sentBatches();
+
+    const remote = batchTo('batch', { size: 2 });
+
+    assert.deepEqual(
+      await Promise.all([1, 2, 3, 4, 5].map((n) => remote.runTask('echo', n))),
+      [1, 2, 3, 4, 5]
+    );
+    // Sent at once, so they may reach the server in any order
+    assert.deepEqual(sentBatches().sort(), [1, 2, 2]);
+  });
+
+  test('waits wait milliseconds after the first task for more', async () => {
+    sentBatches();
+
+    const remote = batchTo('batch', { wait: 50 });
+    const first = remote.runTask('echo', 1);
+
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    assert.deepEqual(
+      await Promise.all([first, remote.runTask('echo', 2)]),
+      [1, 2]
+    );
+    assert.deepEqual(sentBatches(), [2]);
+  });
+
+  test('settles each task with its own reply: a result, an error, or none', async () => {
+    const remote = batchTo('batch');
+    const [ok, failed, skipped] = await Promise.allSettled([
+      remote.runTask('echo', 'fine'),
+      remote.runTask('fail', 1),
+      remote.runTask('skip', 1)
+    ]);
+
+    assert.deepEqual(ok, { status: 'fulfilled', value: 'fine' });
+    assert.ok(
+      failed.status === 'rejected' &&
+        isRemoteError(/'fail' failed: task failed/)(failed.reason)
+    );
+    assert.ok(
+      skipped.status === 'rejected' &&
+        isRemoteError(
+          /'skip' got no reply in the batch/,
+          (error) => error.status === 200
+        )(skipped.reason)
+    );
+  });
+
+  test('rejects every task in a request that fails', async () => {
+    const both = (remote: RemoteCompute) =>
+      Promise.allSettled([
+        remote.runTask('first', 1),
+        remote.runTask('second', 2)
+      ]);
+    const reasons = async (remote: RemoteCompute) =>
+      (await both(remote)).map((result) =>
+        result.status === 'rejected' ? result.reason : result.value
+      );
+
+    for (const [path, message] of [
+      ['http-500', /failed with HTTP 500/],
+      ['ok', /got a batch reply that isn't a JSON array/],
+      ['not-json', /got a reply that isn't JSON/]
+    ] as const) {
+      const [first, second] = await reasons(batchTo(path));
+
+      assert.ok(isRemoteError(message, (e) => e.taskName === 'first')(first));
+      assert.ok(isRemoteError(message, (e) => e.taskName === 'second')(second));
+    }
+
+    const unreachable = await reasons(
+      createRemoteCompute({
+        transport: 'fetch',
+        endpoint: 'http://127.0.0.1:1/compute',
+        canRunTasks: '*',
+        batch: {}
+      })
+    );
+
+    for (const reason of unreachable) {
+      assert.ok(isRemoteError(/couldn't reach/)(reason));
+    }
+
+    const throwing = batchTo(
+      'batch',
+      {},
+      {
+        headers: () => {
+          throw new Error('no token');
+        }
+      }
+    );
+
+    for (const reason of await reasons(throwing)) {
+      assert.match((reason as Error).message, /no token/);
+    }
+  });
+
+  test('rejects input that is not JSON on its own, and sends the rest', async () => {
+    sentBatches();
+
+    const remote = batchTo('batch');
+    const [bad, good] = await Promise.allSettled([
+      remote.runTask('echo', 10n),
+      remote.runTask('echo', 'fine')
+    ]);
+
+    assert.ok(bad.status === 'rejected' && bad.reason instanceof TypeError);
+    assert.deepEqual(good, { status: 'fulfilled', value: 'fine' });
+    assert.deepEqual(sentBatches(), [1]);
+  });
+
+  test('leaves out a task cancelled before sending, and aborts the request once every task has settled', async () => {
+    const original = globalThis.fetch;
+    const requests: RequestInit[] = [];
+
+    globalThis.fetch = (input, init) => {
+      requests.push(init!);
+
+      return original(input, init);
+    };
+
+    try {
+      const remote = batchTo('hang', { wait: 20 }, { timeout: 0 });
+      const early = new AbortController();
+      const late = new AbortController();
+      const first = remote.runTask('a', 1, { signal: early.signal });
+      const second = remote.runTask('b', 2, { signal: late.signal });
+
+      early.abort(new Error('early'));
+      await assert.rejects(first, /early/);
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      assert.equal(requests.length, 1);
+      assert.deepEqual(
+        JSON.parse(String(requests[0].body)).map(
+          ({ task }: { task: string }) => task
+        ),
+        ['b']
+      );
+      assert.equal(requests[0].signal?.aborted, false);
+      late.abort(new Error('late'));
+      await assert.rejects(second, /late/);
+      assert.equal(requests[0].signal?.aborted, true);
+
+      // Every task cancelled before sending: no request at all
+      const only = new AbortController();
+      const alone = remote.runTask('c', 3, { signal: only.signal });
+
+      only.abort(new Error('alone'));
+      await assert.rejects(alone, /alone/);
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      assert.equal(requests.length, 1);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  test('rejects with RemoteTaskError when the timeout passes', async () => {
+    await assert.rejects(
+      batchTo('hang', {}, { timeout: 30 }).runTask('slow', 1),
+      isRemoteError(/'slow' timed out after 30 ms/)
+    );
+  });
+});
+
 describe('websocket transport', () => {
   test('waits for the connection, so a task right after creating it works', async () => {
     const remote = socketTo();
