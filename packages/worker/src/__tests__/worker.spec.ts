@@ -51,17 +51,12 @@ const raw = (extra: Partial<ThreadedComputeOptionsInterface> = {}) =>
     ],
     ...extra
   });
-
-function isWorkerError(
-  message: RegExp,
-  check: (error: WorkerTaskError) => boolean = () => true
-) {
-  return (error: unknown) =>
+const isWorkerError =
+  (message: RegExp, check: (error: WorkerTaskError) => boolean = () => true) =>
+  (error: unknown) =>
     error instanceof WorkerTaskError &&
     message.test(error.message) &&
     check(error);
-}
-
 const options = (value: unknown) =>
   value as unknown as ThreadedComputeOptionsInterface;
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
